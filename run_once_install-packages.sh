@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+set -xeu
+
+env
 
 get_os() {
   case "$(uname -s)" in
@@ -21,20 +24,21 @@ get_os() {
 }
 
 install_brew_apps() {
-  brew "atuin"
-  brew "bat"
-  brew "direnv"
-  brew "eza"
-  brew "fd"
-  brew "gh"
-  brew "glab"
-  brew "micro"
-  brew "rg"
-  brew "tealdeer"
-  brew "trash-cli"
-  brew "ugrep"
-  brew "yq"
-  brew "zoxide"
+  brew install \
+    "atuin" \
+    "bat" \
+    "direnv" \
+    "eza" \
+    "fd" \
+    "gh" \
+    "glab" \
+    "micro" \
+    "rg" \
+    "tealdeer" \
+    "trash-cli" \
+    "ugrep" \
+    "yq" \
+    "zoxide"
 }
 
 install_gnome_ext_from_github() {
@@ -51,8 +55,8 @@ install_gnome_ext_from_github() {
 }
 
 install_gnome_ext() {
-  UUID="$1"
-  GNOME_VERSION="$2"
+  UUID="$1"; shift
+  GNOME_VERSION="$1"; shift
 
   echo "Installing GNOME extension '${UUID}'..."
 
@@ -110,21 +114,25 @@ install_gnome_extensions() {
 }
 
 install_flatpak_from_url() {
-  URL="$1"
+  APP_ID="$1"; shift
+  URL="$1"; shift
 
   echo "Installing Flatpak from ${URL} ..."
   local tmp_file=$(mktemp --suffix=.flatpak)
   curl -L -o "${tmp_file}" "${URL}"
-  flatpak install --user --assumeyes --noninteractive "${tmp_file}"
+  flatpak uninstall --user --assumeyes "${APP_ID}" || true
+  flatpak install --user --assumeyes --noninteractive --reinstall "${tmp_file}"
   rm "${tmp_file}"
 }
 
 install_flatpak_apps() {
-  install_flatpak_from_url "https://github.com/BohdanTkachenko/gearlever/releases/download/cli-update-url/it.mijorus.gearlever.flatpak"
+  install_flatpak_from_url \
+    "it.mijorus.gearlever" \
+    "https://github.com/BohdanTkachenko/gearlever/releases/download/cli-update-url/it.mijorus.gearlever.flatpak"
 }
 
 install_appimage() {
-  URL="$1"
+  URL="$1"; shift
 
   echo "Installing AppImage from ${URL} ..."
   local tmp_file=$(mktemp --suffix=.AppImage)
@@ -149,7 +157,6 @@ configure_fish() {
 
 configure_tldr() {
   tldr --update
-  
 }
 
 install_bazzite_dx() {
