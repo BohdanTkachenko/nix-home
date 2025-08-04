@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-set -xeu
-
-env
+set -eu
 
 get_os() {
   case "$(uname -s)" in
@@ -30,6 +28,7 @@ install_brew_apps() {
     "direnv" \
     "eza" \
     "fd" \
+    "gemini-cli" \
     "gh" \
     "glab" \
     "micro" \
@@ -94,10 +93,6 @@ install_gnome_ext() {
   return 0  
 }
 
-install_npm_global() {
-  npm install -g @google/gemini-cli
-}
-
 install_gnome_extensions() {
   local extensions=(
     "dash-to-dock@micxgx.gmail.com"
@@ -126,6 +121,8 @@ install_flatpak_from_url() {
 }
 
 install_flatpak_apps() {
+  flatpak install --noninteractive --assumeyes \
+    "org.gnome.Platform/x86_64/47"
   install_flatpak_from_url \
     "it.mijorus.gearlever" \
     "https://github.com/BohdanTkachenko/gearlever/releases/download/cli-update-url/it.mijorus.gearlever.flatpak"
@@ -162,7 +159,6 @@ configure_tldr() {
 install_bazzite_dx() {
   install_brew_apps
 
-  install_npm_global
   install_gnome_extensions
 
   install_flatpak_apps
@@ -173,7 +169,7 @@ install_bazzite_dx() {
 
 install() {
   case "$(get_os)" in
-    bazzite-dx-gnome)
+    bazzite-dx-gnome|bazzite-dx-nvidia-gnome)
       install_bazzite_dx
       ;;
   esac
