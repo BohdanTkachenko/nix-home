@@ -1,0 +1,28 @@
+#!/bin/bash
+set -eu -o pipefail
+
+FINGERPRINT="{{- .gpg.keys.master.fingerprint -}}"
+
+if [ -z "$(gpg --list-keys "${FINGERPRINT}" 2>/dev/null)" ]; then
+  gpg --keyserver hkps://keys.openpgp.org --recv-keys "${FINGERPRINT}"
+  gpgconf --kill gpg-agent
+  pkill -U $USER keyboxd
+  gpg --card-status
+fi
+
+(
+  echo "[gpg]"
+  echo "  recipients = ["
+  gpg --with-colons --fingerprint "${FINGERPRINT}" | \
+    awk -F: '$1 == "sub" && $2 != "r" && $12 ~ /e/ { getline; print $10 }' | \
+    while read -r fp; do
+      echo "    \"${fp}!\","
+    done
+  echo "  ]"
+) > "{{- .chezmoi.sourceDir -}}/gpg-subkeys.toml"
+
+if [ $(gpg --list-public-keys --with-colons "${FINGERPRINT}" 2>/dev/null | awk -F: '$1 == "pub" || $1 == "uid" { trust = $2 } $1 == "fpr" && $10 == "'"${FINGERPRINT}"'" { print trust; exit }') != "u" ]; then
+  echo -e "5\ny\n" | gpg --command-fd 0 --edit-key "${FINGERPRINT}" trust
+  gpgconf --kill gpg-agent
+  pkill -U $USER keyboxd
+fi

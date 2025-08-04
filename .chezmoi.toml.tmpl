@@ -1,0 +1,4 @@
+encryption = "gpg"
+{{ if stat (joinPath "gpg-subkeys.toml") }}
+{{- include "gpg-subkeys.toml" -}}
+{{ end }}
