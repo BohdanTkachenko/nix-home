@@ -1,4 +1,8 @@
 encryption = "gpg"
+
+[edit]
+  command = "micro"
+
 {{ if stat (joinPath "gpg-subkeys.toml") }}
 {{- include "gpg-subkeys.toml" -}}
 {{ end }}
