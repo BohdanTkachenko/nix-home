@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu -o pipefail
 
-FINGERPRINT="{{- .gpg.keys.master.fingerprint -}}"
+FINGERPRINT="{{- .gpg_master_fingerprint -}}"
 
 if [ -z "$(gpg --list-keys "${FINGERPRINT}" 2>/dev/null)" ]; then
   gpg --keyserver hkps://keys.openpgp.org --recv-keys "${FINGERPRINT}"
