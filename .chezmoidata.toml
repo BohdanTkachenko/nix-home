@@ -1,0 +1,85 @@
+gpg_master_fingerprint="0167AFAA4B2BF822BB1D1038604E96CB9CD39C26"
+
+[[install.brew]]
+name = "bat"
+
+[[install.brew]]
+name = "direnv"
+
+[[install.brew]]
+name = "eza"
+
+[[install.brew]]
+name = "fd"
+
+[[install.brew]]
+name = "gemini-cli"
+
+[[install.brew]]
+name = "gh"
+
+[[install.brew]]
+name = "glab"
+
+[[install.brew]]
+name = "micro"
+
+[[install.brew]]
+name = "ripgrep"
+
+[[install.brew]]
+name = "tealdeer"
+
+[[install.brew]]
+name = "trash-cli"
+
+[[install.brew]]
+name = "ugrep"
+
+[[install.brew]]
+name = "yq"
+
+[[install.brew]]
+name = "zoxide"
+
+[[install.flatpak]]
+name = "org.gnome.Platform/x86_64/47"
+
+[[install.flatpak]]
+name = "it.mijorus.gearlever"
+url = "https://github.com/BohdanTkachenko/gearlever/releases/download/cli-update-url/it.mijorus.gearlever.flatpak"
+
+[[install.appimage]]
+name = "Beeper"
+url = "https://api.beeper.com/desktop/download/linux/x64/stable/com.automattic.beeper.desktop" 
+
+[[install.gnome_extension]]
+uuid = "dash-to-dock@micxgx.gmail.com"
+
+[[install.gnome_extension]]
+uuid = "search-light@icedman.github.com"
+
+[[install.nerd_font]]
+prefix = "DroidSansMono"
+ext = "otf"
+names = [
+  "DroidSansMNerdFontMono-Regular",
+]
+
+[[install.nerd_font]]
+prefix = "Hack/Regular"
+ext = "ttf"
+names = [
+  "HackNerdFont-Regular",
+  "HackNerdFontMono-Regular",
+  "HackNerdFontPropo-Regular",
+]
+
+[[install.nerd_font]]
+prefix = "RobotoMono/Regular"
+ext = "ttf"
+names = [
+  "RobotoMonoNerdFont-Regular",
+  "RobotoMonoNerdFontMono-Regular",
+  "RobotoMonoNerdFontPropo-Regular", 
+]

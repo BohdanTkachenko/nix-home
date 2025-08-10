@@ -4,38 +4,40 @@ set -eu
 FONTS_DIR="$HOME/.local/share/fonts"
 
 BREW_APPS=(
-  "bat"
-  "direnv"
-  "eza"
-  "fd"
-  "gemini-cli"
-  "gh"
-  "glab"
-  "micro"
-  "ripgrep"
-  "tealdeer"
-  "trash-cli"
-  "ugrep"
-  "yq"
-  "zoxide"
+{{- range .install.brew }}
+  "{{ .name }}"
+{{- end }}
 )
 
 declare -A FLATPAK_APPS
-FLATPAK_APPS["org.gnome.Platform/x86_64/47"]=""
-FLATPAK_APPS["it.mijorus.gearlever"]="https://github.com/BohdanTkachenko/gearlever/releases/download/cli-update-url/it.mijorus.gearlever.flatpak"
+{{- range .install.flatpak }}
+{{- if (index . "url") }}
+FLATPAK_APPS["{{ .name }}"]="{{ .url }}"
+{{- else }}
+FLATPAK_APPS["{{ .name }}"]=""
+{{- end }}
+{{- end }}
 
 declare -A APPIMAGE_APPS
-APPIMAGE_APPS["Beeper"]="https://api.beeper.com/desktop/download/linux/x64/stable/com.automattic.beeper.desktop" 
+{{- range .install.appimage }}
+APPIMAGE_APPS["{{ .name }}"]="{{ .url }}"
+{{- end }}
 
 GNOME_EXTENSIONS=(
-  "dash-to-dock@micxgx.gmail.com"
-  "search-light@icedman.github.com"
+{{- range .install.gnome_extension }}
+  "{{ .uuid }}"
+{{- end }}
 )
 
 declare -A NERD_FONTS
-NERD_FONTS["DroidSansMono"]="DroidSansMNerdFontMono-Regular.otf"
-NERD_FONTS["Hack/Regular"]="HackNerdFont-Regular.ttf HackNerdFontMono-Regular.ttf HackNerdFontPropo-Regular.ttf"
-NERD_FONTS["RobotoMono/Regular"]="RobotoMonoNerdFont-Regular.ttf RobotoMonoNerdFontMono-Regular.ttf RobotoMonoNerdFontPropo-Regular.ttf"
+{{- range .install.nerd_font }}
+{{- $fontFamily := . }}
+NERD_FONTS["{{ .prefix }}"]="{{- range $i, $name := .names -}}
+  {{- if $i }} {{ end -}}
+  {{- /* Use the captured variable to get the extension */ -}}
+  {{- $name }}.{{ $fontFamily.ext -}}
+{{- end -}}"
+{{- end }}
 
 get_os() {
   case "$(uname -s)" in
