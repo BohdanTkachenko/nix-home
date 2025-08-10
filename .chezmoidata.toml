@@ -22,16 +22,22 @@ name = "gh"
 name = "glab"
 
 [[install.brew]]
-name = "kubectl"
+name = "kubernetes-cli"
 
 [[install.brew]]
 name = "micro"
+
+[[install.brew]]
+name = "opentofu"
 
 [[install.brew]]
 name = "ripgrep"
 
 [[install.brew]]
 name = "tealdeer"
+
+[[install.brew]]
+name = "terragrunt"
 
 [[install.brew]]
 name = "trash-cli"
