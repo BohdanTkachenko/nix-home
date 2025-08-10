@@ -140,18 +140,6 @@ install_gnome_extensions() {
   done
 }
 
-install_flatpak_from_url() {
-  local app_id="$1"; shift
-  local url="$1"; shift
-
-  echo "Installing Flatpak from ${url} ..."
-  local tmp_file=$(mktemp --suffix=.flatpak)
-  curl -L -o "${tmp_file}" "${url}"
-  flatpak uninstall --user --assumeyes "${app_id}" || true
-  flatpak install --user --assumeyes --noninteractive --reinstall "${tmp_file}"
-  rm "${tmp_file}"
-}
-
 install_flatpak_apps() {
   echo "🧩  Installing Flatpak apps..."
 
@@ -160,13 +148,7 @@ install_flatpak_apps() {
       echo "✅  Flatpak '${app}' is installed."
     else
       echo "🟡  Flatpak '${app}' is not installed."
-
-      local url="${flatpak_apps[$app]}"
-      if [ "${url}" -eq "" ]; then
-        flatpak install --noninteractive --assumeyes "${app}"
-      else      
-        install_flatpak_from_url "${app}" "${url}"
-      fi
+      flatpak install --noninteractive --assumeyes "${app}"
     fi
   done
 }

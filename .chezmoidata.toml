@@ -55,11 +55,7 @@ name = "yq"
 name = "zoxide"
 
 [[install.flatpak]]
-name = "org.gnome.Platform/x86_64/47"
-
-[[install.flatpak]]
-name = "it.mijorus.gearlever"
-url = "https://github.com/BohdanTkachenko/gearlever/releases/download/cli-update-url/it.mijorus.gearlever.flatpak"
+name = "com.brave.Browser"
 
 [[install.appimage]]
 name = "Beeper"
