@@ -1,4 +1,4 @@
-gpg_master_fingerprint="0167AFAA4B2BF822BB1D1038604E96CB9CD39C26"
+gpg_master_fingerprint = "0167AFAA4B2BF822BB1D1038604E96CB9CD39C26"
 
 [[install.brew]]
 name = "ansible"
@@ -63,7 +63,7 @@ url = "https://github.com/BohdanTkachenko/gearlever/releases/download/cli-update
 
 [[install.appimage]]
 name = "Beeper"
-url = "https://api.beeper.com/desktop/download/linux/x64/stable/com.automattic.beeper.desktop" 
+url = "https://api.beeper.com/desktop/download/linux/x64/stable/com.automattic.beeper.desktop"
 
 [[install.gnome_extension]]
 uuid = "dash-to-dock@micxgx.gmail.com"
@@ -71,27 +71,11 @@ uuid = "dash-to-dock@micxgx.gmail.com"
 [[install.gnome_extension]]
 uuid = "search-light@icedman.github.com"
 
-[[install.nerd_font]]
-prefix = "DroidSansMono"
-ext = "otf"
-names = [
-  "DroidSansMNerdFontMono-Regular",
-]
+[[install.brew_cask]]
+name = "font-hack-nerd-font"
 
-[[install.nerd_font]]
-prefix = "Hack/Regular"
-ext = "ttf"
-names = [
-  "HackNerdFont-Regular",
-  "HackNerdFontMono-Regular",
-  "HackNerdFontPropo-Regular",
-]
+[[install.brew_cask]]
+name = "font-droid-sans-mono-nerd-font"
 
-[[install.nerd_font]]
-prefix = "RobotoMono/Regular"
-ext = "ttf"
-names = [
-  "RobotoMonoNerdFont-Regular",
-  "RobotoMonoNerdFontMono-Regular",
-  "RobotoMonoNerdFontPropo-Regular", 
-]
+[[install.brew_cask]]
+name = "font-roboto-mono-nerd-font"

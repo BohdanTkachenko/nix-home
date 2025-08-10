@@ -9,6 +9,12 @@ BREW_APPS=(
 {{- end }}
 )
 
+BREW_CASKS=(
+{{- range .install.brew_cask }}
+  "{{ .name }}"
+{{- end }}
+)
+
 declare -A FLATPAK_APPS
 {{- range .install.flatpak }}
 {{- if (index . "url") }}
@@ -28,16 +34,6 @@ GNOME_EXTENSIONS=(
   "{{ .uuid }}"
 {{- end }}
 )
-
-declare -A NERD_FONTS
-{{- range .install.nerd_font }}
-{{- $fontFamily := . }}
-NERD_FONTS["{{ .prefix }}"]="{{- range $i, $name := .names -}}
-  {{- if $i }} {{ end -}}
-  {{- /* Use the captured variable to get the extension */ -}}
-  {{- $name }}.{{ $fontFamily.ext -}}
-{{- end -}}"
-{{- end }}
 
 get_os() {
   case "$(uname -s)" in
@@ -69,6 +65,20 @@ install_brew_apps() {
     else
       echo "🟡  ${app} is not installed."
       brew install "${app}"
+    fi
+  done
+}
+
+install_brew_casks() {
+  echo "🧩  Installing Brew casks..."
+
+  local installed=$(brew list -1 --casks)
+  for cask in "${BREW_CASKS[@]}"; do
+    if echo "${installed}" | /usr/sbin/grep -q "^${cask}$"; then
+      echo "✅  ${cask} is already installed."
+    else
+      echo "🟡  ${cask} is not installed."
+      brew install --cask "${cask}"
     fi
   done
 }
@@ -191,33 +201,8 @@ install_appimages() {
   done
 }
 
-install_nerd_font() {
-  local prefix="$1"; shift
-  local names="$1"; shift
-
-  mkdir -p "${FONTS_DIR}"
-
-  for name in ${names}; do
-    local path="${FONTS_DIR}/${name}"
-    local url="https://github.com/ryanoasis/nerd-fonts/raw/HEAD/patched-fonts/${prefix}/${name}"
-
-    if [ -f "${path}" ]; then
-      echo "✅  Font ${name%%.*} is installed."
-    else
-      echo "🟡  Font ${name%%.*} is not installed."
-      echo $url
-      curl -fL -o "${path}" "${url}"
-    fi
-  done
-}
-
-install_fonts() {
-  echo "🧩  Installing fonts..."
-
-  for prefix in "${!NERD_FONTS[@]}"; do
-    install_nerd_font "${prefix}" "${NERD_FONTS[$prefix]}"
-  done
-
+update_fonts_cache() {
+  echo "🧩  Updating fonts cache..."
   fc-cache -f
 }
 
@@ -248,12 +233,13 @@ configure_tldr() {
 
 install_bazzite_dx() {
   install_brew_apps
+  install_brew_casks
   install_flatpak_apps
   install_appimages
 
   install_gnome_extensions
-  install_fonts
 
+  update_fonts_cache
   configure_tldr
   configure_fish
 }
