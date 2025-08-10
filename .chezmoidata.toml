@@ -25,6 +25,9 @@ name = "gh"
 name = "glab"
 
 [[install.brew]]
+name = "go"
+
+[[install.brew]]
 name = "kubernetes-cli"
 
 [[install.brew]]
