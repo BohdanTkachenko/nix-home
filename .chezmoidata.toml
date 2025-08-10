@@ -22,6 +22,9 @@ name = "gh"
 name = "glab"
 
 [[install.brew]]
+name = "kubectl"
+
+[[install.brew]]
 name = "micro"
 
 [[install.brew]]
