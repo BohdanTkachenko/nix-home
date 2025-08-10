@@ -51,3 +51,17 @@ if [ "$(command -v git)" ]
   abbr -a gco 'git checkout'
   abbr -a gb  'git branch'
 end
+
+if [ "$(command -v kubectl)" ]
+  abbr -a k    'kubectl'
+  abbr -a kube 'kubectl'
+end
+
+if [ "$(command -v tofu)" ]
+  abbr -a tf        'tofu'
+  abbr -a terraform 'tofu'
+end
+
+if [ "$(command -v terragrunt)" ]
+  abbr -a tg 'terragrunt'
+end
