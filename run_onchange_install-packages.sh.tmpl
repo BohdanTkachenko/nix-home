@@ -15,14 +15,11 @@ BREW_CASKS=(
 {{- end }}
 )
 
-declare -A FLATPAK_APPS
+FLATPAK_APPS=(
 {{- range .install.flatpak }}
-{{- if (index . "url") }}
-FLATPAK_APPS["{{ .name }}"]="{{ .url }}"
-{{- else }}
-FLATPAK_APPS["{{ .name }}"]=""
+  "{{ .name }}"
 {{- end }}
-{{- end }}
+)
 
 declare -A APPIMAGE_APPS
 {{- range .install.appimage }}
@@ -143,7 +140,7 @@ install_gnome_extensions() {
 install_flatpak_apps() {
   echo "🧩  Installing Flatpak apps..."
 
-  for app in "${!FLATPAK_APPS[@]}"; do
+  for app in "${FLATPAK_APPS[@]}"; do
     if flatpak info "${app}" >/dev/null 2>&1; then
       echo "✅  Flatpak '${app}' is installed."
     else
