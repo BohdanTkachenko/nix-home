@@ -16,9 +16,6 @@ name = "eza"
 name = "fd"
 
 [[install.brew]]
-name = "gemini-cli"
-
-[[install.brew]]
 name = "gh"
 
 [[install.brew]]
@@ -32,6 +29,9 @@ name = "kubernetes-cli"
 
 [[install.brew]]
 name = "micro"
+
+[[install.brew]]
+name = "npm"
 
 [[install.brew]]
 name = "opentofu"
@@ -56,6 +56,9 @@ name = "yq"
 
 [[install.brew]]
 name = "zoxide"
+
+[[install.npm]]
+name = "@google/gemini-cli"
 
 [[install.flatpak]]
 name = "com.brave.Browser"

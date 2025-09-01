@@ -9,6 +9,12 @@ BREW_APPS=(
 {{- end }}
 )
 
+NPM_PACKAGES=(
+{{- range .install.npm }}
+  "{{ .name }}"
+{{- end }}
+)
+
 BREW_CASKS=(
 {{- range .install.brew_cask }}
   "{{ .name }}"
@@ -32,25 +38,7 @@ GNOME_EXTENSIONS=(
 {{- end }}
 )
 
-get_os() {
-  case "$(uname -s)" in
-    Linux)
-      if [ -f /etc/os-release ]; then
-        . /etc/os-release
-        if [ -n "$VARIANT_ID" ]; then
-          echo "$VARIANT_ID"
-        else
-          echo "$ID"
-        fi
-      else
-        echo "linux"
-      fi
-      ;;
-    *)
-      echo "other"
-      ;;
-  esac
-}
+source ./common.sh
 
 install_brew_apps() {
   echo "🧩  Installing Brew apps..."
@@ -62,6 +50,20 @@ install_brew_apps() {
     else
       echo "🟡  ${app} is not installed."
       brew install "${app}"
+    fi
+  done
+}
+
+install_npm_packages() {
+  echo "🧩  Installing global NPM packages..."
+
+  local installed=$(npm ls -g --json | jq -r '.dependencies | keys | .[]')
+  for pkg in "${NPM_PACKAGES[@]}"; do
+    if echo "${installed}" | /usr/sbin/grep -q "^${pkg}$"; then
+      echo "✅  ${pkg} is already installed."
+    else
+      echo "🟡  ${pkg} is not installed."
+      npm install -g "${pkg}"
     fi
   done
 }
@@ -212,9 +214,11 @@ configure_tldr() {
 
 install_bazzite_dx() {
   install_brew_apps
+  install_npm_packages
   install_brew_casks
   install_flatpak_apps
   install_appimages
+
 
   install_gnome_extensions
 

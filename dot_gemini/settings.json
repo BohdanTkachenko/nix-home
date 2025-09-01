@@ -2,5 +2,7 @@
   "theme": "Atom One",
   "selectedAuthType": "gemini-api-key",
   "preferredEditor": "micro",
-  "usageStatisticsEnabled": false
+  "usageStatisticsEnabled": false,
+  "hasSeenIdeIntegrationNudge": true,
+  "ideMode": true
 }
