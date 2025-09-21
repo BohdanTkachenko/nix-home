@@ -31,7 +31,7 @@ name = "kubernetes-cli"
 name = "micro"
 
 [[install.brew]]
-name = "npm"
+name = "node"
 
 [[install.brew]]
 name = "opentofu"
@@ -47,6 +47,9 @@ name = "terragrunt"
 
 [[install.brew]]
 name = "trash-cli"
+
+[[install.brew]]
+name = "sops"
 
 [[install.brew]]
 name = "ugrep"
