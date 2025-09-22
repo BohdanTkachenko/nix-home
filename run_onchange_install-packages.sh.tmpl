@@ -41,43 +41,52 @@ GNOME_EXTENSIONS=(
 source ./common.sh
 
 install_brew_apps() {
-  echo "🧩  Installing Brew apps..."
+  log section "Installing Brew apps"
 
   local installed=$(brew list -1 --installed-on-request)
   for app in "${BREW_APPS[@]}"; do
+    log item "$app"
+
     if echo "${installed}" | /usr/sbin/grep -q "^${app}$"; then
-      echo "✅  ${app} is already installed."
+      log ok "Already installed."
     else
-      echo "🟡  ${app} is not installed."
-      brew install "${app}"
+      log mismatch "Installing..."
+      brew install "$app"
+      log success "Installed."
     fi
   done
 }
 
 install_npm_packages() {
-  echo "🧩  Installing global NPM packages..."
+  log section "Installing global NPM packages..."
 
   local installed=$(npm ls -g --json | jq -r '.dependencies | keys | .[]')
   for pkg in "${NPM_PACKAGES[@]}"; do
+    log item "$pkg"
+
     if echo "${installed}" | /usr/sbin/grep -q "^${pkg}$"; then
-      echo "✅  ${pkg} is already installed."
+      log ok "Already installed."
     else
-      echo "🟡  ${pkg} is not installed."
-      npm install -g "${pkg}"
+      log mismatch "Installing..."
+      npm install -g "$pkg"
+      log success "Installed."
     fi
   done
 }
 
 install_brew_casks() {
-  echo "🧩  Installing Brew casks..."
+  log section "Installing Brew casks..."
 
   local installed=$(brew list -1 --casks)
   for cask in "${BREW_CASKS[@]}"; do
-    if echo "${installed}" | /usr/sbin/grep -q "^${cask}$"; then
-      echo "✅  ${cask} is already installed."
+    log item "$cask"
+
+    if echo "$installed" | /usr/sbin/grep -q "^${cask}$"; then
+      log ok "Already installed."
     else
-      echo "🟡  ${cask} is not installed."
-      brew install --cask "${cask}"
+      log mismatch "Installing..."
+      brew install --cask "$cask"
+      log success "Installed."
     fi
   done
 }
@@ -86,13 +95,11 @@ install_gnome_ext() {
   local uuid="$1"; shift
   local gnome_version="$1"; shift
 
-  echo "Installing GNOME extension '${uuid}'..."
-
   local ext_info=$(curl -s "https://extensions.gnome.org/extension-info/?uuid=${uuid}")
   local ext_version=$(echo "${ext_info}" \
     | jq -r ".shell_version_map | to_entries[] | select(.key == \"${gnome_version}\") | .value.pk")
   if [[ "${ext_version}" -eq "" ]]; then
-    echo "Warning: Extension ${uuid} does not have a version published for GNOME ${gnome_version}. Falling back to the last available extension version."
+    log warning "Extension does not have a version published for GNOME ${gnome_version}. Falling back to the last available extension version."
     ext_version=$(echo "${ext_info}" \
       | jq -r '[.shell_version_map[]] | max_by(.version).pk')
   fi
@@ -100,54 +107,59 @@ install_gnome_ext() {
   local download_url="https://extensions.gnome.org/download-extension/${uuid}.shell-extension.zip?version_tag=${ext_version}"
   local temp_file="/tmp/${uuid}.shell-extension.zip"
   if ! curl -sL "$download_url" -o "$temp_file"; then
-      echo "Failed to download extension"
+      log error "Failed to download extension"
       return 1
   fi
 
   if ! gnome-extensions install --force "$temp_file" 2>/dev/null; then
-      echo "Failed to install extension"
+      log error "Failed to install extension"
       rm -f "$temp_file"
       return 1
   fi
 
   # Enable extension
   if ! gnome-extensions enable "${uuid}" 2>/dev/null; then
-      echo "Failed to enable extension"
+      log error "Failed to enable extension"
       rm -f "$temp_file"
       return 1
   fi
 
   rm -f "$temp_file"
-  echo "✅ Successfully installed and enabled ${uuid}"
   return 0  
 }
 
 install_gnome_extensions() {
-  echo "🧩  Installing GNOME extensions..."
+  log section "Installing GNOME extensions..."
 
   local gnome_version
   gnome_version=$(gnome-shell --version | awk -F'[ .]' '{print $3}')
 
   local enabled_extensions=$(gnome-extensions list --enabled)
   for uuid in "${GNOME_EXTENSIONS[@]}"; do
+    log item "$uuid"
+
     if echo "${enabled_extensions}" | grep -q "^${uuid}$"; then
-      echo "✅  ${uuid} is installed and enabled."
+      log ok "Extension is already installed and enabled."
     else
-      echo "🟡  ${uuid} is not enabled or not installed."
+      log mismatch "Installing extension..."
       install_gnome_ext "${uuid}" "${gnome_version}"
+      log success "Successfully installed and enabled extension"
     fi
   done
 }
 
 install_flatpak_apps() {
-  echo "🧩  Installing Flatpak apps..."
+  log section "Installing Flatpak apps..."
 
   for app in "${FLATPAK_APPS[@]}"; do
+    log item "$app"
+
     if flatpak info "${app}" >/dev/null 2>&1; then
-      echo "✅  Flatpak '${app}' is installed."
+      log ok "App is already installed."
     else
-      echo "🟡  Flatpak '${app}' is not installed."
+      log mismatch "Installing..."
       flatpak install --noninteractive --assumeyes "${app}"
+      log success "Installed."
     fi
   done
 }
@@ -168,46 +180,58 @@ install_appimage() {
 }
 
 install_appimages() {
-  echo "🧩  Installing AppImages..."
+  log section "Installing AppImages..."
 
   local installed_apps=$(flatpak run it.mijorus.gearlever --list-installed)
 
   for app in "${!APPIMAGE_APPS[@]}"; do
+    log item "${app}"
+
     if echo $installed_apps | grep -q "^${app}\s"; then
-      echo "✅  ${app} is already installed."
+      log ok "App is already installed."
     else
-      echo "🟡  ${app} is not installed."
+      log mismatch "Installing..."
       install_appimage "${app}" "${APPIMAGE_APPS[$app]}" 
+      log success "Installed."
     fi
   done
 }
 
 update_fonts_cache() {
-  echo "🧩  Updating fonts cache..."
+  log section "Updating fonts cache..."
   fc-cache -f
 }
 
 configure_fish() {
-  echo "🐟  Configuring fish..."
+  log section "Installing fish..."
+
+  log item "Fisher"
 
   local fish_plugins=$(cat $HOME/.config/fish/fish_plugins)
-
   if echo "${fish_plugins}" | grep -q "^jorgebucaran/fisher$"; then
-    echo "✅  Fisher is already installed."
+    log ok "Already installed."
   else
+    log mismatch "Installing..."
     fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
+    log success "Installed."
   fi
 
+  log item "Tide"
+
   if echo "${fish_plugins}" | grep -q "^ilancosman/tide@v6$"; then
-    echo "✅  Tide is already installed."
+    log ok "Already installed."
   else
+    log mismatch "Installing..."
     fish -c "fisher install IlanCosman/tide@v6"
+    log success "Installed."
+    log mismatch "Configuring..."
     fish -c "tide configure --auto --style=Lean --prompt_colors='True color' --show_time='24-hour format' --lean_prompt_height='One line' --prompt_spacing=Compact --icons='Many icons' --transient=Yes"
+    log success "Configured."
   fi
 }
 
 configure_tldr() {
-  echo "📜  Configuring tldr..."
+  log section "Configuring tldr..."
 
   tldr --update
 }
@@ -218,7 +242,6 @@ install_bazzite_dx() {
   install_brew_casks
   install_flatpak_apps
   install_appimages
-
 
   install_gnome_extensions
 
