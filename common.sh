@@ -83,3 +83,15 @@ get_os() {
       ;;
   esac
 }
+
+is_os_based_on_ostree() {
+  if [ -f /run/ostree-booted ]; then
+    return 0
+  fi
+
+  return 1
+}
+
+is_os_supports_nix() {
+  is_os_based_on_ostree
+}

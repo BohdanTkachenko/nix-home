@@ -109,6 +109,15 @@ update_initramfs_etc_sudo() {
 configure_ostree() {
   log section "Configuring ostree..."
 
+  log item "OS Check"
+  log info "Detected OS: $(get_os)"
+  if is_os_based_on_ostree; then
+    log ok "OS is based on OSTree."
+  else
+    log skip "OS is not based on OSTree. Skipping ostree configuration."
+    return 0
+  fi
+
   local file_changed=0
   maybe_copy_file_sudo \
     "$CHEZMOI_OSTREE_PREPARE_ROOT_CONFIG_FILE" \
@@ -157,6 +166,15 @@ configure_ostree() {
 install_nix() {
   log section "Installing Nix..."
 
+  log item "OS Check"
+  log info "Detected OS: $(get_os)"
+  if is_os_supports_nix; then
+    log ok "OS supports Nix."
+  else
+    log skip "OS does not support Nix. Skipping Nix installation."
+    return 0
+  fi
+
   log item "Nix"
 
   if [ -d "/nix" ]; then
@@ -174,47 +192,15 @@ install_nix() {
       return 1
     fi
 
+    source /nix/var/nix/profiles/default/etc/profile.d/nix.sh
+
     log success "Nix installation completed successfully."
   fi
 }
 
-update_home_manager() {
-  log item "Home Manager"
-
-  local home_manager_command
-  if command -v home-manager &> /dev/null; then
-    home_manager_command=(home-manager switch)
-    log ok "Home-Manager is already installed."
-    log mismatch "Rebuilding home configuration..."
-  else
-    home_manager_command=(nix run home-manager -- switch)
-    log mismatch "Installing Home-Manager and building home configuration..."
-  fi
-
-  if "${home_manager_command[@]}" &>> "$LOG_FILE"; then
-    log success "Installed Home Manager and built home configuration."
-  else
-    log error "Failed to install Home Manager and build home configuration."
-    return 1
-  fi
-
-  source /nix/var/nix/profiles/default/etc/profile.d/nix.sh
-
-  return 0
-}
-
-install_bazzite_dx() {
+install() {
   configure_ostree
   install_nix
-  update_home_manager
-}
-
-install() {
-  case "$(get_os)" in
-    bazzite-dx-gnome|bazzite-dx-nvidia-gnome)
-      install_bazzite_dx
-      ;;
-  esac
 }
 
 install
