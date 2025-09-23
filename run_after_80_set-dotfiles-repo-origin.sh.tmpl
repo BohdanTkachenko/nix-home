@@ -1,0 +1,23 @@
+#!/bin/bash
+set -eu -o pipefail
+
+source common.sh
+
+ORIGIN_URL="git@github.com:BohdanTkachenko/dotfiles.git"
+
+set_dotfiles_repo_origin() {
+    log section "Setting dotfiles repo origin..."
+    
+    log item "$ORIGIN_URL"
+
+    local current_origin=$(git -C "{{- .chezmoi.sourceDir -}}" remote get-url origin)
+    if [ "$current_origin" != "$ORIGIN_URL" ]; then
+        log mismatch "Setting origin..."
+        git -C "{{- .chezmoi.sourceDir -}}" remote set-url origin "$ORIGIN_URL"
+        log success "Origin set."
+    else
+        log ok "Origin is already set."
+    fi
+}
+
+set_dotfiles_repo_origin

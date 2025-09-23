@@ -1,0 +1,72 @@
+#!/bin/bash
+set -eu -o pipefail
+
+source common.sh
+
+FINGERPRINT="{{- .gpg_master_fingerprint -}}"
+SUBKEYS_FILE="{{- .chezmoi.sourceDir -}}/gpg-subkeys.toml"
+
+import_public_keyring() {
+  log item "Import ${FINGERPRINT}"
+  if [ -z "$(gpg --list-keys "${FINGERPRINT}" 2>/dev/null)" ]; then
+    log mismatch "Importing keyring..."
+    gpg --keyserver hkps://keys.openpgp.org --recv-keys "${FINGERPRINT}"
+    gpgconf --kill gpg-agent
+    pkill -U $USER keyboxd
+    gpg --card-status
+    log success "Keyring imported."
+  else
+    log ok "Keyring already imported."
+  fi
+}
+
+trust_public_keyring() {
+  log item "Trust ${FINGERPRINT}"
+  if [ $(gpg --list-public-keys --with-colons "${FINGERPRINT}" 2>/dev/null | awk -F: '$1 == "pub" || $1 == "uid" { trust = $2 } $1 == "fpr" && $10 == "'"${FINGERPRINT}"'" { print trust; exit }') != "u" ]; then
+    log mismatch "Trusting keyring..."
+    echo -e "5\ny\n" | gpg --command-fd 0 --edit-key "${FINGERPRINT}" trust
+    gpgconf --kill gpg-agent
+    pkill -U $USER keyboxd
+    log success "Keyring trusted."
+  else
+    log ok "Keyring already trusted."
+  fi
+}
+
+generate_gpg_subkeys_config() {
+  log item "$SUBKEYS_FILE"
+
+  local new_config="$(
+    echo "[gpg]"
+    echo "  recipients = ["
+    gpg --with-colons --fingerprint "${FINGERPRINT}" | \
+      awk -F: '$1 == "sub" && $2 != "r" && $12 ~ /e/ { getline; print $10 }' | \
+      while read -r fp; do
+        echo "    \"${fp}!\","
+      done
+    echo "  ]"
+  )"
+
+  local existing_config=""
+  if [ -f "${SUBKEYS_FILE}" ]; then
+    existing_config="$(cat "${SUBKEYS_FILE}")"
+  fi
+
+  if [ "${new_config}" != "${existing_config}" ]; then
+    log mismatch "GPG subkeys changed, updating..."
+    echo "${new_config}" > "${SUBKEYS_FILE}"
+    log success "GPG subkeys updated."
+  else
+    log ok "GPG subkeys are up to date."
+  fi
+}
+
+setup_public_keyring() {
+  log section "Setting up public keyring..."
+
+  import_public_keyring
+  trust_public_keyring
+  generate_gpg_subkeys_config
+}
+
+setup_public_keyring
