@@ -1,8 +1,13 @@
 {
-  "theme": "Atom One",
-  "selectedAuthType": "gemini-api-key",
-  "preferredEditor": "micro",
-  "usageStatisticsEnabled": false,
+  "accessibility": {
+    "disableLoadingPhrases": true
+  },
   "hasSeenIdeIntegrationNudge": true,
-  "ideMode": true
+  "hideSandboxStatus": true,
+  "showLineNumbers": false,
+  "ideMode": true,
+  "preferredEditor": "vim",
+  "selectedAuthType": "gemini-api-key",
+  "theme": "Atom One",
+  "usageStatisticsEnabled": false
 }
