@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eu
 
-source common.sh
+source $CHEZMOI_SOURCE_DIR/common.sh
 
 OSTREE_PREPARE_ROOT_CONFIG_FILE=/etc/ostree/prepare-root.conf
 CHEZMOI_OSTREE_PREPARE_ROOT_CONFIG_FILE=./prepare-root.conf
@@ -20,11 +20,9 @@ warn_reboot() {
 
   log critical "$msg_reboot_required $msg_reboot_rerun"
 
-  if ! whiptail \
-    --yesno "$msg_reboot_required\n\n$msg_reboot_rerun" \
-    10 50 \
-    3>&1 1>&2 2>&3;
-  then
+  read -p "Do you want to reboot now? (y/N) " -n 1 -r
+  echo
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     log cancel "User declined reboot. Exiting."
     exit 10
   fi
@@ -42,32 +40,30 @@ ask_file_diff() {
   local dst="$1"; shift
   local diff="$1"; shift
 
-  local choice=$(whiptail \
-    --title "$dst" \
-    --menu "\nFile exists, but its contents differ. Choose an action:" \
-    15 60 3 \
-    "Accept" "Proceed with the current operation." \
-    "Diff"   "Show the difference between two files." \
-    "Skip"   "Ignore this item and move to the next." \
-    3>&1 1>&2 2>&3 || true
-  )
+  while true; do
+    echo "File exists, but its contents differ for $dst"
+    echo "Choose an action:"
+    echo "  1. Accept - Proceed with the current operation."
+    echo "  2. Diff   - Show the difference between two files."
+    echo "  3. Skip   - Ignore this item and move to the next."
+    read -p "Enter your choice (1-3): " choice
 
-  if [ "$choice" == "Skip" ]; then
-    return 1
-  fi
-
-  if [ "$choice" == "Diff" ]; then
-    echo "${diff}" | less -R
-    ask_file_diff "${dst}" "${diff}"
-    return $?
-  fi
-
-  if [ "$choice" == "Accept" ]; then
-    return 0
-  fi
-
-  log cancel "User selected Cancel. Exiting."
-  exit 10
+    case "$choice" in
+      1)
+        return 0
+        ;;
+      2)
+        echo "${diff}" | less -R
+        continue
+        ;;
+      3)
+        return 1
+        ;;
+      *)
+        echo "Invalid choice. Please try again."
+        ;;
+    esac
+  done
 }
 
 maybe_copy_file_sudo() {
@@ -135,7 +131,7 @@ configure_ostree() {
 
   local ostree_status=$(rpm-ostree status --json | jq -r --arg file "$OSTREE_PREPARE_ROOT_CONFIG_FILE" '
     def has_config(d):
-      (d | ."initramfs-etc"?) | arrays | any(. == $file);
+      ((d | ."initramfs-etc"?) // []) | any(. == $file);
 
     if has_config((.deployments[] | select(.booted == true))) then
       "BOOTED"
@@ -191,8 +187,6 @@ install_nix() {
       log error "Nix installation failed. Check '$LOG_FILE' for details."
       return 1
     fi
-
-    source /nix/var/nix/profiles/default/etc/profile.d/nix.sh
 
     log success "Nix installation completed successfully."
   fi

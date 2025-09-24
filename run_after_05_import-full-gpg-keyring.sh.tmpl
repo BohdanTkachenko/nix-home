@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source common.sh
+source $CHEZMOI_SOURCE_DIR/common.sh
 
 FINGERPRINT="{{- .gpg_master_fingerprint -}}"
 PUBKEY_FILE="$HOME/.gnupg/pubkey.asc"

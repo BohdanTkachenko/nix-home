@@ -38,7 +38,7 @@ GNOME_EXTENSIONS=(
 {{- end }}
 )
 
-source ./common.sh
+source $CHEZMOI_SOURCE_DIR/common.sh
 
 install_brew_apps() {
   log section "Installing Brew apps"

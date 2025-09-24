@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -eu
 
-source common.sh
+source $CHEZMOI_SOURCE_DIR/common.sh
+source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
 home_manager() {
   log section "(Re)building home configuration using Home-Manager"
@@ -19,15 +20,15 @@ home_manager() {
 
   local home_manager_command
   if command -v home-manager &> /dev/null; then
-    home_manager_command=(home-manager switch)
+    home_manager_command=(home-manager switch -b backup)
     log ok "Home-Manager is already installed."
     log mismatch "Rebuilding home configuration..."
   else
-    home_manager_command=(nix run home-manager -- switch)
+    home_manager_command=(nix run home-manager -- switch -b backup)
     log mismatch "Installing Home-Manager and building home configuration..."
   fi
 
-  if "${home_manager_command[@]}" &>> "$LOG_FILE"; then
+  if "${home_manager_command[@]}" >> "$LOG_FILE" 2>&1; then
     log success "Installed Home Manager and built home configuration."
   else
     log error "Failed to install Home Manager and build home configuration."

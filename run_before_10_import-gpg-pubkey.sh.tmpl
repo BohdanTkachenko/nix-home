@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu -o pipefail
 
-source common.sh
+source $CHEZMOI_SOURCE_DIR/common.sh
 
 FINGERPRINT="{{- .gpg_master_fingerprint -}}"
 SUBKEYS_FILE="{{- .chezmoi.sourceDir -}}/gpg-subkeys.toml"
