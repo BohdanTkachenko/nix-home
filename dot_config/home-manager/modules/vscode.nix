@@ -1,0 +1,24 @@
+{ pkgs, ... }:
+{
+  nixpkgs.config.allowUnfree = true;
+
+  home.packages = [
+    pkgs.nixfmt-rfc-style
+  ];
+
+  programs = {
+    vscode = {
+      enable = true;
+      package = pkgs.vscode;
+      profiles.default = {
+        extensions = [
+          pkgs.vscode-extensions.jnoortheen.nix-ide
+        ];
+        userSettings = {
+          "editor.formatOnSave" = true;
+          "editor.tabSize" = 2;
+        };
+      };
+    };
+  };
+}

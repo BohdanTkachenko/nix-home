@@ -19,6 +19,7 @@
     ./modules/fish.nix
     ./modules/flatpak.nix
     ./modules/gnome.nix
+    ./modules/vscode.nix
     ./modules/xremap.nix
   ];
 }
