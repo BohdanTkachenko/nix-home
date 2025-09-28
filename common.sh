@@ -2,6 +2,7 @@
 set -eu
 
 LOG_FILE=/tmp/chezmoi_scripts.log
+LAST_COMMAND_LOG_FILE=/tmp/chezmoi_scripts_last_command.log
 
 COLOR_RESET='\033[0m'
 COLOR_BOLD_PURPLE='\033[1;35m'

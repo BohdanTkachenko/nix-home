@@ -21,12 +21,6 @@ BREW_CASKS=(
 {{- end }}
 )
 
-FLATPAK_APPS=(
-{{- range .install.flatpak }}
-  "{{ .name }}"
-{{- end }}
-)
-
 declare -A APPIMAGE_APPS
 {{- range .install.appimage }}
 APPIMAGE_APPS["{{ .name }}"]="{{ .url }}"
@@ -148,22 +142,6 @@ install_gnome_extensions() {
   done
 }
 
-install_flatpak_apps() {
-  log section "Installing Flatpak apps..."
-
-  for app in "${FLATPAK_APPS[@]}"; do
-    log item "$app"
-
-    if flatpak info "${app}" >/dev/null 2>&1; then
-      log ok "App is already installed."
-    else
-      log mismatch "Installing..."
-      flatpak install --noninteractive --assumeyes "${app}"
-      log success "Installed."
-    fi
-  done
-}
-
 install_appimage() {
   local name="$1"; shift
   local url="$1"; shift
@@ -240,7 +218,6 @@ install_bazzite_dx() {
   install_brew_apps
   install_npm_packages
   install_brew_casks
-  install_flatpak_apps
   install_appimages
 
   install_gnome_extensions

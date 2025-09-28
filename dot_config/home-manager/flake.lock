@@ -21,6 +21,22 @@
         "type": "github"
       }
     },
+    "manage-flatpaks": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "path": "./pkgs/manage-flatpaks",
+        "type": "path"
+      },
+      "original": {
+        "path": "./pkgs/manage-flatpaks",
+        "type": "path"
+      },
+      "parent": []
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1758346548,
@@ -40,6 +56,7 @@
     "root": {
       "inputs": {
         "home-manager": "home-manager",
+        "manage-flatpaks": "manage-flatpaks",
         "nixpkgs": "nixpkgs"
       }
     }

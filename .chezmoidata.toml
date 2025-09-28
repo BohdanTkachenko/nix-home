@@ -63,9 +63,6 @@ name = "zoxide"
 [[install.npm]]
 name = "@google/gemini-cli"
 
-[[install.flatpak]]
-name = "com.brave.Browser"
-
 [[install.appimage]]
 name = "Beeper"
 url = "https://api.beeper.com/desktop/download/linux/x64/stable/com.automattic.beeper.desktop"

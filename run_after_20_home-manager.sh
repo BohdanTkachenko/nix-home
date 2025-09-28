@@ -28,10 +28,13 @@ home_manager() {
     log mismatch "Installing Home-Manager and building home configuration..."
   fi
 
-  if "${home_manager_command[@]}" >> "$LOG_FILE" 2>&1; then
+  "${home_manager_command[@]}" 2>&1 | tee -a "$LOG_FILE" > "$LAST_COMMAND_LOG_FILE"
+  status=${PIPESTATUS[0]}
+  if [ $status -eq 0 ]; then
     log success "Installed Home Manager and built home configuration."
   else
     log error "Failed to install Home Manager and build home configuration."
+    cat "$LAST_COMMAND_LOG_FILE"
     return 1
   fi
 
