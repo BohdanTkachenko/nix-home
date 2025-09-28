@@ -1,13 +1,27 @@
 {
-  "accessibility": {
-    "disableLoadingPhrases": true
+  "ui": {
+    "accessibility": {
+      "disableLoadingPhrases": true
+    },
+    "footer": {
+      "hideSandboxStatus": true
+    },
+    "showLineNumbers": false,
+    "theme": "Atom One"
   },
-  "hasSeenIdeIntegrationNudge": true,
-  "hideSandboxStatus": true,
-  "showLineNumbers": false,
-  "ideMode": true,
-  "preferredEditor": "vim",
-  "selectedAuthType": "gemini-api-key",
-  "theme": "Atom One",
-  "usageStatisticsEnabled": false
+  "ide": {
+    "hasSeenNudge": true,
+    "enabled": true
+  },
+  "general": {
+    "preferredEditor": "vim"
+  },
+  "security": {
+    "auth": {
+      "selectedType": "gemini-api-key"
+    }
+  },
+  "privacy": {
+    "usageStatisticsEnabled": false
+  }
 }

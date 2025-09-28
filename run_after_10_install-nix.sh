@@ -6,14 +6,6 @@ source $CHEZMOI_SOURCE_DIR/common.sh
 OSTREE_PREPARE_ROOT_CONFIG_FILE=/etc/ostree/prepare-root.conf
 CHEZMOI_OSTREE_PREPARE_ROOT_CONFIG_FILE=./prepare-root.conf
 
-ELEVATED_WARNED=false
-warn_once_elevated() {
-  if [ "$ELEVATED_WARNED" = false ]; then
-    log warning "This script may require elevated permissions to run."
-    ELEVATED_WARNED=true
-  fi
-}
-
 warn_reboot() {
   local msg_reboot_required="A reboot will be performed for ostree changes to take effect."
   local msg_reboot_rerun="Please run this script again after the reboot."

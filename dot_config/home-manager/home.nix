@@ -10,8 +10,14 @@
     enable = true;
   };
 
+  home.packages = [
+    pkgs.chezmoi
+  ];
+
   imports = [
-    ./modules/packages.nix
     ./modules/bash.nix
+    ./modules/fish.nix
+    ./modules/gnome.nix
+    ./modules/xremap.nix
   ];
 }

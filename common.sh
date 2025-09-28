@@ -63,6 +63,14 @@ log() {
   echo -e "${prefix} ${color}${text}${COLOR_RESET}" | tee -a /dev/stderr >> $LOG_FILE
 }
 
+ELEVATED_WARNED=false
+warn_once_elevated() {
+  if [ "$ELEVATED_WARNED" = false ]; then
+    log warning "This script may require elevated permissions to run."
+    ELEVATED_WARNED=true
+  fi
+}
+
 get_os() {
   case "$(uname -s)" in
     Linux)
