@@ -8,7 +8,7 @@
     };
 
     xremap = {
-      url = "github:nix-community/home-manager/release-25.05";
+      url = "github:xremap/nix-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
