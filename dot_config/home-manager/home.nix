@@ -22,6 +22,8 @@
     ./modules/flatpak.nix
     ./modules/git.nix
     ./modules/gnome.nix
+    ./modules/ssh.nix
+    ./modules/ssh-private.nix
     ./modules/vscode.nix
     ./modules/xremap.nix
   ];
