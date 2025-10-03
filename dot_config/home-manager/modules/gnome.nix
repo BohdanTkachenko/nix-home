@@ -1,11 +1,26 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 
 let
   profileUuid = "C0FFEE-C0DE-FEED-FACE-AC1DDEADBEEF";
 in
 
 {
+  home.packages = [
+    pkgs.adw-gtk3
+  ];
+
+  gtk = {
+    enable = true;
+    gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
+    gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
+  };
+
   dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+      gtk-theme = "adw-gtk3-dark";
+    };
+
     "org/gnome/desktop/wm/keybindings" = {
       close = [ "<Shift><Control>q" ];
       switch-applications = [ "<Control>Tab" ];

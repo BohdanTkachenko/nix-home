@@ -4,13 +4,6 @@
   programs.bash = {
     enable = true;
 
-    profileExtra = ''
-    # Source the system-wide Nix profile if it exists
-    if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix.sh ]; then
-      . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
-    fi
-    '';
-
     initExtra = ''
       if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
       then

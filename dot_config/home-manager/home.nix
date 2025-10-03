@@ -6,9 +6,10 @@
   home.username = "dan";
   home.homeDirectory = "/var/home/dan";
 
-  programs.home-manager = {
-    enable = true;
-  };
+  programs.home-manager.enable = true;
+  targets.genericLinux.enable = true;
+  xdg.enable = true;
+  xdg.mime.enable = true;
 
   home.packages = [
     pkgs.chezmoi
