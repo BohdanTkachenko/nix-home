@@ -1,5 +1,3 @@
-gpg_master_fingerprint = "0167AFAA4B2BF822BB1D1038604E96CB9CD39C26"
-
 [[install.brew]]
 name = "ansible"
 
