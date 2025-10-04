@@ -11,9 +11,13 @@
   xdg.enable = true;
   xdg.mime.enable = true;
 
-  home.packages = [
-    pkgs.chezmoi
-    pkgs._1password-gui
+  home.packages = with pkgs; [
+    _1password-gui
+    chezmoi
+    beeper
+    nerd-fonts.hack
+    nerd-fonts.droid-sans-mono
+    nerd-fonts.roboto-mono
   ];
 
   imports = [
@@ -22,6 +26,7 @@
     ./modules/flatpak.nix
     ./modules/git.nix
     ./modules/gnome.nix
+    ./modules/tools.nix
     ./modules/ssh.nix
     ./modules/ssh-private.nix
     ./modules/vscode.nix

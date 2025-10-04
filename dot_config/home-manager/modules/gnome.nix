@@ -5,8 +5,10 @@ let
 in
 
 {
-  home.packages = [
-    pkgs.adw-gtk3
+  home.packages = with pkgs; [
+    adw-gtk3
+    gnomeExtensions.dash-to-dock
+    gnomeExtensions.search-light
   ];
 
   gtk = {
@@ -16,6 +18,13 @@ in
   };
 
   dconf.settings = {
+    "org/gnome/shell" = {
+      enabled-extensions = [
+        "dash-to-dock@micxgx.gmail.com"
+        "search-light@icedman.github.com"
+      ];
+    };
+
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
       gtk-theme = "adw-gtk3-dark";
