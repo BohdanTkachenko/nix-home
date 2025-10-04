@@ -15,8 +15,6 @@
     kubectl
     micro
     nodejs_24
-    nix
-    nixfmt-rfc-style
     opentofu
     ripgrep
     tealdeer

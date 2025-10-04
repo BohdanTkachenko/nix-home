@@ -10,6 +10,7 @@
   targets.genericLinux.enable = true;
   xdg.enable = true;
   xdg.mime.enable = true;
+  home.sessionVariables.NIXOS_OZONE_WL = "1";
 
   home.packages = with pkgs; [
     _1password-gui

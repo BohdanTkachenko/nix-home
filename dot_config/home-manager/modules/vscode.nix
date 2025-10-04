@@ -2,8 +2,9 @@
 {
   nixpkgs.config.allowUnfree = true;
 
-  home.packages = [
-    pkgs.nixfmt-rfc-style
+  home.packages = with pkgs; [
+    nix
+    nixfmt-rfc-style
   ];
 
   programs = {
