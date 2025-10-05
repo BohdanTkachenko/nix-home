@@ -165,7 +165,7 @@ install_nix() {
 
   log item "Nix"
 
-  if [ -d "/nix" ]; then
+  if [ -f "/nix/receipt.json" ]; then
     log ok "Nix is already installed."
   else
     log mismatch "Not installed. Installing using Determinate Systems installer..."
