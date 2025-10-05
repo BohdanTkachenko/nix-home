@@ -71,12 +71,25 @@
     ];
 
     interactiveShellInit = ''
-      set fish_greeting # Disable greeting
-      set fish_color_command green --bold
+      if not set -q fish_configured
+        set -U fish_greeting
+
+        set -U fish_color_command green --bold
+        set -U fish_color_param white
+        set -U fish_color_end blue
+
+        tide configure --auto \
+          --style=Lean \
+          --prompt_colors='True color' \
+          --show_time='24-hour format' \
+          --lean_prompt_height='One line' \
+          --prompt_spacing=Compact \
+          --icons='Many icons' \
+          --transient=Yes
+        tide reload
+
+        set -U fish_configured
+      end
     '';
   };
-
-  home.activation.configure-tide = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    ${pkgs.fish}/bin/fish -c "tide configure --auto --style=Lean --prompt_colors='True color' --show_time='24-hour format' --lean_prompt_height='One line' --prompt_spacing=Compact --icons='Many icons' --transient=Yes"
-  '';
 }
