@@ -7,8 +7,6 @@ in
 {
   home.packages = with pkgs; [
     adw-gtk3
-    gnomeExtensions.dash-to-dock
-    gnomeExtensions.search-light
   ];
 
   gtk = {
@@ -17,17 +15,35 @@ in
     gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
   };
 
+  programs.gnome-shell = {
+    enable = true;
+    extensions = with pkgs.gnomeExtensions; [
+      { package = appindicator; }
+      { package = blur-my-shell; }
+      { package = caffeine; }
+      { package = dash-to-dock; }
+      { package = search-light; }
+      { package = xremap; }
+    ];
+  };
+
   dconf.settings = {
     "org/gnome/shell" = {
-      enabled-extensions = [
-        "dash-to-dock@micxgx.gmail.com"
-        "search-light@icedman.github.com"
+      favorite-apps = [
+        "com.google.Chrome.desktop"
+        "org.gnome.Ptyxis.desktop"
+        "code.desktop"
+        "com.spotify.Client.desktop"
+        "1password.desktop"
+        "org.gnome.Nautilus.desktop"
       ];
     };
 
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
       gtk-theme = "adw-gtk3-dark";
+      gtk-enable-primary-paste = false;
+      show-battery-percentage = true;
     };
 
     "org/gnome/desktop/wm/keybindings" = {
@@ -36,6 +52,14 @@ in
       switch-applications-backward = [ "<Shift><Control>Tab" ];
       switch-group = [ "<Control>grave" ];
       switch-group-backward = [ "<Shift><Control>grave" ];
+    };
+
+    "org/gnome/desktop/wm/preferences" = {
+      button-layout = "close,minimize,maximize:";
+    };
+
+    "org/gnome/mutter" = {
+      overlay-key = "Super_R";
     };
 
     "org/gnome/settings-daemon/plugins/media-keys" = {
@@ -64,6 +88,17 @@ in
       label = "The Coffee Coder";
       opacity = lib.gvariant.mkDouble 0.9;
       palette = "Japanesque";
+    };
+
+    "org/gnome/shell/extensions/dash-to-dock" = {
+      dock-fixed = true;
+      show-apps-at-top = true;
+      always-center-icons = true;
+    };
+
+    "org/gnome/shell/extensions/search-light" = {
+      shortcut-search = [ "<Control>space" ];
+      popup-at-cursor-monitor = true;
     };
   };
 }
