@@ -16,7 +16,7 @@
   xdg.enable = true;
   xdg.mime.enable = true;
   systemd.user.sessionVariables.NIXOS_OZONE_WL = "1";
-  systemd.user.sessionVariables.PATH = "$HOME/.nix-profile/bin:$PATH";
+  systemd.user.sessionVariables.PATH = "$HOME/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PATH";
 
   home.packages = with pkgs; [
     _1password-gui
