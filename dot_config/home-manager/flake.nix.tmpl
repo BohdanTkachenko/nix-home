@@ -1,0 +1,66 @@
+{
+  description = "Home Manager configuration";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+
+    home-manager = {
+      url = "github:nix-community/home-manager/release-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    xremap = {
+      url = "github:xremap/nix-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    manage-flatpaks = {
+      url = "path:./pkgs/manage-flatpaks";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs =
+    {
+      home-manager,
+      manage-flatpaks,
+      nixpkgs,
+      xremap,
+      ...
+    }:
+
+    let
+      system = "x86_64-linux";
+      username = "{{ .chezmoi.username }}";
+      homeDirectory = "{{ .chezmoi.homeDir }}";
+
+      lib = nixpkgs.lib;
+
+      mkHome =
+        hostTypeName:
+        let
+          features = {
+            xremap = (hostTypeName == "lenovo-z16");
+          };
+        in
+        home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.${system};
+          extraSpecialArgs = {
+            features = features;
+            inherit username homeDirectory;
+          };
+          modules = [
+            manage-flatpaks.homeManagerModules.default
+            ./home.nix
+          ]
+          ++ (lib.optional features.xremap xremap.homeManagerModules.default);
+        };
+    in
+    {
+      homeConfigurations = {
+        {{- range .hosttypes }}
+        "{{ . }}" = mkHome "{{ . }}";
+        {{- end }}
+      };
+    };
+}

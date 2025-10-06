@@ -1,10 +1,15 @@
-{ pkgs, ... }:
-
+{
+  features,
+  homeDirectory,
+  pkgs,
+  username,
+  lib,
+  ...
+}:
 {
   home.stateVersion = "25.05";
-
-  home.username = "dan";
-  home.homeDirectory = "/var/home/dan";
+  home.username = username;
+  home.homeDirectory = homeDirectory;
 
   programs.home-manager.enable = true;
   targets.genericLinux.enable = true;
@@ -31,6 +36,6 @@
     ./modules/ssh.nix
     ./modules/ssh-private.nix
     ./modules/vscode.nix
-    ./modules/xremap.nix
-  ];
+  ]
+  ++ (lib.optional features.xremap ./modules/xremap.nix);
 }

@@ -75,7 +75,6 @@
         set -U fish_greeting
 
         set -U fish_color_command green --bold
-        set -U fish_color_param white
         set -U fish_color_end blue
 
         tide configure --auto \

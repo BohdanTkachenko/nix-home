@@ -1,3 +1,6 @@
+{{- $hosttypes := list "desktop" "lenovo-z16" -}}
+{{- $hosttype := promptChoice "What type of host are you on" $hosttypes -}}
+
 encryption = "age"
 
 [age]
@@ -6,3 +9,7 @@ encryption = "age"
 
 [edit]
   command = "micro"
+
+[data]
+  hosttype = "{{- $hosttype -}}"
+  hosttypes = {{ $hosttypes | toToml }}

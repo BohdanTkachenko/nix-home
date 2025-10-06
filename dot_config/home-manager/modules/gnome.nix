@@ -90,6 +90,10 @@ in
       palette = "Japanesque";
     };
 
+    "org/gnome/shell/extensions/caffeine" = {
+      show-notifications = false;
+    };
+
     "org/gnome/shell/extensions/dash-to-dock" = {
       dock-fixed = true;
       show-apps-at-top = true;
