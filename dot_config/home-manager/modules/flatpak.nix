@@ -9,7 +9,10 @@
       {
         id = "com.google.Chrome";
         overrides = {
-          filesystem = [ "~/.local/share/applications" ];
+          filesystem = [
+            "~/.local/share/applications"
+            "~/.local/share/icons"
+          ];
         };
       }
       "com.mattjakeman.ExtensionManager"
