@@ -12,8 +12,9 @@
       enable = true;
       package = pkgs.vscode;
       profiles.default = {
-        extensions = [
-          pkgs.vscode-extensions.jnoortheen.nix-ide
+        extensions = with pkgs.vscode-extensions; [
+          jnoortheen.nix-ide
+          ms-python.python
         ];
         userSettings = {
           "editor.formatOnSave" = true;

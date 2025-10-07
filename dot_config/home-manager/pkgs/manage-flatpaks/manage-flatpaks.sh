@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -x -euo pipefail
+set -euo pipefail
 
 log() {
   echo "[Flatpak Manager]: $1"

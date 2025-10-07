@@ -15,7 +15,10 @@
   targets.genericLinux.enable = true;
   xdg.enable = true;
   xdg.mime.enable = true;
+
   systemd.user.sessionVariables.NIXOS_OZONE_WL = "1";
+
+  programs.chromium-pwa-wmclass-sync.service.enable = true;
 
   home.packages = with pkgs; [
     _1password-gui
