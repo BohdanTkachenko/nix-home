@@ -16,7 +16,6 @@
   xdg.enable = true;
   xdg.mime.enable = true;
   systemd.user.sessionVariables.NIXOS_OZONE_WL = "1";
-  systemd.user.sessionVariables.PATH = "$HOME/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PATH";
 
   home.packages = with pkgs; [
     _1password-gui
@@ -33,9 +32,10 @@
     ./modules/flatpak.nix
     ./modules/git.nix
     ./modules/gnome.nix
-    ./modules/tools.nix
-    ./modules/ssh.nix
     ./modules/ssh-private.nix
+    ./modules/ssh.nix
+    ./modules/systemd.nix
+    ./modules/tools.nix
     ./modules/vscode.nix
   ]
   ++ (lib.optional features.xremap ./modules/xremap.nix);
