@@ -15,12 +15,12 @@
           version = "0.1.0";
           src = ./.;
 
-          nativeBuildInputs = [ pkgs.makeWrapper ];
+          nativeBuildInputs = [ pkgs.makeWrapper pkgs.jq ];
 
           installPhase = ''
             install -D -m755 manage-flatpaks.sh $out/bin/manage-flatpaks
             wrapProgram $out/bin/manage-flatpaks \
-              --prefix PATH : "/usr/sbin:/usr/bin"
+              --prefix PATH : "/usr/sbin:/usr/bin:${pkgs.jq}/bin"
           '';
         });
 
@@ -64,8 +64,20 @@
             packages = lib.mkOption {
               type = with lib.types; listOf (either str (submodule {
                 options = {
-                  id = mkOption { type = str; };
-                  repo = mkOption { type = str; default = cfg.defaultRepo; };
+                  id = lib.mkOption { type = str; };
+                  repo = lib.mkOption { type = str; default = cfg.defaultRepo; };
+                  overrides = lib.mkOption {
+                    type = with lib.types; attrsOf (either str (listOf str));
+                    default = {};
+                    description = "Flatpak override settings for the package.";
+                    example = ''
+                      {
+                        filesystem = [ "~/.local/share/applications" ];
+                        socket = [ "wayland" ];
+                        device = "all";
+                      }
+                    '';
+                  };
                 };
               }));
               default = [];
@@ -78,16 +90,21 @@
 
             home.activation.manage-flatpaks =
               let
-                # Normalize the packages list so it's always a list of {id, repo}
+                # Normalize the packages list so it's always a list of {id, repo, overrides}
                 normalizedPackages = map (p:
-                  if lib.isString p then { id = p; repo = cfg.defaultRepo; }
-                  else p
+                  if lib.isString p then { id = p; repo = cfg.defaultRepo; overrides = {}; }
+                  else p // { overrides = p.overrides or {}; }
                 ) cfg.packages;
 
                 # Create a string of escaped shell arguments like: "id1 repo1 id2 repo2"
                 packageArgs = lib.strings.concatStringsSep " " (map (p:
                   "${lib.escapeShellArg p.id} ${lib.escapeShellArg p.repo}"
                 ) normalizedPackages);
+
+                # Create a JSON string for overrides
+                overridesJson = builtins.toJSON (lib.listToAttrs (map (p:
+                  { name = p.id; value = p.overrides; }
+                ) (lib.filter (p: p.overrides != {}) normalizedPackages)));
 
                 # Create a string for the repos
                 repoArgs = lib.strings.concatStringsSep " " (map (r:
@@ -99,7 +116,8 @@
                 ${manage-flatpaks.${pkgs.system}}/bin/manage-flatpaks \
                   --on-unmanaged ${lib.escapeShellArg cfg.onUnmanaged} \
                   --repos ${repoArgs} \
-                  --packages ${packageArgs}
+                  --packages ${packageArgs} \
+                  --overrides ${lib.escapeShellArg overridesJson}
               '';
           };
         };

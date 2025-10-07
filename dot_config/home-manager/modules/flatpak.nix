@@ -6,7 +6,12 @@
       "com.brave.Browser"
       "com.github.tchx84.Flatseal"
       "com.github.wwmm.easyeffects"
-      "com.google.Chrome"
+      {
+        id = "com.google.Chrome";
+        overrides = {
+          filesystem = [ "~/.local/share/applications" ];
+        };
+      }
       "com.mattjakeman.ExtensionManager"
       "com.ranfdev.DistroShelf"
       "com.spotify.Client"
