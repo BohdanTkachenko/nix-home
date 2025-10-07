@@ -5,6 +5,7 @@
     packages = [
       "com.brave.Browser"
       "com.github.tchx84.Flatseal"
+      "com.github.wwmm.easyeffects"
       "com.google.Chrome"
       "com.mattjakeman.ExtensionManager"
       "com.ranfdev.DistroShelf"
