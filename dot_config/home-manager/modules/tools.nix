@@ -12,7 +12,6 @@
     glab
     go
     kubectl
-    micro
     nodejs_24
     opentofu
     ripgrep

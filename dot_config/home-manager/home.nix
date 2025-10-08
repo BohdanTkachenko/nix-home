@@ -35,6 +35,7 @@
     ./modules/flatpak.nix
     ./modules/git.nix
     ./modules/gnome.nix
+    ./modules/micro.nix
     ./modules/ssh-private.nix
     ./modules/ssh.nix
     ./modules/systemd.nix
