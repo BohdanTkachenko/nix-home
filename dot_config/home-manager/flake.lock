@@ -37,6 +37,22 @@
         "type": "github"
       }
     },
+    "chromium-pwa-wmclass-sync": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "path": "./pkgs/chromium-pwa-wmclass-sync",
+        "type": "path"
+      },
+      "original": {
+        "path": "./pkgs/chromium-pwa-wmclass-sync",
+        "type": "path"
+      },
+      "parent": []
+    },
     "crane": {
       "locked": {
         "lastModified": 1751562746,
@@ -584,6 +600,7 @@
     },
     "root": {
       "inputs": {
+        "chromium-pwa-wmclass-sync": "chromium-pwa-wmclass-sync",
         "home-manager": "home-manager",
         "manage-flatpaks": "manage-flatpaks",
         "nixpkgs": "nixpkgs",

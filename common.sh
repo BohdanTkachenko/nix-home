@@ -61,7 +61,7 @@ log() {
     2) prefix="    ╰── ${icon}" ;;
   esac
 
-  echo -e "${prefix} ${color}${text}${COLOR_RESET}" | tee -a /dev/stderr >> $LOG_FILE
+  echo -e "${prefix} ${color}${text}${COLOR_RESET}" | tee -a ${LOG_FILE} >&2
 }
 
 ELEVATED_WARNED=false

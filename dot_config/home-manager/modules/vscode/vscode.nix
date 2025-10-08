@@ -1,9 +1,13 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  ...
+}:
 {
   nixpkgs.config.allowUnfree = true;
 
   home.packages = with pkgs; [
     nix
+    nixd
     nixfmt-rfc-style
   ];
 
@@ -16,11 +20,9 @@
           jnoortheen.nix-ide
           ms-python.python
         ];
-        userSettings = {
-          "editor.formatOnSave" = true;
-          "editor.tabSize" = 2;
-        };
       };
     };
   };
+
+  imports = [ ./settings.nix ];
 }

@@ -39,7 +39,7 @@
     ./modules/ssh.nix
     ./modules/systemd.nix
     ./modules/tools.nix
-    ./modules/vscode.nix
+    ./modules/vscode/vscode.nix
   ]
   ++ (lib.optional features.xremap ./modules/xremap.nix);
 }
