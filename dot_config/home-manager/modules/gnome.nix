@@ -50,6 +50,7 @@ in
         "org.gnome.Ptyxis.desktop"
         "code.desktop"
         "com.spotify.Client.desktop"
+        "beepertexts.desktop"
         "1password.desktop"
         "org.gnome.Nautilus.desktop"
       ];
