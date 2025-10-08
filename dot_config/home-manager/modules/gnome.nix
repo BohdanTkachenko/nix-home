@@ -9,6 +9,21 @@ in
     adw-gtk3
   ];
 
+  xdg = {
+    enable = true;
+    mime.enable = true;
+
+    autostart = {
+      enable = true;
+      entries = [
+        "${pkgs._1password-gui}/share/applications/1password.desktop"
+        "${pkgs.beeper}/share/applications/beepertexts.desktop"
+      ];
+    };
+  };
+
+  systemd.user.sessionVariables.NIXOS_OZONE_WL = "1";
+
   gtk = {
     enable = true;
     gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
@@ -30,6 +45,7 @@ in
   dconf.settings = {
     "org/gnome/shell" = {
       favorite-apps = [
+        "com.google.Chrome.flextop.chrome-gdfaincndogidkdcdkhapmbffkckdkhn-Default.desktop" # Gemini
         "com.google.Chrome.desktop"
         "org.gnome.Ptyxis.desktop"
         "code.desktop"
