@@ -39,6 +39,7 @@
     ./modules/ssh-private.nix
     ./modules/ssh.nix
     ./modules/systemd.nix
+    ./modules/tealdeer.nix
     ./modules/tools.nix
     ./modules/vscode/vscode.nix
   ]

@@ -15,7 +15,6 @@
     nodejs_24
     opentofu
     ripgrep
-    tealdeer
     terragrunt
     trash-cli
     sops
