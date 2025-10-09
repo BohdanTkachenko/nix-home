@@ -1,0 +1,11 @@
+{
+  username = "{{ .chezmoi.username }}";
+  homeDirectory = "{{ .chezmoi.homeDir }}";
+  sourceDir = "{{ .chezmoi.sourceDir }}";
+
+  hosttypes = [
+    {{- range .hosttypes }}
+    "{{ . }}"
+    {{- end }}
+  ];
+}

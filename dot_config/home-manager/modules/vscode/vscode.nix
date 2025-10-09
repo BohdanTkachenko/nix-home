@@ -1,4 +1,7 @@
 {
+  chezmoiData,
+  config,
+  lib,
   pkgs,
   ...
 }:
@@ -24,5 +27,7 @@
     };
   };
 
-  imports = [ ./settings.nix ];
+  home.file.".config/Code/User/settings.json".source = lib.mkForce (
+    config.lib.file.mkOutOfStoreSymlink "${chezmoiData.sourceDir}/dot_config/home-manager/modules/vscode/settings.json"
+  );
 }

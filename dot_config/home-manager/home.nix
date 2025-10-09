@@ -1,15 +1,16 @@
 {
+  chezmoiData,
   features,
   homeDirectory,
+  lib,
   pkgs,
   username,
-  lib,
   ...
 }:
 {
   home.stateVersion = "25.05";
-  home.username = username;
-  home.homeDirectory = homeDirectory;
+  home.username = chezmoiData.username;
+  home.homeDirectory = chezmoiData.homeDirectory;
 
   programs.home-manager.enable = true;
   targets.genericLinux.enable = true;

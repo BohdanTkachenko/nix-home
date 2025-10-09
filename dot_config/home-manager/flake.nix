@@ -36,13 +36,14 @@
     }:
 
     let
+      chezmoiData = import ./chezmoi-data.nix;
+
       system = "x86_64-linux";
-      username = "{{ .chezmoi.username }}";
-      homeDirectory = "{{ .chezmoi.homeDir }}";
 
       lib = nixpkgs.lib;
-
-      mkHome =
+    in
+    {
+      homeConfigurations = lib.genAttrs chezmoiData.hosttypes (
         hostTypeName:
         let
           features = {
@@ -53,7 +54,7 @@
           pkgs = nixpkgs.legacyPackages.${system};
           extraSpecialArgs = {
             features = features;
-            inherit username homeDirectory;
+            chezmoiData = chezmoiData;
           };
           modules = [
             chromium-pwa-wmclass-sync.homeManagerModules.default
@@ -61,13 +62,7 @@
             ./home.nix
           ]
           ++ (lib.optional features.xremap xremap.homeManagerModules.default);
-        };
-    in
-    {
-      homeConfigurations = {
-        {{- range .hosttypes }}
-        "{{ . }}" = mkHome "{{ . }}";
-        {{- end }}
-      };
+        }
+      );
     };
 }
