@@ -3,15 +3,22 @@
     enable = true;
     onUnmanaged = "delete";
     packages = [
-      "com.brave.Browser"
+      {
+        id = "com.brave.Browser";
+        overrides = {
+          filesystem = [
+            "\\\~/.local/share/brave-profiles"
+          ];
+        };
+      }
       "com.github.tchx84.Flatseal"
       "com.github.wwmm.easyeffects"
       {
         id = "com.google.Chrome";
         overrides = {
           filesystem = [
-            "~/.local/share/applications"
-            "~/.local/share/icons"
+            "\\\~/.local/share/applications:create"
+            "\\\~/.local/share/icons:create"
           ];
         };
       }
