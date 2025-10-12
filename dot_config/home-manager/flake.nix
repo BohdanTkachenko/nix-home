@@ -4,8 +4,17 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 
+    nixpkgs-unstable = {
+      url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager/release-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -31,16 +40,18 @@
       home-manager,
       manage-flatpaks,
       nixpkgs,
+      nixpkgs-unstable,
+      sops-nix,
       xremap,
       ...
     }:
 
     let
       chezmoiData = import ./chezmoi-data.nix;
-
       system = "x86_64-linux";
-
       lib = nixpkgs.lib;
+      pkgs = nixpkgs.legacyPackages.${system};
+      pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
     in
     {
       homeConfigurations = lib.genAttrs chezmoiData.hosttypes (
@@ -51,14 +62,17 @@
           };
         in
         home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.${system};
+          inherit pkgs;
+
           extraSpecialArgs = {
+            pkgs-unstable = pkgs-unstable;
             features = features;
             chezmoiData = chezmoiData;
           };
           modules = [
             chromium-pwa-wmclass-sync.homeManagerModules.default
             manage-flatpaks.homeManagerModules.default
+            sops-nix.homeManagerModules.sops
             ./home.nix
           ]
           ++ (lib.optional features.xremap xremap.homeManagerModules.default);

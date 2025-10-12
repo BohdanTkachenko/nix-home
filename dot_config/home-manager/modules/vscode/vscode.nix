@@ -10,7 +10,7 @@
 
   home.packages = with pkgs; [
     nix
-    nixd
+    nil
     nixfmt-rfc-style
   ];
 

@@ -1,10 +1,8 @@
 {
   chezmoiData,
   features,
-  homeDirectory,
   lib,
   pkgs,
-  username,
   ...
 }:
 {
@@ -17,6 +15,11 @@
 
   programs.chromium-pwa-wmclass-sync.service.enable = true;
 
+  home.sessionVariables = {
+    EDITOR = "micro";
+    VISUAL = "micro";
+  };
+
   home.packages = with pkgs; [
     _1password-gui
     chezmoi
@@ -27,6 +30,8 @@
   ];
 
   imports = [
+    ./secrets.nix
+
     ./modules/bash.nix
     ./modules/fish.nix
     ./modules/flatpak.nix
@@ -38,6 +43,7 @@
     ./modules/systemd.nix
     ./modules/tealdeer.nix
     ./modules/tools.nix
+    ./modules/gemini-cli/gemini-cli.nix
     ./modules/vscode/vscode.nix
   ]
   ++ (lib.optional features.xremap ./modules/xremap.nix);

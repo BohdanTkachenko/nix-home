@@ -180,6 +180,9 @@ install_nix() {
       return 1
     fi
 
+    nix-channel --add https://nixos.org/channels/nixos-25.05 nixpkgs
+    nix-channel --update
+
     log success "Nix installation completed successfully."
   fi
 }

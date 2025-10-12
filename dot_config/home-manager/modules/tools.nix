@@ -7,7 +7,6 @@
     direnv
     eza
     fd
-    gemini-cli
     gh
     glab
     go

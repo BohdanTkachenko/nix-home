@@ -2,12 +2,18 @@
   config,
   lib,
   pkgs,
+  pkgs-unstable,
+  chezmoiData,
   ...
 }:
 
 {
-  home.packages = with pkgs; [
-    gemini-cli
+  home.packages = [
+    (pkgs.writeShellScriptBin "gemini" ''
+      #!${pkgs.runtimeShell}
+      export GEMINI_API_KEY=$(cat "${config.sops.secrets.geminiApiKey.path}")
+      exec "${lib.getExe pkgs-unstable.gemini-cli}" "$@"
+    '')
   ];
 
   home.file.".gemini/settings.json".source = lib.mkForce (

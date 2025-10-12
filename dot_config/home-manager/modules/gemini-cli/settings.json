@@ -7,14 +7,17 @@
       "hideSandboxStatus": true
     },
     "showLineNumbers": false,
-    "theme": "Atom One"
+    "theme": "Atom One",
+    "showCitations": true
   },
   "ide": {
     "hasSeenNudge": true,
     "enabled": true
   },
   "general": {
-    "preferredEditor": "vim"
+    "preferredEditor": "vim",
+    "disableAutoUpdate": true,
+    "disableUpdateNags": true
   },
   "security": {
     "auth": {
@@ -23,5 +26,10 @@
   },
   "privacy": {
     "usageStatisticsEnabled": false
+  },
+  "tools": {
+    "shell": {
+      "enableInteractiveShell": true
+    }
   }
 }
