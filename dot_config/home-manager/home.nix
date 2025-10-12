@@ -1,6 +1,7 @@
 {
   chezmoiData,
   features,
+  config,
   lib,
   pkgs,
   ...
@@ -19,6 +20,8 @@
     EDITOR = "micro";
     VISUAL = "micro";
   };
+
+  sops.age.keyFile = "${config.xdg.configHome}/age/dotfiles.key";
 
   home.packages = with pkgs; [
     _1password-gui

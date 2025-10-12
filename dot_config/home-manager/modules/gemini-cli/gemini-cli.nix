@@ -8,6 +8,8 @@
 }:
 
 {
+  sops.secrets.geminiApiKey.sopsFile = ./secrets.yaml;
+
   home.packages = [
     (pkgs.writeShellScriptBin "gemini" ''
       #!${pkgs.runtimeShell}
