@@ -16,4 +16,6 @@
       config.sops.secrets.ssh_private_config.path
     ];
   };
+
+  home.file.".ssh/authorized_keys".source = ./authorized_keys;
 }
