@@ -16,12 +16,10 @@
 
   programs.chromium-pwa-wmclass-sync.service.enable = true;
 
-  home.sessionVariables = {
-    EDITOR = "micro";
-    VISUAL = "micro";
-  };
+  home.sessionVariables.EDITOR = "micro";
+  home.sessionVariables.VISUAL = "micro";
 
-  sops.age.keyFile = "${config.xdg.configHome}/age/dotfiles.key";
+  sops.age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
 
   home.packages = with pkgs; [
     _1password-gui
@@ -39,8 +37,7 @@
     ./modules/git.nix
     ./modules/gnome.nix
     ./modules/micro.nix
-    ./modules/ssh-private.nix
-    ./modules/ssh.nix
+    ./modules/ssh
     ./modules/systemd.nix
     ./modules/tealdeer.nix
     ./modules/tools.nix
