@@ -6,6 +6,9 @@ source $CHEZMOI_SOURCE_DIR/common.sh
 OSTREE_PREPARE_ROOT_CONFIG_FILE=/etc/ostree/prepare-root.conf
 CHEZMOI_OSTREE_PREPARE_ROOT_CONFIG_FILE=./prepare-root.conf
 
+NIX_CONF_FILE=$HOME/.config/nix/nix.conf
+CHEZMOI_NIX_CONF_FILE=~/.config/home-manager/scripts/resources/nix.conf
+
 warn_reboot() {
   local msg_reboot_required="A reboot will be performed for ostree changes to take effect."
   local msg_reboot_rerun="Please run this script again after the reboot."
@@ -20,11 +23,19 @@ warn_reboot() {
   fi
 }
 
-copy_file_sudo() {
+copy_file() {
   local src="$1"; shift
   local dst="$1"; shift
+  local sudo="$1"; shift
+
+  if [ -z "$sudo" ]; then
+    mkdir -p "$(dirname "$dst")"
+    cp "${src}" "${dst}"
+    return 0
+  fi
 
   warn_once_elevated
+  sudo mkdir -p "$(dirname "$dst")"
   sudo cp "${src}" "${dst}"
 }
 
@@ -58,15 +69,16 @@ ask_file_diff() {
   done
 }
 
-maybe_copy_file_sudo() {
+maybe_copy_file() {
   local src="$1"; shift
   local dst="$1"; shift
+  local sudo="$1"; shift
 
   log item $dst
 
   if ! test -f "${dst}"; then
     log mismatch "Does not exist. Creating..."
-    copy_file_sudo "${src}" "${dst}"
+    copy_file "${src}" "${dst}" "${sudo}"
     log success "Created."
     return 11
   fi
@@ -75,7 +87,7 @@ maybe_copy_file_sudo() {
     log mismatch "Content differs. Asking user for confirmation..."
     if ask_file_diff "${dst}" "${diff}"; then
       log info "User confirmed. Replacing..."
-      copy_file_sudo "${src}" "${dst}"
+      copy_file "${src}" "${dst}" "${sudo}"
       log success "Replaced."
       return 12
     fi
@@ -107,9 +119,10 @@ configure_ostree() {
   fi
 
   local file_changed=0
-  maybe_copy_file_sudo \
+  maybe_copy_file \
     "$CHEZMOI_OSTREE_PREPARE_ROOT_CONFIG_FILE" \
     "$OSTREE_PREPARE_ROOT_CONFIG_FILE" \
+    "sudo" \
   || file_changed=$?
 
   log item "InitramfsEtc"
@@ -162,6 +175,11 @@ install_nix() {
     log skip "OS does not support Nix. Skipping Nix installation."
     return 0
   fi
+
+  maybe_copy_file \
+    "$CHEZMOI_NIX_CONF_FILE" \
+    "$NIX_CONF_FILE" \
+    "" \ # No sudo
 
   log item "Nix"
 
