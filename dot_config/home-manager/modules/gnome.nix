@@ -92,6 +92,7 @@ in
       new-tab = "<Control>t";
       new-window = "<Control>n";
       paste-clipboard = "<Control>v";
+      reset = "'<Shift><Control>r'";
       search = "<Control>f";
       select-all = "<Control>a";
     };
