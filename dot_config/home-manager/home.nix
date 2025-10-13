@@ -33,8 +33,6 @@
   ];
 
   imports = [
-    ./secrets.nix
-
     ./modules/bash.nix
     ./modules/fish.nix
     ./modules/flatpak.nix
