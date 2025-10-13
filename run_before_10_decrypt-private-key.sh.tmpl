@@ -4,7 +4,6 @@ set -eu -o pipefail
 source $CHEZMOI_SOURCE_DIR/common.sh
 
 IDENTITY_DECRYPTED="{{- .chezmoi.config.age.identity -}}"
-IDENTITY_DECRYPTED2="$HOME/.config/sops/age/keys.txt"
 IDENTITY_ENCRYPTED="{{- .chezmoi.sourceDir -}}/key.txt.age"
 
 decrypt_key() {
@@ -22,11 +21,6 @@ decrypt_key() {
     log success "Decrypted"
   else
     log ok "Already decrypted."
-  fi
-
-  if [ ! -f "$IDENTITY_DECRYPTED2" ]; then
-    mkdir -p $(dirname "$IDENTITY_DECRYPTED2")
-    cp "$IDENTITY_DECRYPTED" "$IDENTITY_DECRYPTED2"
   fi
 }
 
