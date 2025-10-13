@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source $CHEZMOI_SOURCE_DIR/common.sh
+source $CHEZMOI_SOURCE_DIR/dot_config/home-manager/scripts/_common.sh
 
 ostree_make_group_available_sudo() {
   local group="$1"; shift

@@ -1,10 +1,7 @@
 #!/bin/sh
 set -eu -o pipefail
 
-source $CHEZMOI_SOURCE_DIR/common.sh
-
-IDENTITY_DECRYPTED="{{- .chezmoi.config.age.identity -}}"
-IDENTITY_ENCRYPTED="{{- .chezmoi.sourceDir -}}/key.txt.age"
+source $CHEZMOI_SOURCE_DIR/dot_config/home-manager/scripts/_common.sh
 
 decrypt_key() {
   log section "Decrypting age key..."

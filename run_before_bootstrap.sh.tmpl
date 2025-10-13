@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -eu
+
+export IDENTITY_DECRYPTED="{{- .chezmoi.config.age.identity -}}"
+export IDENTITY_ENCRYPTED="{{- .chezmoi.sourceDir -}}/key.txt.age"
+export HOST_TYPE="{{- .hosttype -}}"
+
+$CHEZMOI_SOURCE_DIR/dot_config/home-manager/scripts/bootstrap.sh

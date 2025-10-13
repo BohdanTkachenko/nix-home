@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eu
 
-source $CHEZMOI_SOURCE_DIR/common.sh
+source $CHEZMOI_SOURCE_DIR/dot_config/home-manager/scripts/_common.sh
 source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
 home_manager() {
@@ -28,7 +28,7 @@ home_manager() {
     log mismatch "Installing Home-Manager and building home configuration..."
   fi
 
-  home_manager_command+=(switch -v -b backup --show-trace --flake "$HOME/.config/home-manager#{{ .hosttype }}")
+  home_manager_command+=(switch -v -b backup --show-trace --flake "$HOME/.config/home-manager#$HOST_TYPE")
 
   "${home_manager_command[@]}" 2>&1 | tee -a "$LOG_FILE" > "$LAST_COMMAND_LOG_FILE"
   status=${PIPESTATUS[0]}
