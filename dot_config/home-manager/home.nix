@@ -32,6 +32,7 @@
 
   imports = [
     ./modules/bash.nix
+    ./modules/easyeffects
     ./modules/fish.nix
     ./modules/flatpak.nix
     ./modules/git.nix

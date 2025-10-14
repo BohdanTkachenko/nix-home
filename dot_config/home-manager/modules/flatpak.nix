@@ -12,7 +12,6 @@
         };
       }
       "com.github.tchx84.Flatseal"
-      "com.github.wwmm.easyeffects"
       {
         id = "com.google.Chrome";
         overrides = {

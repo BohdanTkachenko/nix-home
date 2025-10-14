@@ -1,0 +1,3 @@
+[submodule "dot_config/home-manager/modules/easyeffects/presets/JackHack96"]
+	path = dot_config/home-manager/modules/easyeffects/presets/JackHack96
+	url = https://github.com/JackHack96/EasyEffects-Presets.git
