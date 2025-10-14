@@ -21,15 +21,16 @@ in
     in
     lib.listToAttrs (map loadPreset jsonFilenames);
 
-  # Declaratively manage the IRS files
   home.file =
     let
       irsFilenames = lib.attrNames (builtins.readDir irsPath);
     in
-    lib.listToAttrs (map (filename: {
-      name = ".config/easyeffects/irs/${filename}";
-      value = {
-        source = irsPath + "/${filename}";
-      };
-    }) irsFilenames);
+    lib.listToAttrs (
+      map (filename: {
+        name = ".config/easyeffects/irs/${filename}";
+        value = {
+          source = irsPath + "/${filename}";
+        };
+      }) irsFilenames
+    );
 }

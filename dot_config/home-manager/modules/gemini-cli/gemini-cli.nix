@@ -3,7 +3,7 @@
   lib,
   pkgs,
   pkgs-unstable,
-  chezmoiData,
+  bootstrap,
   ...
 }:
 
@@ -19,6 +19,6 @@
   ];
 
   home.file.".gemini/settings.json".source = lib.mkForce (
-    config.lib.file.mkOutOfStoreSymlink "${chezmoiData.sourceDir}/dot_config/home-manager/modules/gemini-cli/settings.json"
+    config.lib.file.mkOutOfStoreSymlink "${bootstrap.sourceDir}/modules/gemini-cli/settings.json"
   );
 }

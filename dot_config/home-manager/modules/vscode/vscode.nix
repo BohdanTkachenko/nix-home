@@ -1,5 +1,5 @@
 {
-  chezmoiData,
+  bootstrap,
   config,
   lib,
   pkgs,
@@ -28,6 +28,6 @@
   };
 
   home.file.".config/Code/User/settings.json".source = lib.mkForce (
-    config.lib.file.mkOutOfStoreSymlink "${chezmoiData.sourceDir}/dot_config/home-manager/modules/vscode/settings.json"
+    config.lib.file.mkOutOfStoreSymlink "${bootstrap.sourceDir}/modules/vscode/settings.json"
   );
 }

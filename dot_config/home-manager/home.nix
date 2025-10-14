@@ -1,5 +1,5 @@
 {
-  chezmoiData,
+  bootstrap,
   features,
   config,
   lib,
@@ -8,8 +8,8 @@
 }:
 {
   home.stateVersion = "25.05";
-  home.username = chezmoiData.username;
-  home.homeDirectory = chezmoiData.homeDirectory;
+  home.username = bootstrap.username;
+  home.homeDirectory = bootstrap.homeDirectory;
 
   programs.home-manager.enable = true;
   targets.genericLinux.enable = true;

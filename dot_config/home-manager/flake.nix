@@ -47,14 +47,14 @@
     }:
 
     let
-      chezmoiData = import ./chezmoi-data.nix;
+      bootstrap = import ./bootstrap.nix;
       system = "x86_64-linux";
       lib = nixpkgs.lib;
       pkgs = nixpkgs.legacyPackages.${system};
       pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
     in
     {
-      homeConfigurations = lib.genAttrs chezmoiData.hosttypes (
+      homeConfigurations = lib.genAttrs bootstrap.hosttypes (
         hostTypeName:
         let
           features = {
@@ -67,7 +67,7 @@
           extraSpecialArgs = {
             pkgs-unstable = pkgs-unstable;
             features = features;
-            chezmoiData = chezmoiData;
+            bootstrap = bootstrap;
           };
           modules = [
             chromium-pwa-wmclass-sync.homeManagerModules.default

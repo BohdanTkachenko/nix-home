@@ -28,5 +28,6 @@
     }
   },
   "terminal.integrated.fontFamily": "MesloLGL Nerd Font",
-  "update.mode": "none"
+  "update.mode": "none",
+  "geminicodeassist.project": "autonomous-axiom-hz78w"
 }
