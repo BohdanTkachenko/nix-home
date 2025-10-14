@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eu
 
-source $CHEZMOI_SOURCE_DIR/dot_config/home-manager/scripts/_common.sh
+source $HOME_MANAGER_DIR/scripts/_common.sh
 
 OSTREE_PREPARE_ROOT_CONFIG_FILE=/etc/ostree/prepare-root.conf
 CHEZMOI_OSTREE_PREPARE_ROOT_CONFIG_FILE=~/.local/share/chezmoi/dot_config/home-manager/scripts/resources/prepare-root.conf

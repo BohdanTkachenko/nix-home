@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu -o pipefail
 
-source $CHEZMOI_SOURCE_DIR/dot_config/home-manager/scripts/_common.sh
+source $HOME_MANAGER_DIR/scripts/_common.sh
 
 decrypt_key() {
   log section "Decrypting age key..."

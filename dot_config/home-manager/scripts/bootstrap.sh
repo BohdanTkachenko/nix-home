@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -eu
 
-for script in $CHEZMOI_SOURCE_DIR/dot_config/home-manager/scripts/_bootstrap_*.sh; do
+for script in $HOME_MANAGER_DIR/scripts/_bootstrap_*.sh; do
   "$script"
 done

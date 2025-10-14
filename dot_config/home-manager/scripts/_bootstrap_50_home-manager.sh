@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eu
 
-source $CHEZMOI_SOURCE_DIR/dot_config/home-manager/scripts/_common.sh
+source $HOME_MANAGER_DIR/scripts/_common.sh
 source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
 home_manager() {

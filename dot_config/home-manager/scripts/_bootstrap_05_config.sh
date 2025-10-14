@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -eu
 
-source $CHEZMOI_SOURCE_DIR/dot_config/home-manager/scripts/_common.sh
+source $HOME_MANAGER_DIR/scripts/_common.sh
 
-CONFIG_FILE="$CHEZMOI_SOURCE_DIR/dot_config/home-manager/bootstrap.nix"
+CONFIG_FILE="$HOME_MANAGER_DIR/bootstrap.nix"
 
 function write_config() {
   log section "Config"
