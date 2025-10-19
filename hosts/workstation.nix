@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   pkgs,
   ...
 }:
@@ -38,7 +37,6 @@
     ../modules/micro.nix
     ../modules/obsidian
     ../modules/ssh
-    ../modules/systemd.nix
     ../modules/tealdeer.nix
     ../modules/tools.nix
     ../modules/gemini-cli/gemini-cli.nix
