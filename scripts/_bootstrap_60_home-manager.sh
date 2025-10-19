@@ -29,7 +29,7 @@ home_manager() {
     log mismatch "Installing Home-Manager and building home configuration..."
   fi
 
-  home_manager_command+=(switch -v -b backup --show-trace --flake "$HOME_MANAGER_DIR#$HOME_MANAGER_PROFILE")
+  home_manager_command+=(switch -v -b backup --show-trace --flake "$HOME_MANAGER_DIR#$HOME_MANAGER_HOST")
 
   if "${home_manager_command[@]}" 2>&1 | tee -a "$LOG_FILE" > "$LAST_COMMAND_LOG_FILE"; then
     log success "Installed Home Manager and built home configuration."

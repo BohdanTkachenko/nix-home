@@ -3,5 +3,5 @@
 ## Installation
 
 ```sh
-sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply BohdanTkachenko
+bash -c "bash <(curl -sSL https://raw.githubusercontent.com/BohdanTkachenko/dotfiles/refs/heads/main/scripts/install.sh)"
 ```

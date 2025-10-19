@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -xe
 
 GITHUB_USER="BohdanTkachenko"
 REPO_NAME="dotfiles"
@@ -7,7 +7,7 @@ REPO_NAME="dotfiles"
 REAL_HOME=$(readlink -f "$HOME")
 DEFAULT_DEST="$REAL_HOME/.config/home-manager"
 BOOTSTRAP_SCRIPT="scripts/bootstrap.sh"
-ENV_FILE="$REAL_HOME/.config/home-manager.env"
+HOME_MANAGER_ENV_FILE="$REAL_HOME/.config/home-manager.env"
 
 HTTPS_URL="https://github.com/$GITHUB_USER/$REPO_NAME.git"
 SSH_URL="git@github.com:$GITHUB_USER/$REPO_NAME.git"
@@ -52,7 +52,7 @@ main() {
         
     info "Previous installation detected at '$HOME_MANAGER_DIR'."
     info "Handing over to the bootstrap script to continue setup..."
-    exec "$bootstrap_script_path"
+    (cd "$HOME_MANAGER_DIR" && exec "$BOOTSTRAP_SCRIPT")
     exit 0
   fi
 
@@ -152,7 +152,7 @@ main() {
   fi
 
   info "Handing over to the bootstrap script..."
-  exec "$bootstrap_script_path"
+  (cd "$dest_dir" && exec "$BOOTSTRAP_SCRIPT")
 }
 
 main
