@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source "$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/_common.sh"
+source "$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/../_common.sh"
 
 OSTREE_PREPARE_ROOT_CONFIG_FILE=/etc/ostree/prepare-root.conf
-CHEZMOI_OSTREE_PREPARE_ROOT_CONFIG_FILE=$HOME_MANAGER_DIR/scripts/resources/prepare-root.conf
+CHEZMOI_OSTREE_PREPARE_ROOT_CONFIG_FILE=$HOME_MANAGER_DIR/scripts/bootstrap.d/resources/prepare-root.conf
 
 NIX_CONF_FILE=$HOME/.config/nix/nix.conf
-CHEZMOI_NIX_CONF_FILE=$HOME_MANAGER_DIR/scripts/resources/nix.conf
+CHEZMOI_NIX_CONF_FILE=$HOME_MANAGER_DIR/scripts/bootstrap.d/resources/nix.conf
 
 warn_reboot() {
   local msg_reboot_required="A reboot will be performed for ostree changes to take effect."
@@ -44,26 +44,22 @@ ask_file_diff() {
   local diff="$1"; shift
 
   while true; do
-    echo "File exists, but its contents differ for $dst"
-    echo "Choose an action:"
-    echo "  1. Accept - Proceed with the current operation."
-    echo "  2. Diff   - Show the difference between two files."
-    echo "  3. Skip   - Ignore this item and move to the next."
-    read -p "Enter your choice (1-3): " choice
+    local options=(abort accept diff skip)
+    choice=$(input_choice "File exists, but its contents differ for $dst" options)
 
     case "$choice" in
-      1)
+      "abort")
+        exit 1
+        ;;
+      "accept")
         return 0
         ;;
-      2)
+      "diff")
         echo "${diff}" | less -R
         continue
         ;;
-      3)
+      "skip")
         return 1
-        ;;
-      *)
-        echo "Invalid choice. Please try again."
         ;;
     esac
   done
@@ -108,15 +104,6 @@ update_initramfs_etc_sudo() {
 
 configure_ostree() {
   log section "Configuring ostree..."
-
-  log item "OS Check"
-  log info "Detected OS: $(get_os)"
-  if is_os_based_on_ostree; then
-    log ok "OS is based on OSTree."
-  else
-    log skip "OS is not based on OSTree. Skipping ostree configuration."
-    return 0
-  fi
 
   local file_changed=0
   maybe_copy_file \
@@ -167,15 +154,6 @@ configure_ostree() {
 install_nix() {
   log section "Installing Nix..."
 
-  log item "OS Check"
-  log info "Detected OS: $(get_os)"
-  if is_os_supports_nix; then
-    log ok "OS supports Nix."
-  else
-    log skip "OS does not support Nix. Skipping Nix installation."
-    return 0
-  fi
-
   maybe_copy_file \
     "$CHEZMOI_NIX_CONF_FILE" \
     "$NIX_CONF_FILE" \
@@ -197,9 +175,6 @@ install_nix() {
       log error "Nix installation failed. Check '$LOG_FILE' for details."
       return 1
     fi
-
-    nix-channel --add https://nixos.org/channels/nixos-25.05 nixpkgs
-    nix-channel --update
 
     log success "Nix installation completed successfully."
   fi

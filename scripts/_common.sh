@@ -1,35 +1,28 @@
 #!/usr/bin/env bash
 set -eu
 
-HOME_MANAGER_ENV_FILE="$HOME/.config/home-manager.env"
+REAL_HOME=$(readlink -f "$HOME")
+HOME_MANAGER_DIR="$REAL_HOME/.config/home-manager"
+HOME_MANAGER_ENV_FILE="$HOME_MANAGER_DIR/.env"
 
-LOG_FILE=/tmp/chezmoi_scripts.log
-LAST_COMMAND_LOG_FILE=/tmp/chezmoi_scripts_last_command.log
+LOG_FILE=/tmp/nix-home_scripts.log
+LAST_COMMAND_LOG_FILE=/tmp/nix-home_scripts_last_command.log
 
 COLOR_RESET='\033[0m'
 COLOR_BOLD_BLUE='\033[1;34m'
 COLOR_BOLD_CYAN='\033[1;36m'
 COLOR_BOLD_GREEN='\033[1;32m'
 COLOR_BOLD_PURPLE='\033[1;35m'
-# COLOR_BOLD='\033[1m'
+COLOR_BOLD='\033[1m'
 COLOR_BOLD_RED='\033[1;31m'
 COLOR_RED='\033[0;31m'
 COLOR_GREEN='\033[0;32m'
 COLOR_YELLOW='\033[0;33m'
 COLOR_BLUE='\033[0;34m'
-# COLOR_CYAN='\033[0;36m'
+COLOR_CYAN='\033[0;36m'
 
 if [ -f "$HOME_MANAGER_ENV_FILE" ]; then
-    source "$HOME_MANAGER_ENV_FILE"
-else
-    echo "❌ [ERROR] Environment file not found at '$HOME_MANAGER_ENV_FILE'. Please run the main install.sh script first." >&2
-    exit 1
-fi
-
-# The env file should define this variable.
-if [ -z "${HOME_MANAGER_DIR:-}" ]; then
-    echo "❌ [ERROR] HOME_MANAGER_DIR is not set in '$HOME_MANAGER_ENV_FILE'. The file might be corrupt." >&2
-    exit 1
+  source "$HOME_MANAGER_ENV_FILE"
 fi
 
 # A simple, unified logger.
@@ -279,37 +272,4 @@ warn_once_elevated() {
     log warning "This script may require elevated permissions to run."
     ELEVATED_WARNED=true
   fi
-}
-
-get_os() {
-  case "$(uname -s)" in
-    Linux)
-      if [ -f /etc/os-release ]; then
-        # shellcheck disable=SC1091
-        . /etc/os-release
-        if [ -n "$VARIANT_ID" ]; then
-          echo "$VARIANT_ID"
-        else
-          echo "$ID"
-        fi
-      else
-        echo "linux"
-      fi
-      ;;
-    *)
-      echo "other"
-      ;;
-  esac
-}
-
-is_os_based_on_ostree() {
-  if [ -f /run/ostree-booted ]; then
-    return 0
-  fi
-
-  return 1
-}
-
-is_os_supports_nix() {
-  is_os_based_on_ostree
 }

@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
-set -xe
+set -eu -o pipefail
 
 GITHUB_USER="BohdanTkachenko"
-REPO_NAME="dotfiles"
+REPO_NAME="nix-home"
 
 REAL_HOME=$(readlink -f "$HOME")
-DEFAULT_DEST="$REAL_HOME/.config/home-manager"
-BOOTSTRAP_SCRIPT="scripts/bootstrap.sh"
-HOME_MANAGER_ENV_FILE="$REAL_HOME/.config/home-manager.env"
+HOME_MANAGER_DIR="$REAL_HOME/.config/home-manager"
+BOOTSTRAP_SCRIPT="$HOME_MANAGER_DIR/scripts/bootstrap.sh"
 
 HTTPS_URL="https://github.com/$GITHUB_USER/$REPO_NAME.git"
 SSH_URL="git@github.com:$GITHUB_USER/$REPO_NAME.git"
@@ -25,58 +24,40 @@ info() {
   printf "⚙️  ${BLUE}[INFO]${NC} %s\n" "$1"
 }
 
-success() {
-  printf "🚀 ${GREEN}[SUCCESS]${NC} %s\n" "$1"
+warn() {
+  printf "⚠️  ${YELLOW}[WARN]${NC} %s\n" "$1"
 }
 
 error() {
   printf "❌ ${RED}[ERROR]${NC} %s\n" "$1" >&2
   exit 1
 }
+
+bootstrap() {
+  if [ ! -f "$BOOTSTRAP_SCRIPT" ]; then
+    error "Bootstrap script not found at '$BOOTSTRAP_SCRIPT'. Cannot continue."
+  fi
+
+  info "Handing over to the bootstrap script..."
+  (cd "$HOME_MANAGER_DIR" && exec "$BOOTSTRAP_SCRIPT")
+
+  exit 0
+}
 # ---
 
 # --- Main Script ---
 main() {
-  if [ -f "$HOME_MANAGER_ENV_FILE" ]; then
-    source "$HOME_MANAGER_ENV_FILE"
-    export HOME_MANAGER_DIR
-        
-    if [ -z "${HOME_MANAGER_DIR:-}" ] || [ ! -d "$HOME_MANAGER_DIR" ]; then
-      error "Env file points to a non-existent directory: '$HOME_MANAGER_DIR'. Please remove '$HOME_MANAGER_ENV_FILE' to start over."
-    fi
-
-    local bootstrap_script_path="$HOME_MANAGER_DIR/$BOOTSTRAP_SCRIPT"
-    if [ ! -f "$bootstrap_script_path" ]; then
-      error "Bootstrap script not found in '$HOME_MANAGER_DIR'. Installation may be corrupt. Please remove '$HOME_MANAGER_ENV_FILE' and run again."
-    fi
-        
-    info "Previous installation detected at '$HOME_MANAGER_DIR'."
-    info "Handing over to the bootstrap script to continue setup..."
-    (cd "$HOME_MANAGER_DIR" && exec "$BOOTSTRAP_SCRIPT")
-    exit 0
-  fi
-
-  # --- First time installation ---
   info "👋 Starting Home Manager configuration setup..."
 
   if ! command -v git &> /dev/null; then
     error "Git is not installed. Please install Git to continue."
   fi
     
-  info "First, let's decide where to store the Home Manager configuration."
-  local dest_dir=""
-  printf "⌨️  ${BLUE}Press ENTER to use the default location (%s), or specify a different one:${NC} " "$DEFAULT_DEST"
-  read dest_dir
-  dest_dir="${dest_dir:-$DEFAULT_DEST}"    
-  dest_dir="${dest_dir/#\~/$REAL_HOME}"
-    
-  info "Configuration will be installed in: $dest_dir"
-
-  if [ -d "$dest_dir" ]; then
-    printf "⚠️  ${YELLOW}Directory '%s' already exists.${NC}\n" "$dest_dir"
+  if [ -d "$HOME_MANAGER_DIR" ]; then
+    warn "Home Manager directory '$HOME_MANAGER_DIR' already exists."
         
     local bootstrap_exists=false
-    if [ -f "$dest_dir/$BOOTSTRAP_SCRIPT" ]; then
+    if [ -f "$BOOTSTRAP_SCRIPT" ]; then
       bootstrap_exists=true
     fi
 
@@ -96,26 +77,22 @@ main() {
       case "$choice" in
         [Rr])
           if [ "$bootstrap_exists" = true ]; then
-            info "Resuming installation using existing directory..."
-            info "Saving installation path to '$HOME_MANAGER_ENV_FILE'..."
-            mkdir -p "$(dirname "$HOME_MANAGER_ENV_FILE")"
-            echo "HOME_MANAGER_DIR=\"$dest_dir\"" > "$HOME_MANAGER_ENV_FILE"
-            info "Handing over to the bootstrap script..."
-            exec "$dest_dir/$BOOTSTRAP_SCRIPT"
-            exit 0
+            bootstrap
           else
             printf "❌ ${RED}Invalid option '${choice}'. Please try again.${NC}\n\n"
           fi
         ;;
         [Bb])
-          local backup_name="${dest_dir}.bak.$(date +%Y%m%d-%H%M%S)"
+          local backup_name="${HOME_MANAGER_DIR}.bak.$(date +%Y%m%d-%H%M%S)"
           info "Backing up directory to '$backup_name'..."
-          mv "$dest_dir" "$backup_name"
+          cd "$REAL_HOME"
+          mv "$HOME_MANAGER_DIR" "$backup_name"
           break
         ;;
         [Dd])
           info "Removing existing directory..."
-          rm -rf "$dest_dir"
+          cd "$REAL_HOME"
+          rm -rf "$HOME_MANAGER_DIR"
           break
         ;;
         [Aa])
@@ -129,30 +106,15 @@ main() {
     done
   fi
 
-  info "Saving installation path to '$HOME_MANAGER_ENV_FILE'..."
-  mkdir -p "$(dirname "$HOME_MANAGER_ENV_FILE")"
-  echo "HOME_MANAGER_DIR=\"$dest_dir\"" > "$HOME_MANAGER_ENV_FILE"
-
-  source "$HOME_MANAGER_ENV_FILE"
-  export HOME_MANAGER_DIR
-
-  info "Cloning repository into '$dest_dir'..."
-  git clone --quiet "$HTTPS_URL" "$dest_dir"
+  info "Cloning repository into '$HOME_MANAGER_DIR'..."
+  git clone --quiet "$HTTPS_URL" "$HOME_MANAGER_DIR"
+  cd "$HOME_MANAGER_DIR"
 
   info "Changing remote URL to SSH..."
-  (
-    cd "$dest_dir"
-    git remote set-url origin "$SSH_URL"
-  )
+  git remote set-url origin "$SSH_URL"
   info "Remote URL changed to: $SSH_URL"
 
-  local bootstrap_script_path="$dest_dir/$BOOTSTRAP_SCRIPT"    
-  if [ ! -f "$bootstrap_script_path" ]; then
-    error "Bootstrap script not found at '$bootstrap_script_path'. Cannot continue."
-  fi
-
-  info "Handing over to the bootstrap script..."
-  (cd "$dest_dir" && exec "$BOOTSTRAP_SCRIPT")
+  bootstrap
 }
 
 main

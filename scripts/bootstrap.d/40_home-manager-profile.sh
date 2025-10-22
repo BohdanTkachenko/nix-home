@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source "$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/_common.sh"
+source "$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/../_common.sh"
 
 # -----------------------------------------------------------------------------
 # FUNCTION: select_profile
@@ -24,7 +24,7 @@ source "$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/_co
 #   select_profile
 # -----------------------------------------------------------------------------
 select_profile() {
-  log item "$HOME_MANAGER_ENV_FILE"
+  log item ".env"
 
   declare -a hosts
   mapfile -t hosts < <(find_hosts "$HOME_MANAGER_DIR/hosts")
@@ -39,18 +39,11 @@ select_profile() {
     exit 1
   fi
 
-  if [ -n "${HOME_MANAGER_HOST:-}" ]; then
-    log ok "Configuration profile already selected: '$HOME_MANAGER_HOST'. Skipping."
-    return 0
-  fi
-
   chosen_config=$(input_choice "Choose a host" hosts)
 
   log item "Saving selection to '$HOME_MANAGER_ENV_FILE'..."
-  echo "HOME_MANAGER_HOST=\"$chosen_config\"" >> "$HOME_MANAGER_ENV_FILE"
+  echo "HOME_MANAGER_HOST=\"$chosen_config\"" > "$HOME_MANAGER_ENV_FILE"
   log ok "Selection saved."
-
-  export HOME_MANAGER_HOST="$chosen_config"
 }
 
 main() {

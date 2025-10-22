@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source "$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/_common.sh"
+source "$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/../_common.sh"
 
 ostree_make_group_available_sudo() {
   local group="$1"; shift
@@ -36,9 +36,7 @@ add_user_to_group_sudo() {
 
   warn_once_elevated
 
-  if is_os_based_on_ostree; then
-    ostree_make_group_available_sudo "$group"
-  fi
+  ostree_make_group_available_sudo "$group"
 
   if ! sudo usermod -aG "$group" "$user"; then
     log error "Failed to add user '$user' to group '$group'. Please check permissions."
