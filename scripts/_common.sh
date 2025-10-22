@@ -273,3 +273,96 @@ warn_once_elevated() {
     ELEVATED_WARNED=true
   fi
 }
+
+ask_before_reboot() {
+  local msg_reboot_required="A reboot is needed for changes to take effect."
+  local msg_reboot_rerun="Please run this script again after the reboot."
+
+  log critical "$msg_reboot_required $msg_reboot_rerun"
+  
+  local options=(yes no)
+  choice=$(input_choice "Do you want to reboot now?" options)
+
+  if [[ $choice == "no" ]]; then
+    log cancel "User declined reboot. Exiting."
+    exit 10
+  fi
+  
+  systemctl reboot --now
+}
+
+
+copy_file() {
+  local src="$1"; shift
+  local dst="$1"; shift
+  local sudo="$1"; shift
+
+  if [ -z "$sudo" ]; then
+    mkdir -p "$(dirname "$dst")"
+    cp "${src}" "${dst}"
+    return 0
+  fi
+
+  warn_once_elevated
+  sudo mkdir -p "$(dirname "$dst")"
+  sudo cp "${src}" "${dst}"
+}
+
+ask_file_diff() {
+  local dst="$1"; shift
+  local diff="$1"; shift
+
+  while true; do
+    local options=(abort accept diff skip)
+    choice=$(input_choice "File exists, but its contents differ for $dst" options)
+
+    case "$choice" in
+      "abort")
+        exit 1
+        ;;
+      "accept")
+        return 0
+        ;;
+      "diff")
+        echo "${diff}" | less -R
+        continue
+        ;;
+      "skip")
+        return 1
+        ;;
+    esac
+  done
+}
+
+maybe_copy_file() {
+  local src="$1"; shift
+  local dst="$1"; shift
+  local sudo="$1"; shift
+
+  log item $dst
+
+  if ! test -f "${dst}"; then
+    log mismatch "Does not exist. Creating..."
+    copy_file "${src}" "${dst}" "${sudo}"
+    log success "Created."
+    return 11
+  fi
+
+  if ! diff=$(git diff --color --no-index -- "${dst}" "${src}"); then
+    log mismatch "Content differs. Asking user for confirmation..."
+    if ask_file_diff "${dst}" "${diff}"; then
+      log info "User confirmed. Replacing..."
+      copy_file "${src}" "${dst}" "${sudo}"
+      log success "Replaced."
+      return 12
+    fi
+
+    log skip "User declined. Skipping."
+    return 10
+  fi
+
+  log ok "Already correct."
+  return 0
+}
+
+

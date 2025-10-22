@@ -3,7 +3,9 @@ set -euo pipefail
 
 source "$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/../_common.sh"
 
-source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+if [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
+  source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+fi
 
 home_manager() {
   log section "(Re)building home configuration using Home-Manager"
