@@ -4,7 +4,7 @@ set -euo pipefail
 source "$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/../_common.sh"
 
 OSTREE_PREPARE_ROOT_CONFIG_FILE=/etc/ostree/prepare-root.conf
-CHEZMOI_OSTREE_PREPARE_ROOT_CONFIG_FILE=$HOME_MANAGER_DIR/scripts/bootstr
+BOOTSTRAP_OSTREE_PREPARE_ROOT_CONFIG_FILE=$HOME_MANAGER_DIR/scripts/bootstrap.d/resources/prepare-root.conf
 
 update_initramfs_etc_sudo() {
   warn_once_elevated
@@ -17,7 +17,7 @@ configure_ostree() {
 
   local file_changed=0
   maybe_copy_file \
-    "$CHEZMOI_OSTREE_PREPARE_ROOT_CONFIG_FILE" \
+    "$BOOTSTRAP_OSTREE_PREPARE_ROOT_CONFIG_FILE" \
     "$OSTREE_PREPARE_ROOT_CONFIG_FILE" \
     "sudo" \
   || file_changed=$?
@@ -62,11 +62,6 @@ configure_ostree() {
 
 install_nix() {
   log section "Installing Nix..."
-
-  maybe_copy_file \
-    "$CHEZMOI_NIX_CONF_FILE" \
-    "$NIX_CONF_FILE" \
-    "" \ # No sudo
 
   log item "Nix"
 
