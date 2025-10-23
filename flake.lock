@@ -150,11 +150,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1760840266,
-        "narHash": "sha256-Nj0Gtj/M6xrZ4YiL9ivfJcDgTn9mxyi1dHUPHQi707s=",
+        "lastModified": 1761188567,
+        "narHash": "sha256-34tjXaz20zcamjncSzDy8/gJf2dpGveoAu+E+ZMVpvg=",
         "owner": "BohdanTkachenko",
         "repo": "home-manager",
-        "rev": "8e17055c1a9460940f769e7748642451ffe137e4",
+        "rev": "53d57b91b12e077f81b8ead4815311b266b57d4d",
         "type": "github"
       },
       "original": {
