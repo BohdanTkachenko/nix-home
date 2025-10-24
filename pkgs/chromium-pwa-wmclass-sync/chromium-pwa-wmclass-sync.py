@@ -27,7 +27,7 @@ class ColoredFormatter(logging.Formatter):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Fixes the StartupWMClass in Chromium PWA .desktop files to match the Icon value."
+        description="Fixes StartupWMClass and renames .desktop files for Chromium PWAs."
     )
     parser.add_argument(
         "--dry-run",
@@ -67,7 +67,7 @@ def main():
         return
 
     logging.debug(f"Scanning directory: {app_path}")
-    for desktop_file in app_path.glob("*.desktop"):
+    for desktop_file in list(app_path.glob("*.desktop")):
         logging.debug(f"Checking file: {desktop_file.name}")
         try:
             config = configparser.ConfigParser(interpolation=None)
@@ -87,10 +87,8 @@ def main():
             wm_class = entry.get("StartupWMClass")
 
             if not icon or not wm_class:
-                logging.debug(" -> Skipped: Missing Icon or StartupWMClass.")
-                continue
-
-            if icon != wm_class:
+                logging.debug(f" -> WMClass check for {desktop_file.name} skipped: Missing Icon or StartupWMClass.")
+            elif icon != wm_class:
                 logging.debug(f" -> Mismatch: Icon='{icon}' vs StartupWMClass='{wm_class}'")
                 if args.dry_run:
                     logging.info(
@@ -103,6 +101,52 @@ def main():
                     logging.info(f"MODIFIED: {desktop_file.name}: Updated StartupWMClass.")
             else:
                 logging.info(f"OK: {desktop_file.name}: StartupWMClass already correct.")
+
+            name = entry.get("Name")
+            exec_line = entry.get("Exec")
+
+            if not name or not exec_line:
+                logging.debug(f" -> Rename for {desktop_file.name} skipped: Missing Name or Exec.")
+                continue
+
+            profile_dir = "Default"
+            for part in exec_line.split():
+                if part.startswith("--profile-directory="):
+                    profile_dir = part.split("=", 1)[1]
+                    break
+
+            sanitized_name = name.replace("/", "-")
+
+            if profile_dir == "Default":
+                new_filename = f"{sanitized_name}.desktop"
+            else:
+                new_filename = f"{sanitized_name} ({profile_dir}).desktop"
+
+            if desktop_file.name != new_filename:
+                new_filepath = desktop_file.with_name(new_filename)
+                final_filepath = new_filepath
+                final_filename = new_filename
+
+                # Handle existing files by adding a suffix
+                if final_filepath.exists():
+                    counter = 1
+                    base_name = final_filepath.stem
+                    suffix = final_filepath.suffix
+                    while final_filepath.exists():
+                        final_filename = f"{base_name} ({counter}) - {suffix}"
+                        final_filepath = final_filepath.with_name(final_filename)
+                        counter += 1
+                    logging.warning(f" -> Target file {new_filename} already exists. Will use {final_filename} instead.")
+
+                if args.dry_run:
+                    logging.info(
+                        f"DRY RUN: {desktop_file.name}: Would be renamed to {final_filename}."
+                    )
+                else:
+                    desktop_file.rename(final_filepath)
+                    logging.info(f"RENAMED: {desktop_file.name} to {final_filename}.")
+            else:
+                logging.info(f"OK: {desktop_file.name}: Filename already correct.")
 
         except configparser.Error as e:
             logging.error(f" -> Skipped {desktop_file.name}: Could not parse file. Error: {e}")
