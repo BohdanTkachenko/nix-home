@@ -45,7 +45,7 @@ in
   dconf.settings = {
     "org/gnome/shell" = {
       favorite-apps = [
-        "com.google.Chrome.flextop.chrome-gdfaincndogidkdcdkhapmbffkckdkhn-Default.desktop" # Gemini
+        "Gemini.desktop"
         "com.google.Chrome.desktop"
         "org.gnome.Ptyxis.desktop"
         "code.desktop"
