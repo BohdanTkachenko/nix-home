@@ -1,10 +1,10 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
   nixpkgs.config.permittedInsecurePackages = [
     "mbedtls-2.28.10"
   ];
 
-  home.packages = with pkgs; [
-    openrgb
+  home.packages = [
+    (config.lib.nixGL.wrap pkgs.openrgb)
   ];
 }

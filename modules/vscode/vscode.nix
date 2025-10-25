@@ -16,7 +16,7 @@
   programs = {
     vscode = {
       enable = true;
-      package = pkgs.vscode;
+      package = (config.lib.nixGL.wrap pkgs.vscode);
       profiles.default = {
         extensions = with pkgs.vscode-extensions; [
           jnoortheen.nix-ide

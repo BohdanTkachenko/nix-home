@@ -8,6 +8,11 @@
       url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     };
 
+    nixgl = {
+      url = "github:nix-community/nixGL";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     home-manager = {
       url = "github:BohdanTkachenko/home-manager/systemd-path-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -33,6 +38,7 @@
     {
       chromium-pwa-wmclass-sync,
       home-manager,
+      nixgl,
       nixpkgs,
       nixpkgs-unstable,
       sops-nix,
@@ -49,7 +55,7 @@
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = {
-            inherit pkgs-unstable;
+            inherit nixgl pkgs-unstable;
           };
           modules = [
             chromium-pwa-wmclass-sync.homeManagerModules.default

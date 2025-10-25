@@ -1,17 +1,21 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
-  home.packages = with pkgs; [
-    baobab
-    brave
-    firefox
-    gnome-calculator
-    gnome-extension-manager # TODO: remove
-    gnome-logs
-    gnome-text-editor
-    google-chrome
-    loupe
-    papers
-  ];
+  home.packages = with pkgs;
+    let
+      guiApps = [
+        baobab
+        brave
+        firefox
+        gnome-calculator
+        gnome-extension-manager # TODO: remove
+        gnome-logs
+        gnome-text-editor
+        google-chrome
+        loupe
+        papers
+      ];
+    in
+    (map (p: config.lib.nixGL.wrap p) guiApps);
 
   dconf.settings = {
     "org/gnome/shell" = {

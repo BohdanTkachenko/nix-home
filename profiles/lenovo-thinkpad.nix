@@ -1,7 +1,10 @@
-{ ... }:
+{ lib, ... }:
 {
+  nixGL.defaultWrapper = "mesa";
+  nixGL.installScripts = [ "mesa" ];
+
   services.xremap = {
-    enable = true;
+    enable = lib.mkForce true;
     withGnome = true;
     deviceNames = [
       "AT Translated Set 2 keyboard"

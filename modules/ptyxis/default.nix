@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   profileUuid = "C0FFEE-C0DE-FEED-FACE-AC1DDEADBEEF";
@@ -6,7 +11,7 @@ in
 
 {
   home.packages = with pkgs; [
-    ptyxis
+    (config.lib.nixGL.wrap ptyxis)
   ];
 
   dconf.settings = {

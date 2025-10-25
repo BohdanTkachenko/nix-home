@@ -2,8 +2,6 @@
 {
   home.packages = with pkgs; [
     adw-gtk3
-    ptyxis
-    spotify
   ];
 
   xdg = {
