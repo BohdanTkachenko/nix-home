@@ -26,6 +26,28 @@ add_user_to_group() {
   return 2
 }
 
+add_user_to_groups() {
+  local needs_reboot=""
+  for group in "$@"; do
+    local group_status=0
+    add_user_to_group "$group" || group_status=$?
+
+    if [[ "$group_status" -eq 1 ]]; then
+      return 1
+    fi
+
+    if [[ "$group_status" -eq 2 ]]; then
+      needs_reboot="1"
+    fi
+  done
+
+  if [[ -n "$needs_reboot" ]]; then
+    return 2
+  fi
+
+  return 0
+}
+
 install_nix() {
   log item "Nix"
 
@@ -68,7 +90,7 @@ install() {
   fi
 
   local group_status=0
-  add_user_to_group "nix-users" || group_status=$?
+  add_user_to_groups "nix-users" "input" || group_status=$?
 
   if [[ "$group_status" -eq 1 ]]; then
     return 1
