@@ -8,7 +8,7 @@
         brave
         firefox
         gnome-calculator
-        gnome-extension-manager # TODO: remove
+        gnome-extension-manager
         gnome-logs
         gnome-text-editor
         google-chrome
@@ -21,7 +21,7 @@
   dconf.settings = {
     "org/gnome/shell" = {
       favorite-apps = [
-        "Gemini.desktop"
+        "Google Gemini.desktop"
         "google-chrome.desktop"
         "org.gnome.Ptyxis.desktop"
         "code.desktop"
