@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ ... }:
 {
   services.xremap = {
     enable = true;

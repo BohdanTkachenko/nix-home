@@ -1,4 +1,7 @@
 {
+  home.sessionVariables.EDITOR = "micro";
+  home.sessionVariables.VISUAL = "micro";
+
   programs.micro = {
     enable = true;
     settings = {

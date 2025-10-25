@@ -7,4 +7,4 @@ if [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
   source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
 
-home-manager switch -v --flake "$HOME_MANAGER_DIR#$HOME_MANAGER_HOST"
+home-manager switch -b backup -v --flake "path:$HOME_MANAGER_DIR#$HOME_MANAGER_HOST"

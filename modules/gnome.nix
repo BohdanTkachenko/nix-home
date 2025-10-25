@@ -1,12 +1,9 @@
-{ lib, pkgs, ... }:
-
-let
-  profileUuid = "C0FFEE-C0DE-FEED-FACE-AC1DDEADBEEF";
-in
-
+{ pkgs, ... }:
 {
   home.packages = with pkgs; [
     adw-gtk3
+    ptyxis
+    spotify
   ];
 
   xdg = {
@@ -43,24 +40,15 @@ in
   };
 
   dconf.settings = {
-    "org/gnome/shell" = {
-      favorite-apps = [
-        "Gemini.desktop"
-        "com.google.Chrome.desktop"
-        "org.gnome.Ptyxis.desktop"
-        "code.desktop"
-        "com.spotify.Client.desktop"
-        "beepertexts.desktop"
-        "1password.desktop"
-        "org.gnome.Nautilus.desktop"
-      ];
-    };
-
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
       gtk-theme = "adw-gtk3-dark";
       gtk-enable-primary-paste = false;
       show-battery-percentage = true;
+    };
+
+    "org/gnome/desktop/peripherals/mouse" = {
+      natural-scroll = true;
     };
 
     "org/gnome/desktop/wm/keybindings" = {
@@ -83,29 +71,6 @@ in
       next = [ "AudioNext" ];
       play = [ "AudioPlay" ];
       previous = [ "AudioPrev" ];
-    };
-
-    "org/gnome/Ptyxis/Shortcuts" = {
-      close-tab = "<Control>w";
-      close-window = "";
-      copy-clipboard = "<Control>c";
-      new-tab = "<Control>t";
-      new-window = "<Control>n";
-      paste-clipboard = "<Control>v";
-      reset = "'<Shift><Control>r'";
-      search = "<Shift><Control>f";
-      select-all = "<Control>a";
-    };
-
-    "org/gnome/Ptyxis" = {
-      default-profile-uuid = profileUuid;
-      profile-uuids = [ profileUuid ];
-    };
-
-    "org/gnome/Ptyxis/Profiles/${profileUuid}" = {
-      label = "The Coffee Coder";
-      opacity = lib.gvariant.mkDouble 0.9;
-      palette = "Japanesque";
     };
 
     "org/gnome/shell/extensions/caffeine" = {

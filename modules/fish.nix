@@ -10,8 +10,6 @@
     };
 
     shellAbbrs = {
-      cm = "chezmoi";
-
       m = "micro";
       vi = "micro";
       vim = "micro";
