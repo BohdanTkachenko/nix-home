@@ -1,6 +1,5 @@
 {
   config,
-  nixgl,
   pkgs,
   ...
 }:
@@ -16,9 +15,6 @@ let
 in
 {
   programs.chromium-pwa-wmclass-sync.service.enable = true;
-
-  nixGL.packages = nixgl.packages;
-  nixGL.vulkan.enable = true;
 
   home.packages = (map (p: config.lib.nixGL.wrap p) guiApps);
 

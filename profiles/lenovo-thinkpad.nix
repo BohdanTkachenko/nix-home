@@ -1,8 +1,5 @@
 { lib, pkgs, ... }:
 {
-  nixGL.defaultWrapper = "mesa";
-  nixGL.installScripts = [ "mesa" ];
-
   programs.gnome-shell = {
     enable = true;
     extensions = with pkgs.gnomeExtensions; [
