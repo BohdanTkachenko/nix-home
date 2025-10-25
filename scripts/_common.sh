@@ -101,9 +101,7 @@ find_hosts() {
     for file_path in "$dir"/*.nix; do
       local filename
       filename=$(basename "$file_path")
-      if [[ "$filename" != _* ]]; then
-        echo "${filename%.nix}"
-      fi
+      echo "${filename%.nix}"
     done
   )
 }
