@@ -23,11 +23,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    manage-flatpaks = {
-      url = "path:./pkgs/manage-flatpaks";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     chromium-pwa-wmclass-sync = {
       url = "path:./pkgs/chromium-pwa-wmclass-sync";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -38,7 +33,6 @@
     {
       chromium-pwa-wmclass-sync,
       home-manager,
-      manage-flatpaks,
       nixpkgs,
       nixpkgs-unstable,
       sops-nix,
@@ -59,7 +53,6 @@
           };
           modules = [
             chromium-pwa-wmclass-sync.homeManagerModules.default
-            manage-flatpaks.homeManagerModules.default
             sops-nix.homeManagerModules.sops
             xremap.homeManagerModules.default
           ]

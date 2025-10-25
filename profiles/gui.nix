@@ -5,6 +5,8 @@
   home.packages = with pkgs; [
     beeper
     obsidian
+    cameractrls-gtk4
+    mission-center
     nerd-fonts.hack
     nerd-fonts.droid-sans-mono
     nerd-fonts.roboto-mono
