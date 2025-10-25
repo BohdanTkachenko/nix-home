@@ -29,5 +29,7 @@
     }
   },
   "terminal.integrated.fontFamily": "MesloLGL Nerd Font",
-  "update.mode": "none"
+  "update.mode": "none",
+  "window.menuStyle": "custom",
+  "window.titleBarStyle": "native"
 }
