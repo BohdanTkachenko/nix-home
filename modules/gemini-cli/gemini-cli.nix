@@ -18,6 +18,6 @@
   ];
 
   home.file.".gemini/settings.json".source = lib.mkForce (
-    config.lib.file.mkOutOfStoreSymlink "${builtins.toString ./.}/settings.json"
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/home-manager/modules/gemini-cli/settings.json"
   );
 }

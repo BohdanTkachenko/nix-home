@@ -27,6 +27,6 @@
   };
 
   home.file.".config/Code/User/settings.json".source = lib.mkForce (
-    config.lib.file.mkOutOfStoreSymlink "${builtins.toString ./.}/settings.json"
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/home-manager/modules/vscode/settings.json"
   );
 }
