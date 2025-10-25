@@ -10,6 +10,7 @@
     "*.sh.tmpl": "shellscript"
   },
   "files.autoSave": "onFocusChange",
+  "geminicodeassist.project": "autonomous-axiom-hz78w",
   "nix.enableLanguageServer": true,
   "nix.serverSettings": {
     "nil": {
@@ -28,6 +29,5 @@
     }
   },
   "terminal.integrated.fontFamily": "MesloLGL Nerd Font",
-  "update.mode": "none",
-  "geminicodeassist.project": "autonomous-axiom-hz78w"
+  "update.mode": "none"
 }
