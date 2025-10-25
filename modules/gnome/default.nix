@@ -33,7 +33,6 @@
       { package = caffeine; }
       { package = dash-to-dock; }
       { package = search-light; }
-      { package = xremap; }
     ];
   };
 
