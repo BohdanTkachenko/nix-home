@@ -1,6 +1,7 @@
 { pkgs, config, ... }:
 {
-  home.packages = with pkgs;
+  home.packages =
+    with pkgs;
     let
       guiApps = [
         baobab
@@ -34,6 +35,5 @@
 
   imports = [
     ../modules/easyeffects
-    ../modules/gemini-cli/gemini-cli.nix
   ];
 }

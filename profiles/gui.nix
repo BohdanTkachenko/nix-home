@@ -20,18 +20,12 @@ in
   nixGL.packages = nixgl.packages;
   nixGL.vulkan.enable = true;
 
-  home.packages =
-    with pkgs;
-    (map (p: config.lib.nixGL.wrap p) guiApps)
-    ++ [
-      nerd-fonts.hack
-      nerd-fonts.droid-sans-mono
-      nerd-fonts.roboto-mono
-    ];
+  home.packages = (map (p: config.lib.nixGL.wrap p) guiApps);
 
   imports = [
+    ../modules/fonts
     ../modules/gnome
     ../modules/ptyxis
-    ../modules/vscode/vscode.nix
+    ../modules/vscode
   ];
 }

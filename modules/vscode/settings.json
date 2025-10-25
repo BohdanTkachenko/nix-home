@@ -1,5 +1,4 @@
 {
-  "editor.fontFamily": "'MesloLGL Nerd Font', 'Droid Sans Mono', 'monospace', monospace",
   "editor.fontSize": 16,
   "editor.formatOnSave": true,
   "editor.tabSize": 2,
@@ -31,5 +30,6 @@
   "terminal.integrated.fontFamily": "MesloLGL Nerd Font",
   "update.mode": "none",
   "window.menuStyle": "custom",
-  "window.titleBarStyle": "native"
+  "window.titleBarStyle": "native",
+  "editor.fontFamily": "'MesloLGL Nerd Font Mono', 'Droid Sans Mono', 'monospace', monospace"
 }

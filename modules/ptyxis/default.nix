@@ -30,8 +30,7 @@ in
     "org/gnome/Ptyxis" = {
       default-profile-uuid = profileUuid;
       profile-uuids = [ profileUuid ];
-      use-system-font = false;
-      font-name = "Hack Nerd Font Mono 10";
+      use-system-font = true;
     };
 
     "org/gnome/Ptyxis/Profiles/${profileUuid}" = {
@@ -40,7 +39,7 @@ in
       palette = "Japanesque";
       use-custom-command = true;
       custom-command = "/usr/bin/bash";
-      cell-height-scale = 1.1;
+      cell-height-scale = 1.0;
     };
   };
 }
