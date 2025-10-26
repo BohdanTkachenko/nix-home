@@ -17,8 +17,11 @@
       package = (config.lib.nixGL.wrap pkgs.vscode);
       profiles.default = {
         extensions = with pkgs.vscode-extensions; [
+          foxundermoon.shell-format
+          hashicorp.terraform
           jnoortheen.nix-ide
           ms-python.python
+          ms-vscode.makefile-tools
         ];
       };
     };

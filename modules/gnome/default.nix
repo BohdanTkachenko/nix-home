@@ -2,6 +2,8 @@
 {
   home.packages = with pkgs; [
     adw-gtk3
+    adwaita-icon-theme
+    gnome-themes-extra
   ];
 
   xdg = {
@@ -21,8 +23,6 @@
 
   gtk = {
     enable = true;
-    gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
-    gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
   };
 
   programs.gnome-shell = {
@@ -40,6 +40,7 @@
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
       gtk-theme = "adw-gtk3-dark";
+      icon-theme = "Adwaita";
       gtk-enable-primary-paste = false;
       show-battery-percentage = true;
     };

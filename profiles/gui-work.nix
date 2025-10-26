@@ -17,4 +17,8 @@
       ];
     };
   };
+
+  imports = [
+    ../modules/vscode
+  ];
 }

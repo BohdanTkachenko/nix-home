@@ -6,11 +6,13 @@
     gh
     glab
     go
-    nodejs_24
+    google-cloud-sdk
     kubectl
+    libvirt
+    nodejs_24
     opentofu
-    terragrunt
     sops
+    terragrunt
   ];
 
   imports = [

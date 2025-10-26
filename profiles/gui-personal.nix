@@ -14,6 +14,7 @@
         google-chrome
         loupe
         papers
+        seabird
       ];
     in
     (map (p: config.lib.nixGL.wrap p) guiApps);
@@ -35,5 +36,6 @@
 
   imports = [
     ../modules/easyeffects
+    ../modules/vscode/personal.nix
   ];
 }

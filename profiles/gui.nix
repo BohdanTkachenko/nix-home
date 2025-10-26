@@ -22,6 +22,5 @@ in
     ../modules/fonts
     ../modules/gnome
     ../modules/ptyxis
-    ../modules/vscode
   ];
 }
