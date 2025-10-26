@@ -6,6 +6,9 @@ ifneq (,$(wildcard ./.env))
     export
 endif
 
+HOME_MANAGER_HOST := $(subst ",,$(HOME_MANAGER_HOST))
+HOME_MANAGER_ENV := $(subst ",,$(HOME_MANAGER_ENV))
+
 IMPURE_FLAG :=
 ifeq ($(HOME_MANAGER_HOST), personal-pc)
 IMPURE_FLAG := --impure
