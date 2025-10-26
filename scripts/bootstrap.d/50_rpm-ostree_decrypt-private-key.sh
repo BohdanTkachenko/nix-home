@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source "$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/../_common.sh"
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)/../_common.sh"
 
 IDENTITY_ENCRYPTED="$HOME_MANAGER_DIR/key.txt.age"
 IDENTITY_DECRYPTED="$HOME/.config/sops/age/keys.txt"
@@ -23,7 +23,7 @@ decrypt_key() {
     --passphrase \
     "$IDENTITY_ENCRYPTED"
   chmod 600 "$IDENTITY_DECRYPTED"
-  
+
   log success "Decrypted"
 }
 

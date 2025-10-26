@@ -34,7 +34,8 @@ fi
 #   log ok "File is correct."
 #   log input "Select an option:"
 log() {
-  local type="$1"; shift
+  local type="$1"
+  shift
   local text="$*"
 
   if [ -z "$type" ]; then
@@ -47,29 +48,69 @@ log() {
   local level=2
   local echo="echo -e"
   case $type in
-    section)  icon="⚙️ "; color="${COLOR_BOLD_PURPLE}"; level=0                ;;
-    item)     icon="🔷";  color="${COLOR_BOLD_CYAN}"  ; level=1                ;;
-    mismatch) icon="🟡";  color="${COLOR_YELLOW}"                              ;;
-    ok)       icon="🟢";  color="${COLOR_GREEN}"                               ;;
-    info)     icon="ℹ️ "; color="${COLOR_BLUE}"                                ;;
-    success)  icon="✅";  color="${COLOR_GREEN}"                               ;;
-    error)    icon="❌";  color="${COLOR_RED}"                                 ;;
-    warning)  icon="⚠️ "; color="${COLOR_YELLOW}"                              ;;
-    critical) icon="‼️ "; color="${COLOR_BOLD_RED}"                            ;;
-    skip)     icon="⏭️ "; color="${COLOR_YELLOW}"                              ;;
-    cancel)   icon="⏹️ "; color="${COLOR_RED}"                                 ;;
-    input)    icon="⌨️ "; color="${COLOR_BLUE}"  ; level=2; echo+=" -n" ;;
-    *)
-      echo "log ERROR: Unknown log type: '${type}'" >&2
-      return 1
-      ;;
-  esac  
+  section)
+    icon="⚙️ "
+    color="${COLOR_BOLD_PURPLE}"
+    level=0
+    ;;
+  item)
+    icon="🔷"
+    color="${COLOR_BOLD_CYAN}"
+    level=1
+    ;;
+  mismatch)
+    icon="🟡"
+    color="${COLOR_YELLOW}"
+    ;;
+  ok)
+    icon="🟢"
+    color="${COLOR_GREEN}"
+    ;;
+  info)
+    icon="ℹ️ "
+    color="${COLOR_BLUE}"
+    ;;
+  success)
+    icon="✅"
+    color="${COLOR_GREEN}"
+    ;;
+  error)
+    icon="❌"
+    color="${COLOR_RED}"
+    ;;
+  warning)
+    icon="⚠️ "
+    color="${COLOR_YELLOW}"
+    ;;
+  critical)
+    icon="‼️ "
+    color="${COLOR_BOLD_RED}"
+    ;;
+  skip)
+    icon="⏭️ "
+    color="${COLOR_YELLOW}"
+    ;;
+  cancel)
+    icon="⏹️ "
+    color="${COLOR_RED}"
+    ;;
+  input)
+    icon="⌨️ "
+    color="${COLOR_BLUE}"
+    level=2
+    echo+=" -n"
+    ;;
+  *)
+    echo "log ERROR: Unknown log type: '${type}'" >&2
+    return 1
+    ;;
+  esac
 
   local prefix=""
   case $level in
-    0) prefix="\n${icon}" ;;
-    1) prefix=" ╰─${icon}" ;;
-    2) prefix="    ╰── ${icon}" ;;
+  0) prefix="\n${icon}" ;;
+  1) prefix=" ╰─${icon}" ;;
+  2) prefix="    ╰── ${icon}" ;;
   esac
 
   $echo "${prefix} ${color}${text}${COLOR_RESET}" | tee -a ${LOG_FILE} >&2
@@ -89,7 +130,7 @@ log() {
 #   mapfile -t hosts < <(find_hosts "./my-hosts-dir")
 # -----------------------------------------------------------------------------
 find_hosts() {
-  local dir="${1:-.}"; shift
+  local dir="${1:-.}"
 
   if [[ ! -d "$dir" ]]; then
     log error "Directory '$dir' not found." >&2
@@ -149,7 +190,7 @@ get_option_aliases() {
     local alias_found=false
 
     # Strategy 2: Try the rest of the letters in the option name
-    for (( i=1; i<${#option}; i++ )); do
+    for ((i = 1; i < ${#option}; i++)); do
       local letter="${option:$i:1}"
       if ! [[ -v result_map[$letter] ]]; then
         result_map["$letter"]="$option"
@@ -181,88 +222,19 @@ get_option_aliases() {
 }
 # -----------------------------------------------------------------------------
 
-# -----------------------------------------------------------------------------
-# FUNCTION: input_choice
-#
-# Prompts a user to select an option from a list, using automatically
-# generated single-character aliases.
-#
-# @param $1 - The prompt message to display.
-# @param $2 - The name of the indexed array containing the list of options.
-# @return   - Echos the selected option string. Returns exit code 1 on error.
-#
-# USAGE:
-#   options=("server" "workstation" "router")
-#   selection=$(input_choice "Select a machine" options)
-# -----------------------------------------------------------------------------
-input_choice() {
-  local prompt="$1"
-  local -n options_array="$2"
+confirm() {
+  log input "Do you want to continue? [Y/n] "
+  read -n 1 response
+  echo
 
-  # 1. Generate the aliases for the given options
-  local -A aliases
-  if ! get_option_aliases aliases "${options_array[@]}"; then
-    # Propagate the error message from get_option_aliases
+  response=${response:-Y}
+  if [[ ! $response =~ ^[Yy]$ ]]; then
+    log cancel "Aborted"
     return 1
   fi
 
-  # 2. Build the prompt string, e.g., "s = server | w = workstation"
-  local options_str=""
-  local delim=""
-  # Sort keys for a consistent display order
-  for key in $(printf "%s\n" "${!aliases[@]}" | sort); do
-    local value="${aliases[$key]}"
-    local display_text=""
-    local lower_value="${value,,}"
-
-    # Check if the alias character exists in the option string (case-insensitive)
-    if [[ "$lower_value" == *"$key"* ]]; then
-      # Find the prefix before the first occurrence of the key
-      local prefix="${lower_value%%$key*}"
-      local index="${#prefix}"
-
-      # Reconstruct the string with the highlighted character
-      local original_prefix="${value:0:$index}"
-      local char_to_highlight="${value:$index:1}"
-      local suffix="${value:$((index + 1))}"
-      display_text="${original_prefix}${COLOR_BOLD_GREEN}${char_to_highlight}${COLOR_BOLD_BLUE}${suffix}"
-    else
-      # If the alias is a fallback, append it in parentheses, e.g., "reader (1)"
-      display_text="${value} (${COLOR_BOLD_GREEN}${key}${COLOR_BOLD_BLUE})"
-    fi
-
-    options_str+="${delim}${display_text}"
-    delim=" ${COLOR_BLUE}|${COLOR_BOLD_BLUE} "
-  done
-
-  log input "$prompt ($options_str${COLOR_BLUE}): ${COLOR_RESET}"
-
-  # 3. Read user input until a valid choice is made
-  local result=""
-  while true; do
-    read -rsn1 choice
-
-    # Ignore empty input (Enter key)
-    if [[ -z "$choice" ]]; then
-      continue
-    fi
-
-    local lower_choice="${choice,,}"
-
-    # Check if the chosen alias is valid
-    if [[ -v "aliases[$lower_choice]" ]]; then
-      result="${aliases[$lower_choice]}"
-      # Echo the character to the log and to the user's screen
-      echo -e "$choice" >&2
-      log success "You have selected '$result'."
-      break
-    fi
-  done
-
-  # Return the selected option value
-  echo "$result"
+  return 0
 }
-# -----------------------------------------------------------------------------
 
 ELEVATED_WARNED=false
 warn_once_elevated() {
@@ -277,23 +249,18 @@ ask_before_reboot() {
   local msg_reboot_rerun="Please run this script again after the reboot."
 
   log critical "$msg_reboot_required $msg_reboot_rerun"
-  
-  local options=(yes no)
-  choice=$(input_choice "Do you want to reboot now?" options)
 
-  if [[ $choice == "no" ]]; then
-    log cancel "User declined reboot. Exiting."
+  if ! confirm; then
     exit 10
   fi
-  
+
   systemctl reboot --now
 }
 
-
 copy_file() {
-  local src="$1"; shift
-  local dst="$1"; shift
-  local sudo="$1"; shift
+  local src="$1"
+  local dst="$2"
+  local sudo="$3"
 
   if [ -z "$sudo" ]; then
     mkdir -p "$(dirname "$dst")"
@@ -307,17 +274,14 @@ copy_file() {
 }
 
 ask_file_diff() {
-  local dst="$1"; shift
-  local diff="$1"; shift
+  local dst="$1"
+  local diff="$2"
 
   while true; do
-    local options=(abort accept diff skip)
-    choice=$(input_choice "File exists, but its contents differ for $dst" options)
-
-    case "$choice" in
-      "abort")
-        exit 1
-        ;;
+    PS3="File exists, but its contents differ for $dst"
+    local options=(accept dff skip abort)
+    select option in "${options[@]}"; do
+      case $option in
       "accept")
         return 0
         ;;
@@ -328,14 +292,22 @@ ask_file_diff() {
       "skip")
         return 1
         ;;
-    esac
+      "abort")
+        exit 1
+        ;;
+      *)
+        echo "Invalid option $REPLY"
+        continue
+        ;;
+      esac
+    done
   done
 }
 
 maybe_copy_file() {
-  local src="$1"; shift
-  local dst="$1"; shift
-  local sudo="$1"; shift
+  local src="$1"
+  local dst="$2"
+  local sudo="$3"
 
   log item $dst
 
@@ -362,5 +334,3 @@ maybe_copy_file() {
   log ok "Already correct."
   return 0
 }
-
-

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source "$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/../_common.sh"
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)/../_common.sh"
 
 ostree_make_group_available_sudo() {
-  local group="$1"; shift
+  local group="$1"
 
   warn_once_elevated
 
@@ -20,7 +20,7 @@ ostree_make_group_available_sudo() {
     exit 1
   fi
 
-  if ! (grep -E "^${group}:" /usr/lib/group | sudo tee -a /etc/group > /dev/null); then
+  if ! (grep -E "^${group}:" /usr/lib/group | sudo tee -a /etc/group >/dev/null); then
     log error "Failed to append group '$group' to /etc/group. Please check permissions."
     exit 1
   fi
@@ -31,8 +31,8 @@ ostree_make_group_available_sudo() {
 }
 
 add_user_to_group_sudo() {
-  local user="$1"; shift
-  local group="$1"; shift
+  local user="$1"
+  local group="$2"
 
   warn_once_elevated
 
@@ -45,7 +45,8 @@ add_user_to_group_sudo() {
 }
 
 ensure_user_in_group() {
-  local group="$1"; shift
+  local group="$1"
+
   log item "Checking group membership for '${group}'"
 
   if groups "$USER" | grep -q "\b${group}\b"; then
@@ -61,7 +62,7 @@ ensure_user_in_group() {
 
 main() {
   log section "Configuring User Groups..."
-  
+
   local change_made=false
 
   ensure_user_in_group "input" || change_made=true

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source "$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/../_common.sh"
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)/../_common.sh"
 
 add_user_to_group() {
-  local group="$1"; shift
-  
+  local group="$1"
+
   log item "Add user $USER to group $group"
 
   if groups "$USER" | grep -q "\b$group\b"; then
@@ -14,7 +14,7 @@ add_user_to_group() {
   fi
 
   warn_once_elevated
-  
+
   if ! sudo usermod -a -G "$group" $USER; then
     log error "Failed to add user to group."
     return 1
@@ -22,7 +22,7 @@ add_user_to_group() {
 
   log success "User added to group."
   log warning "A re-login or reboot is required for this to take effect."
-  
+
   return 2
 }
 
@@ -55,10 +55,10 @@ install_nix() {
     log ok "Nix is already installed."
     return 0
   fi
-  
+
   log mismatch "Not installed. Installing Debian nix package..."
   {
-     DEBIAN_FRONTEND=noninteractive sudo apt install -y nix
+    DEBIAN_FRONTEND=noninteractive sudo apt install -y nix
   } 2>&1 | tee -a "$LOG_FILE"
   exit_codes=("${PIPESTATUS[@]}")
 
@@ -99,7 +99,7 @@ install() {
   if [[ "$group_status" -eq 2 ]]; then
     needs_reboot="1"
   fi
-  
+
   if [[ -n "$needs_reboot" ]]; then
     ask_before_reboot
   fi

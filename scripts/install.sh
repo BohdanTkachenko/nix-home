@@ -6,7 +6,6 @@ REPO_NAME="nix-home"
 
 REAL_HOME=$(readlink -f "$HOME")
 HOME_MANAGER_DIR="$REAL_HOME/.config/home-manager"
-BOOTSTRAP_SCRIPT="$HOME_MANAGER_DIR/scripts/bootstrap.sh"
 
 HTTPS_URL="https://github.com/$GITHUB_USER/$REPO_NAME.git"
 SSH_URL="git@github.com:$GITHUB_USER/$REPO_NAME.git"
@@ -34,12 +33,8 @@ error() {
 }
 
 bootstrap() {
-  if [ ! -f "$BOOTSTRAP_SCRIPT" ]; then
-    error "Bootstrap script not found at '$BOOTSTRAP_SCRIPT'. Cannot continue."
-  fi
-
-  info "Handing over to the bootstrap script..."
-  (cd "$HOME_MANAGER_DIR" && exec "$BOOTSTRAP_SCRIPT")
+  info "Handing over to 'make bootstrap'..."
+  (cd "$HOME_MANAGER_DIR" && make bootstrap)
 
   exit 0
 }
@@ -49,58 +44,47 @@ bootstrap() {
 main() {
   info "👋 Starting Home Manager configuration setup..."
 
-  if ! command -v git &> /dev/null; then
+  if ! command -v git &>/dev/null; then
     error "Git is not installed. Please install Git to continue."
   fi
-    
+
   if [ -d "$HOME_MANAGER_DIR" ]; then
     warn "Home Manager directory '$HOME_MANAGER_DIR' already exists."
-        
-    local bootstrap_exists=false
-    if [ -f "$BOOTSTRAP_SCRIPT" ]; then
-      bootstrap_exists=true
-    fi
 
     while true; do
       printf "❓ ${YELLOW}What would you like to do?${NC}\n"
-      if [ "$bootstrap_exists" = true ]; then
-        printf "   ${BLUE}[R]esume${NC} - Use the existing directory and run its bootstrap script.\n"
-      fi
-      printf "   ${BLUE}[B]ackup${NC}   - Rename the directory to *.bak.YYYYMMDD-HHMMSS and start fresh.\n"
-      printf "   ${BLUE}[D]elete${NC}  - Permanently remove the directory and start fresh.\n"
-      printf "   ${BLUE}[A]bort${NC}   - Exit the installer.\n"
+      printf "   ${BLUE}[R]esume${NC} - Use the existing directory and run 'make bootstrap'.\n"
+      printf "   ${BLUE}[B]ackup${NC} - Rename the directory to *.bak.YYYYMMDD-HHMMSS and start fresh.\n"
+      printf "   ${BLUE}[D]elete${NC} - Permanently remove the directory and start fresh.\n"
+      printf "   ${BLUE}[A]bort${NC}  - Exit the installer.\n"
       printf "⌨️  ${BLUE}Choose an option:${NC} "
-            
+
       read -r -n 1 choice
       printf "\n\n"
 
       case "$choice" in
-        [Rr])
-          if [ "$bootstrap_exists" = true ]; then
-            bootstrap
-          else
-            printf "❌ ${RED}Invalid option '${choice}'. Please try again.${NC}\n\n"
-          fi
+      [Rr])
+        bootstrap
         ;;
-        [Bb])
-          local backup_name="${HOME_MANAGER_DIR}.bak.$(date +%Y%m%d-%H%M%S)"
-          info "Backing up directory to '$backup_name'..."
-          cd "$REAL_HOME"
-          mv "$HOME_MANAGER_DIR" "$backup_name"
-          break
+      [Bb])
+        local backup_name="${HOME_MANAGER_DIR}.bak.$(date +%Y%m%d-%H%M%S)"
+        info "Backing up directory to '$backup_name'..."
+        cd "$REAL_HOME"
+        mv "$HOME_MANAGER_DIR" "$backup_name"
+        break
         ;;
-        [Dd])
-          info "Removing existing directory..."
-          cd "$REAL_HOME"
-          rm -rf "$HOME_MANAGER_DIR"
-          break
+      [Dd])
+        info "Removing existing directory..."
+        cd "$REAL_HOME"
+        rm -rf "$HOME_MANAGER_DIR"
+        break
         ;;
-        [Aa])
-          info "Aborting installation."
-          exit 0
+      [Aa])
+        info "Aborting installation."
+        exit 0
         ;;
-        *)
-          printf "❌ ${RED}Invalid option '${choice}'. Please try again.${NC}\n\n"
+      *)
+        printf "❌ ${RED}Invalid option '${choice}'. Please try again.${NC}\n\n"
         ;;
       esac
     done

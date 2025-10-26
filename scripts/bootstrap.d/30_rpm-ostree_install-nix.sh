@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source "$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/../_common.sh"
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)/../_common.sh"
 
 OSTREE_PREPARE_ROOT_CONFIG_FILE=/etc/ostree/prepare-root.conf
 BOOTSTRAP_OSTREE_PREPARE_ROOT_CONFIG_FILE=$HOME_MANAGER_DIR/scripts/bootstrap.d/resources/prepare-root.conf
@@ -19,8 +19,8 @@ configure_ostree() {
   maybe_copy_file \
     "$BOOTSTRAP_OSTREE_PREPARE_ROOT_CONFIG_FILE" \
     "$OSTREE_PREPARE_ROOT_CONFIG_FILE" \
-    "sudo" \
-  || file_changed=$?
+    "sudo" ||
+    file_changed=$?
 
   log item "InitramfsEtc"
   if [ $file_changed -gt 10 ]; then
@@ -44,16 +44,16 @@ configure_ostree() {
     end
   ')
   case "$ostree_status" in
-    STAGED)
-      log mismatch "Staged ostree deployment is already configured correctly."
-      ask_before_reboot
-      return 11
-      ;;
-    NONE)
-      log mismatch "Neither currently booted nor staged ostree deployment is configured correctly. Running rpm-ostree initramfs-etc..."
-      update_initramfs_etc_sudo
-      return 12
-      ;;
+  STAGED)
+    log mismatch "Staged ostree deployment is already configured correctly."
+    ask_before_reboot
+    return 11
+    ;;
+  NONE)
+    log mismatch "Neither currently booted nor staged ostree deployment is configured correctly. Running rpm-ostree initramfs-etc..."
+    update_initramfs_etc_sudo
+    return 12
+    ;;
   esac
 
   log ok "Currently booted ostree deployment is already configured correctly."
@@ -70,7 +70,7 @@ install_nix() {
   else
     log mismatch "Not installed. Installing using Determinate Systems installer..."
     {
-      curl -fsSL https://install.determinate.systems/nix 2> >(tee -a "$LOG_FILE") | \
+      curl -fsSL https://install.determinate.systems/nix 2> >(tee -a "$LOG_FILE") |
         sh -s -- install --no-confirm
     } 2>&1 | tee -a "$LOG_FILE"
     exit_codes=("${PIPESTATUS[@]}")
