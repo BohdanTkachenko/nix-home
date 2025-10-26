@@ -37,13 +37,15 @@ configure: .env
 bootstrap: configure
 	@if [ -n "$$FORCE" ] || ! command -v home-manager &> /dev/null; then \
 		$(HOME_MANAGER_SWITCH_VERBOSE_ENV) $(HOME_MANAGER_SWITCH_IMPURE_ENV) ./scripts/bootstrap.sh; \
-		echo "Bootstrap complete. Running make install..."; \
-		$(MAKE) install; \
 	else \
 		echo "home-manager is already installed. Skipping bootstrap."; \
 	fi
 
-install:
+submodules:
+	@echo "Updating submodules..."
+	@git submodule update --init
+
+install: bootstrap submodules
 	@echo "Executing home-manager switch..."
 	@$(SOURCE_NIX_DAEMON) \
 	$(HM_CMD_SWITCH) \
