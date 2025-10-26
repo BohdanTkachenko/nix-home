@@ -58,4 +58,8 @@ clean:
 	@rm -f .env
 	@echo "Clean complete."
 
-.PHONY: default configure bootstrap install update clean
+code:
+	@echo "Opening project in VSCode..."
+	@code "$(mkfile_dir)"
+
+.PHONY: default configure bootstrap install update clean code
