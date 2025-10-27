@@ -37,6 +37,7 @@
   };
 
   imports = [
+    ./gui.nix
     ../modules/easyeffects
     ../modules/vscode/personal.nix
   ];

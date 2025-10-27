@@ -32,7 +32,11 @@
       { package = blur-my-shell; }
       { package = caffeine; }
       { package = dash-to-dock; }
+      { package = junk-notification-cleaner; }
+      { package = just-perfection; } # temporary
+      # { package = paperwm; }
       { package = search-light; }
+      { package = tiling-shell; }
     ];
   };
 

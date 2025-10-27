@@ -3,22 +3,25 @@
   dconf.settings = {
     "org/gnome/shell" = {
       favorite-apps = [
-        "chrome-kcnapeopnfjnjabihlnncilmkjbjjipg-Default.desktop" # Gemini
-        "chrome-ahdfkjhgpgcbfkeoehapbdafbjlnpejh-Default.desktop" # Duckie
+        "obsidian.desktop"
+        "Google Gemini.desktop"
+        "Duckie.desktop"
         "google-chrome.desktop"
-        "chrome-apkjikbjlghbonboeaehkeoadefnfjmb-Default.desktop" # Cider
+        "Cider.desktop"
         "org.gnome.Ptyxis.desktop"
-        "chrome-fmgjjmmmlfnkbppncabfkddbjimcfncm-Default.desktop" # Gmail
-        "chrome-pommaclcbfghclhalboakcipcmmndhcj-Default.desktop" # Google Chat
-        "chrome-kjbdgfilnfhdoflbpgamdcdgpehopbep-Default.desktop" # Google Calender
+        "Gmail.desktop"
+        "Google Chat.desktop"
+        "Google Meet.desktop"
+        "Google Calender.desktop"
         "spotify.desktop"
-        "chrome-hnpfjngllnobngcgfapefoaidbinmjnm-Profile_1.desktop" # WhatsApp
+        "WhatsApp Web.desktop"
         "1password.desktop"
       ];
     };
   };
 
   imports = [
+    ./gui.nix
     ../modules/vscode
   ];
 }

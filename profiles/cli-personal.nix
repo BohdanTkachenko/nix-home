@@ -16,6 +16,7 @@
   ];
 
   imports = [
+    ./cli.nix
     ../modules/gemini-cli
     ../modules/ssh/personal.nix
   ];
