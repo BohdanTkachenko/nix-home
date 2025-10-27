@@ -6,6 +6,7 @@
 
     shellAliases = {
       hm = "make -C ~/.config/home-manager";
+      hmcd = "cd ~/.config/home-manager";
 
       l = "eza --icons --group-directories-first -lah";
       t = "eza --icons --group-directories-first -L 2 -Tlah";

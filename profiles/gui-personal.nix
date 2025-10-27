@@ -6,6 +6,8 @@
       guiApps = [
         baobab
         brave
+        cilium-cli
+        claude-code
         firefox
         gnome-calculator
         gnome-extension-manager
