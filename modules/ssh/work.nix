@@ -7,6 +7,7 @@
 
     matchBlocks."*.corp.google.com" = {
       forwardAgent = true;
+      identityAgent = null;
     };
 
     matchBlocks."ws" = {

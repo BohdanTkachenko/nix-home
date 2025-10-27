@@ -6,10 +6,6 @@
   };
 
   programs.ssh = {
-    matchBlocks."*" = {
-      identityAgent = "~/.1password/agent.sock";
-    };
-
     includes = [
       config.sops.secrets.ssh_private_config.path
     ];
