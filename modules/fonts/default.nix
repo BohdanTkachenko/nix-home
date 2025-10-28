@@ -1,8 +1,13 @@
 { pkgs, ... }:
 let
-  emojiFontName = "Noto Color Emoji";
-  fontName = "Adwaita Sans 12";
-  monospaceFontName = "MesloLGL Nerd Font Mono 12";
+
+  emojiFontFamily = "Noto Color Emoji";
+  fontFamily = "Adwaita Sans";
+  monospaceFontFamily = "MesloLGL Nerd Font Mono";
+  gnomeFontSize = "12";
+  gnomeMonospaceFontSize = "12";
+  gnomeFontName = "${fontFamily} ${gnomeFontSize}";
+  gnomeMonospaceFontName = "${monospaceFontFamily} ${gnomeMonospaceFontSize}";
 in
 {
 
@@ -15,18 +20,18 @@ in
   fonts.fontconfig = {
     enable = true;
     defaultFonts = {
-      emoji = [ emojiFontName ];
-      monospace = [ monospaceFontName ];
-      sansSerif = [ fontName ];
-      serif = [ fontName ];
+      emoji = [ emojiFontFamily ];
+      monospace = [ monospaceFontFamily ];
+      sansSerif = [ fontFamily ];
+      serif = [ fontFamily ];
     };
   };
 
   dconf.settings = {
     "org/gnome/desktop/interface" = {
-      font-name = fontName;
-      document-font-name = fontName;
-      monospace-font-name = monospaceFontName;
+      font-name = gnomeFontName;
+      document-font-name = gnomeFontName;
+      monospace-font-name = gnomeMonospaceFontName;
     };
   };
 }
