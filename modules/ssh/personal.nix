@@ -9,6 +9,10 @@
     includes = [
       config.sops.secrets.ssh_private_config.path
     ];
+    extraConfig = ''
+      Host *
+        IdentityAgent ~/.1password/agent.sock
+    '';
   };
 
   home.file.".ssh/authorized_keys".source = ./personal_authorized_keys;
