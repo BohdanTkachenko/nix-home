@@ -23,6 +23,7 @@
     foxundermoon.shell-format
     hashicorp.terraform
     jnoortheen.nix-ide
+    ms-python.black-formatter
     ms-python.python
     ms-vscode.makefile-tools
   ];
