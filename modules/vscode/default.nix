@@ -19,6 +19,7 @@
   };
 
   programs.vscode.profiles.default.extensions = with pkgs.vscode-extensions; [
+    coolbear.systemd-unit-file
     foxundermoon.shell-format
     hashicorp.terraform
     jnoortheen.nix-ide
