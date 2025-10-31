@@ -1,7 +1,7 @@
 { ... }:
 {
   home.username = "bohdant";
-  home.homeDirectory = "/home/bohdant";
+  home.homeDirectory = "/usr/local/google/home/bohdant";
 
   imports = [
     ./cli-work.nix
