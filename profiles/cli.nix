@@ -15,6 +15,7 @@
     ../modules/fish
     ../modules/git
     ../modules/micro
+    ../modules/shpool
     ../modules/ssh
     ../modules/tealdeer
   ];
