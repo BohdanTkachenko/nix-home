@@ -25,7 +25,7 @@ add_channel() {
 
   log item "$name ($url)"
 
-  existing=$(nix-channel --list | grep -e "^$name ")
+  existing=$(nix-channel --list | grep -e "^$name " || true)
   if [[ ! -z "$existing" ]]; then
     existing_url=$(echo "$existing" | cut -d ' ' -f2)
     if [[ "$existing_url" == "$url" ]]; then
