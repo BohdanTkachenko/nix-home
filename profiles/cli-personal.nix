@@ -1,6 +1,7 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    act
     ansible
     direnv
     gh
@@ -12,6 +13,7 @@
     nodejs_24
     opentofu
     sops
+    strace
     terragrunt
   ];
 

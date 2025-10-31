@@ -31,5 +31,12 @@
   "update.mode": "none",
   "window.menuStyle": "custom",
   "window.titleBarStyle": "native",
-  "editor.fontFamily": "'MesloLGL Nerd Font Mono', 'Droid Sans Mono', 'monospace', monospace"
+  "editor.fontFamily": "'MesloLGL Nerd Font Mono', 'Droid Sans Mono', 'monospace', monospace",
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  },
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-containers"
+  },
+  "makefile.configureOnOpen": true
 }
