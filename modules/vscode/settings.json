@@ -1,4 +1,11 @@
 {
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-containers"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  },
+  "editor.fontFamily": "'MesloLGL Nerd Font Mono', 'Droid Sans Mono', 'monospace', monospace",
   "editor.fontSize": 16,
   "editor.formatOnSave": true,
   "editor.tabSize": 2,
@@ -10,6 +17,8 @@
   },
   "files.autoSave": "onFocusChange",
   "geminicodeassist.project": "autonomous-axiom-hz78w",
+  "git.confirmSync": false,
+  "makefile.configureOnOpen": true,
   "nix.enableLanguageServer": true,
   "nix.serverSettings": {
     "nil": {
@@ -30,13 +39,5 @@
   "terminal.integrated.fontFamily": "MesloLGL Nerd Font",
   "update.mode": "none",
   "window.menuStyle": "custom",
-  "window.titleBarStyle": "native",
-  "editor.fontFamily": "'MesloLGL Nerd Font Mono', 'Droid Sans Mono', 'monospace', monospace",
-  "[markdown]": {
-    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
-  },
-  "[dockerfile]": {
-    "editor.defaultFormatter": "ms-azuretools.vscode-containers"
-  },
-  "makefile.configureOnOpen": true
+  "window.titleBarStyle": "native"
 }
