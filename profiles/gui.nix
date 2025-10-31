@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  claude-desktop,
   ...
 }:
 let
@@ -9,10 +8,8 @@ let
     _1password-gui
     beeper
     cameractrls-gtk4
-    claude-desktop.packages.${pkgs.system}.claude-desktop
     mission-center
     obsidian
-    solaar
     spotify
   ];
 in

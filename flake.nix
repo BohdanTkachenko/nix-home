@@ -32,17 +32,11 @@
       url = "path:./pkgs/chromium-pwa-wmclass-sync";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    claude-desktop = {
-      url = "github:k3d3/claude-desktop-linux-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
     {
       chromium-pwa-wmclass-sync,
-      claude-desktop,
       home-manager,
       nixgl,
       nixpkgs,
@@ -61,7 +55,7 @@
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = {
-            inherit nixgl pkgs-unstable claude-desktop;
+            inherit nixgl pkgs-unstable;
           };
           modules = [
             chromium-pwa-wmclass-sync.homeManagerModules.default
