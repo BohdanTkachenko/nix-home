@@ -12,7 +12,7 @@
         "Gmail.desktop"
         "Google Chat.desktop"
         "Google Meet.desktop"
-        "Google Calender.desktop"
+        "Google Calendar.desktop"
         "spotify.desktop"
         "WhatsApp Web.desktop"
         "1password.desktop"
