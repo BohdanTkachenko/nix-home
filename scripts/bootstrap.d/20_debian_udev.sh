@@ -3,24 +3,23 @@ set -euo pipefail
 
 source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)/../_common.sh"
 
-UINPUT_MODULE="uinput"
-MODULES_FILE="/etc/modules"
+UINPUT_MODULE_FILE_SRC="$HOME_MANAGER_DIR/scripts/bootstrap.d/resources/uinput.conf"
+UINPUT_MODULE_FILE_DST="/etc/modules-load.d/uinput.conf"
 
 RULE_FILE="/etc/udev/rules.d/input.rules"
 RULE_LINE='KERNEL=="uinput", GROUP="input", TAG+="uaccess"'
 
-install_kernel_module() {
-  local module="$1"
+install_uinput_kernel_module() {
+  log section "Kernel module uinput"
 
-  log item "Kernel module $module"
+  local file_changed
+  maybe_copy_file \
+    "$UINPUT_MODULE_FILE_SRC" \
+    "$UINPUT_MODULE_FILE_DST" \
+    "sudo" ||
+    file_changed=$?
 
-  if grep -qFx "$module" "$MODULES_FILE" >/dev/null 2>&1; then
-    log ok "Module already registered in $MODULES_FILE"
-  else
-    warn_once_elevated
-    echo "$module" | sudo tee -a "$MODULES_FILE" >/dev/null 2>&1
-    log success "Registered module in $MODULES_FILE"
-  fi
+  log item "modprobe uinput"
 
   if lsmod | ug uinput >/dev/null 2>&1; then
     log ok "Module is already loaded"
@@ -48,9 +47,7 @@ install_udev_rule() {
 }
 
 main() {
-  log section "udev Rules"
-
-  install_kernel_module "$UINPUT_MODULE"
+  install_uinput_kernel_module
   install_udev_rule "$RULE_LINE"
 }
 
