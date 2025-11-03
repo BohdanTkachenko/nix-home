@@ -22,6 +22,7 @@
 
   imports = [
     ./gui.nix
+    ../modules/1password
     ../modules/vscode
   ];
 }

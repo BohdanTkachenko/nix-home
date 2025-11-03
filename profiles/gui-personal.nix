@@ -38,6 +38,7 @@
 
   imports = [
     ./gui.nix
+    ../modules/1password/personal.nix
     ../modules/easyeffects
     ../modules/vscode/personal.nix
   ];

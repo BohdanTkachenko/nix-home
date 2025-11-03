@@ -18,7 +18,6 @@ in
   home.packages = (map (p: config.lib.nixGL.wrap p) guiApps);
 
   imports = [
-    ../modules/1password
     ../modules/fonts
     ../modules/gnome
     ../modules/ptyxis
