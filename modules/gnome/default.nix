@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   home.packages = with pkgs; [
     adw-gtk3
@@ -40,7 +40,7 @@
     ];
   };
 
-  dconf.settings = {
+  dconf.settings = with lib.hm.gvariant; {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
       gtk-theme = "adw-gtk3-dark";
@@ -51,6 +51,20 @@
 
     "org/gnome/desktop/peripherals/mouse" = {
       natural-scroll = true;
+    };
+
+    "org/gnome/desktop/input-sources" = {
+      xkb-options = [ "grp:sclk_toggle" ];
+      sources = [
+        (mkTuple [
+          "xkb"
+          "us"
+        ])
+        (mkTuple [
+          "xkb"
+          "ua"
+        ])
+      ];
     };
 
     "org/gnome/desktop/wm/keybindings" = {
