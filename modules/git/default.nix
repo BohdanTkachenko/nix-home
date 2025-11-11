@@ -1,4 +1,12 @@
 { pkgs, ... }:
+let
+  gitKeyFinder = pkgs.writeShellScript "git-key-finder" ''
+    /usr/bin/ssh-add -L | \
+      ${pkgs.gnugrep}/bin/grep -v 'cert' | \
+      ${pkgs.coreutils}/bin/head -n 1 | \
+      ${pkgs.gawk}/bin/awk '{printf "key::%s %s", $1, $2}'
+  '';
+in
 {
   programs.git = {
     enable = true;
@@ -6,13 +14,20 @@
     userEmail = "bohdan@tkachenko.dev";
 
     signing = {
-      key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDrWBrKDssaTRUUStKYtEr/c2GQg0PhSXfakpMQSq346";
-      format = "ssh";
+      key = null;
       signByDefault = true;
-      signer = "${pkgs._1password-gui}/bin/op-ssh-sign";
     };
 
     extraConfig = {
+      gpg = {
+        format = "ssh";
+      };
+
+      "gpg \"ssh\"" = {
+        defaultKeyCommand = "${gitKeyFinder}";
+        program = "/usr/bin/ssh-keygen";
+      };
+
       core = {
         editor = "micro";
       };
