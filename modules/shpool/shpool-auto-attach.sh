@@ -18,9 +18,6 @@ while IFS=$'\t' read -r name _ status; do
     index=${name#"$PREFIX"}
     if [[ "$index" =~ ^[0-9]+$ ]]; then
       all_auto_indices+=("$index")
-      if [[ "$status" != "attached" ]]; then
-        detached_sessions+=("$index")
-      fi
     fi
   fi
 done <<<"$CLEAN_OUTPUT"
@@ -32,6 +29,7 @@ if [ ${#detached_sessions[@]} -gt 0 ]; then
   target_session="${PREFIX}${target_index}"
   echo "Found available session. Attaching to $target_session..."
 
+  export TERM=xterm-256color
   exec shpool attach "$target_session"
 fi
 
@@ -53,4 +51,5 @@ fi
 new_session="${PREFIX}${K}"
 echo "No available sessions. Creating and attaching to new session $new_session..."
 
+export TERM=xterm-256color
 exec shpool attach "$new_session"
