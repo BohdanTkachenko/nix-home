@@ -6,6 +6,7 @@
     direnv
     gh
     glab
+    cilium-cli
     go
     google-cloud-sdk
     kubectl

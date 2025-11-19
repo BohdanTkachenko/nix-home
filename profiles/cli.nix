@@ -8,6 +8,7 @@
     ripgrep
     trash-cli
     ugrep
+    xh
     yq
   ];
 
