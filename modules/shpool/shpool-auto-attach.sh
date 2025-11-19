@@ -11,7 +11,7 @@ CLEAN_OUTPUT=$(echo "$SHPOOL_OUTPUT" | tail -n +2)
 
 detached_sessions=()
 all_auto_indices=()
-while IFS=$'\t' read -r name _ status; do
+while IFS=$'\t' read -r name _ _; do
   [ -z "$name" ] && continue
 
   if [[ "$name" == "$PREFIX"* ]]; then
