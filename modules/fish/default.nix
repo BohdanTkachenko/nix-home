@@ -56,11 +56,6 @@
 
     plugins = with pkgs.fishPlugins; [
       {
-        name = "tide";
-        inherit (tide) src;
-      }
-
-      {
         name = "sponge";
         inherit (z) src;
       }
@@ -77,16 +72,6 @@
 
         set -U fish_color_command green --bold
         set -U fish_color_end blue
-
-        tide configure --auto \
-          --style=Lean \
-          --prompt_colors='True color' \
-          --show_time='24-hour format' \
-          --lean_prompt_height='One line' \
-          --prompt_spacing=Compact \
-          --icons='Many icons' \
-          --transient=Yes
-        tide reload
 
         set -U fish_configured
       end

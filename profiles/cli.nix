@@ -20,6 +20,7 @@
     ../modules/rust
     ../modules/shpool
     ../modules/ssh
+    ../modules/starship
     ../modules/tealdeer
   ];
 }
