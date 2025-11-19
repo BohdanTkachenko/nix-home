@@ -22,6 +22,7 @@
   imports = [
     ./cli.nix
     ../modules/gemini-cli
+    ../modules/jujutsu
     ../modules/ssh/personal.nix
   ];
 }
