@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   pkgs-unstable,
   ...
 }:
@@ -10,6 +11,12 @@
     nix
     nil
     nixfmt-rfc-style
+    # Terraform
+    terraform-ls
+    # Terraform wrapper that executes tofu
+    (pkgs.writeShellScriptBin "terraform" ''
+      exec ${pkgs-unstable.opentofu}/bin/tofu "$@"
+    '')
   ];
 
   programs = {

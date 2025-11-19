@@ -5,6 +5,16 @@
   "[markdown]": {
     "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
   },
+  "[terraform]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file"
+  },
+  "[terraform-vars]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file"
+  },
   "editor.fontFamily": "'MesloLGL Nerd Font Mono', 'Droid Sans Mono', 'monospace', monospace",
   "editor.fontSize": 16,
   "editor.formatOnSave": true,
@@ -39,5 +49,10 @@
   "terminal.integrated.fontFamily": "MesloLGL Nerd Font",
   "update.mode": "none",
   "window.menuStyle": "custom",
-  "window.titleBarStyle": "native"
+  "window.titleBarStyle": "native",
+  "workbench.startupEditor": "none",
+  "terraform.codelens.referenceCount": true,
+  "terraform.mcp.server.enable": true,
+  "terraform.experimentalFeatures.prefillRequiredFields": true,
+  "terraform.experimentalFeatures.validateOnSave": true
 }
