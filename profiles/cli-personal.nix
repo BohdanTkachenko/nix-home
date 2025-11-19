@@ -3,12 +3,13 @@
   home.packages = with pkgs; [
     act
     ansible
+    cilium-cli
     direnv
     gh
     glab
-    cilium-cli
     go
     google-cloud-sdk
+    jujutsu
     kubectl
     libvirt
     nodejs_24
