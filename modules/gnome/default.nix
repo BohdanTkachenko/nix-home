@@ -47,6 +47,7 @@
       icon-theme = "Adwaita";
       gtk-enable-primary-paste = false;
       show-battery-percentage = true;
+      enable-hot-corners = false;
     };
 
     "org/gnome/desktop/peripherals/mouse" = {
@@ -73,6 +74,8 @@
       switch-applications-backward = [ "<Shift><Control>Tab" ];
       switch-group = [ "<Control>grave" ];
       switch-group-backward = [ "<Shift><Control>grave" ];
+      switch-to-workspace-left = [ ];
+      switch-to-workspace-right = [ ];
     };
 
     "org/gnome/desktop/wm/preferences" = {
