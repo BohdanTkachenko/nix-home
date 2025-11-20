@@ -96,6 +96,24 @@ in
         "$container"
       ];
 
+      hostname = {
+        format = "[@$hostname]($style)[:](bright-black) ";
+        aliases = {
+          dan = "ws";
+        };
+      };
+
+      username.format = "[$user]($style)";
+
+      directory = {
+        truncation_length = 0;
+        substitutions = {
+          "/google/src/cloud/bohdant/" = " ";
+          "/google3/" = " //";
+          "/google3" = " //"; 
+        };
+      };
+
       cmd_duration = {
         show_notifications = true;
         format = "[󰔟 $duration]($style) ";
@@ -108,9 +126,14 @@ in
 
       direnv.disabled = false;
       status.disabled = false;
-      os.disabled = false;
+
+      os = {
+        disabled = false;
+        style = "bold bright-black";
+      };
 
       python.format = "[$symbol$virtualenv]($style) ";
+      git_branch.format = "[$symbol$branch(:$remote_branch)]($style) ";
 
       custom.jj = {
         description = "The current jj status";
@@ -152,6 +175,7 @@ in
       git_status.disabled = true;
       custom.git_status = {
         when = "! jj --ignore-working-copy root";
+        require_repo = true;
         command = "starship module git_status";
         style = ""; # This disables the default "(bold green)" style
         description = "Only show git_status if we're not in a jj repo";
@@ -160,6 +184,7 @@ in
       git_commit.disabled = true;
       custom.git_commit = {
         when = "! jj --ignore-working-copy root";
+        require_repo = true;
         command = "starship module git_commit";
         style = "";
         description = "Only show git_commit if we're not in a jj repo";
@@ -168,6 +193,7 @@ in
       git_metrics.disabled = true;
       custom.git_metrics = {
         when = "! jj --ignore-working-copy root";
+        require_repo = true;
         command = "starship module git_metrics";
         description = "Only show git_metrics if we're not in a jj repo";
         style = "";
@@ -176,6 +202,7 @@ in
       git_branch.disabled = true;
       custom.git_branch = {
         when = "! jj --ignore-working-copy root";
+        require_repo = true;
         command = "starship module git_branch";
         description = "Only show git_branch if we're not in a jj repo";
         style = "";
