@@ -12,7 +12,7 @@ let
   ];
 in
 {
-  programs.chromium-pwa-wmclass-sync.service.enable = true;
+  # programs.chromium-pwa-wmclass-sync.service.enable = true;
 
   home.packages = (map (p: config.lib.nixGL.wrap p) guiApps);
 
