@@ -14,7 +14,6 @@
       enable = true;
       entries = [
         "${pkgs._1password-gui}/share/applications/1password.desktop"
-        "${pkgs.beeper}/share/applications/beepertexts.desktop"
       ];
     };
   };

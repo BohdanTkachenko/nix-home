@@ -5,7 +5,6 @@
 }:
 let
   guiApps = with pkgs; [
-    beeper
     cameractrls-gtk4
     mission-center
     obsidian

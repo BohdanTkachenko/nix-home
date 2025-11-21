@@ -27,7 +27,6 @@
         "org.gnome.Ptyxis.desktop"
         "code.desktop"
         "spotify.desktop"
-        "beepertexts.desktop"
         "1password.desktop"
         "org.gnome.Nautilus.desktop"
       ];
