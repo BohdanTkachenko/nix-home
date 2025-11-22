@@ -1,7 +1,10 @@
-{ nixgl, ... }:
+{ nixgl, lib, ... }:
 {
-  nixGL.packages = nixgl.packages;
-  nixGL.defaultWrapper = "mesa";
-  nixGL.installScripts = [ "mesa" ];
-  nixGL.vulkan.enable = true;
+  # nixGL is only needed on non-NixOS systems (nixgl is null on NixOS)
+  nixGL = lib.mkIf (nixgl != null) {
+    packages = nixgl.packages;
+    defaultWrapper = "mesa";
+    installScripts = [ "mesa" ];
+    vulkan.enable = true;
+  };
 }

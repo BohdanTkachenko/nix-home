@@ -43,6 +43,12 @@ in
       pull = {
         rebase = true;
       };
+
+      url = {
+        "git@github.com:" = {
+          pushInsteadOf = "https://github.com/";
+        };
+      };
     };
   };
 }

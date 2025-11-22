@@ -1,5 +1,5 @@
 {
-  description = "Home Manager configuration";
+  description = "NixOS and Home Manager configuration";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
@@ -28,6 +28,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    disko = {
+      url = "github:nix-community/disko/latest";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     chromium-pwa-wmclass-sync = {
       url = "path:./pkgs/chromium-pwa-wmclass-sync";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -36,7 +46,10 @@
 
   outputs =
     {
+      self,
       chromium-pwa-wmclass-sync,
+      disko,
+      lanzaboote,
       home-manager,
       nixgl,
       nixpkgs,
@@ -53,6 +66,7 @@
         config.allowUnfree = true;
       };
       lib = nixpkgs.lib;
+
       mkHome =
         hostSpecificModule:
         home-manager.lib.homeManagerConfiguration {
@@ -67,8 +81,59 @@
           ]
           ++ [ hostSpecificModule ];
         };
+
+      mkNixos =
+        machineModule:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = {
+            inherit pkgs-unstable;
+          };
+          modules = [
+            sops-nix.nixosModules.sops
+            xremap.nixosModules.default
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                extraSpecialArgs = {
+                  inherit pkgs-unstable;
+                  nixgl = null;
+                };
+                sharedModules = [
+                  chromium-pwa-wmclass-sync.homeManagerModules.default
+                  sops-nix.homeManagerModules.sops
+                  xremap.homeManagerModules.default
+                ];
+              };
+            }
+            disko.nixosModules.disko
+            lanzaboote.nixosModules.lanzaboote
+
+            machineModule
+          ];
+        };
+      personalLaptop = mkNixos ./machines/personal-laptop;
     in
     {
+      nixosConfigurations = {
+        personal-laptop = personalLaptop;
+
+        installer-iso = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = {
+            inherit self;
+            targetConfig = personalLaptop;
+          };
+          modules = [
+            disko.nixosModules.disko
+            ./nixos/installer-iso.nix
+          ];
+        };
+      };
+
+      # Standalone Home Manager configurations (for non-NixOS systems)
       homeConfigurations = lib.mapAttrs' (
         fileName: fileType:
         if
