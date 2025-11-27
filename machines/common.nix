@@ -45,4 +45,10 @@
 
       targets.genericLinux.enable = lib.mkForce false;
     };
+  
+  programs._1password.enable = true;
+  programs._1password-gui = {
+    enable = true;
+    polkitPolicyOwners = [ "dan" ];
+  };
 }
