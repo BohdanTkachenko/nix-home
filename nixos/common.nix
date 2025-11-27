@@ -61,7 +61,6 @@
   };
 
   console = {
-    font = "${pkgs.terminus_font}/share/consolefonts/ter-u28n.psf.gz";
     keyMap = "us";
   };
 
@@ -78,19 +77,6 @@
     enable = true;
     displayManager.gdm.enable = true;
     desktopManager.gnome.enable = true;
-    dpi = 180;
-    
-    libinput = {
-      enable = true;
-      touchpad = {
-        accelSpeed = "0.3";
-        clickMethod = "clickfinger";
-        disableWhileTyping = true;
-        scrollMethod = "twofinger";
-        naturalScrolling = true;
-        tapping = false;
-      };
-    };
   };
 
   programs.xwayland.enable = true;
@@ -113,9 +99,6 @@
   ];
 
   services.fwupd.enable = true;
-
-  # Weekly TRIM for SSD maintenance
-  services.fstrim.enable = true;
 
   security.polkit.enable = true;
   

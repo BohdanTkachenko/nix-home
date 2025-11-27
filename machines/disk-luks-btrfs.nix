@@ -1,9 +1,12 @@
+# Common LUKS + Btrfs disk configuration
+# Use this by setting the device path in the importing module
+{ diskDevice }:
 { ... }:
 {
   disko.devices = {
     disk = {
       main = {
-        device = "/dev/disk/by-id/nvme-WD_BLACK_SN850X_4000GB_23402H800030";
+        device = diskDevice;
         type = "disk";
         content = {
           type = "gpt";

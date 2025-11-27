@@ -1,10 +1,9 @@
+# Common machine configuration shared between all personal machines
 { lib, pkgs, ... }:
 {
   imports = [
-    ../../nixos/common.nix
+    ../nixos/common.nix
   ];
-
-  networking.hostName = lib.mkDefault "dan-idea";
 
   users.users.dan = {
     isNormalUser = true;
@@ -21,13 +20,19 @@
 
   programs.fish.enable = true;
 
+  boot.loader = {
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
+  };
+
+  networking.useDHCP = lib.mkDefault true;
+
   home-manager.users.dan =
     { config, lib, ... }:
     {
       imports = [
-        ../../profiles/common.nix
-        ../../profiles/lenovo-thinkpad-z16-gen1.nix
-        ../../profiles/personal.nix
+        ../profiles/common.nix
+        ../profiles/personal.nix
       ];
 
       home = {

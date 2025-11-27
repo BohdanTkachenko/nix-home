@@ -115,10 +115,12 @@
           ];
         };
       personalLaptop = mkNixos ./machines/personal-laptop;
+      personalPc = mkNixos ./machines/personal-pc;
     in
     {
       nixosConfigurations = {
         dan-idea = personalLaptop;
+        nyancat = personalPc;
 
         installer-iso = nixpkgs.lib.nixosSystem {
           inherit system;

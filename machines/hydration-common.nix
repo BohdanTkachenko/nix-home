@@ -1,3 +1,4 @@
+# Common hydration configuration for personal machines
 {
   config,
   lib,
