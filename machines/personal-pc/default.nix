@@ -25,9 +25,16 @@
     extraPackages = with pkgs; [
       adwaita-icon-theme
     ];
+    package = pkgs.steam.override {
+      extraEnv = {
+        MANGOHUD = true;
+        DXVK_HUD = "compiler";
+      };
+    };
   };
 
   programs.gamemode.enable = true;
+  environment.systemPackages = with pkgs; [ mangohud ];
 
   home-manager.users.dan.xdg.autostart.entries = [
     (pkgs.makeDesktopItem {
