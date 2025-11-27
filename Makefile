@@ -58,6 +58,10 @@ update:
 	@echo "Applying updates..."
 	@$(MAKE) install
 
+key-decrypt:
+	mkdir "$HOME/.config/sops/age"
+	nix-shell -p age --command "age --decrypt --output='$HOME/.config/sops/age/keys.txt' key.txt.age"
+
 clean:
 	@echo "Cleaning generated files..."
 	@rm -f .env

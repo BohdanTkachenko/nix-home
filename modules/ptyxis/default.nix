@@ -37,8 +37,6 @@ in
       label = "The Coffee Coder";
       opacity = lib.gvariant.mkDouble 0.9;
       palette = "Japanesque";
-      use-custom-command = true;
-      custom-command = "/usr/bin/bash";
       cell-height-scale = 1.0;
     };
   };

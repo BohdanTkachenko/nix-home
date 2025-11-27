@@ -4,7 +4,7 @@
     ../../nixos/common.nix
   ];
 
-  networking.hostName = lib.mkDefault "personal-laptop";
+  networking.hostName = lib.mkDefault "dan-idea";
 
   users.users.dan = {
     isNormalUser = true;

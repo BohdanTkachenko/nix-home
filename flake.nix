@@ -118,7 +118,7 @@
     in
     {
       nixosConfigurations = {
-        personal-laptop = personalLaptop;
+        dan-idea = personalLaptop;
 
         installer-iso = nixpkgs.lib.nixosSystem {
           inherit system;

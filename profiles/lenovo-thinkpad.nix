@@ -1,11 +1,11 @@
 { lib, pkgs, ... }:
 {
-  programs.gnome-shell = {
-    enable = true;
-    extensions = with pkgs.gnomeExtensions; [
-      { package = xremap; }
-    ];
-  };
+  # programs.gnome-shell = {
+  #   enable = true;
+  #   extensions = with pkgs.gnomeExtensions; [
+  #     { package = xremap; }
+  #   ];
+  # };
 
   services.xremap = {
     enable = lib.mkForce true;

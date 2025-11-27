@@ -36,10 +36,24 @@
       # { package = paperwm; }
       { package = search-light; }
       { package = tiling-shell; }
+      # { package = bing-wallpaper-changer ;}
     ];
   };
 
   dconf.settings = with lib.hm.gvariant; {
+    "org/gnome/mutter" = {
+      experimental-features = "['scale-monitor-framebuffer']";
+    };
+
+    "org/gnome/desktop/session" = {
+      idle-delay = 900;
+    };
+
+    "org/gnome/settings-daemon/plugins/power" = {
+      sleep-inactive-battery-timeout = 1800;
+      sleep-inactive-ac-timeout = 3600;
+    };
+
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
       gtk-theme = "adw-gtk3-dark";
@@ -51,6 +65,10 @@
 
     "org/gnome/desktop/peripherals/mouse" = {
       natural-scroll = true;
+    };
+
+    "org/gnome/desktop/peripherals/touchpad" = {
+      tap-to-click = false;
     };
 
     "org/gnome/desktop/input-sources" = {

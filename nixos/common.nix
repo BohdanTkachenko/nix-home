@@ -44,7 +44,7 @@
     firewall.enable = true;
   };
 
-  time.timeZone = "America/Los_Angeles";
+  time.timeZone = "America/New_York";
   i18n = {
     defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
@@ -61,7 +61,7 @@
   };
 
   console = {
-    font = "Lat2-Terminus16";
+    font = "${pkgs.terminus_font}/share/consolefonts/ter-u28n.psf.gz";
     keyMap = "us";
   };
 
@@ -73,11 +73,31 @@
     pulse.enable = true;
   };
 
+
   services.xserver = {
     enable = true;
     displayManager.gdm.enable = true;
     desktopManager.gnome.enable = true;
+    dpi = 180;
+    
+    libinput = {
+      enable = true;
+      touchpad = {
+        accelSpeed = "0.3";
+        clickMethod = "clickfinger";
+        disableWhileTyping = true;
+        scrollMethod = "twofinger";
+        naturalScrolling = true;
+        tapping = false;
+      };
+    };
   };
+
+  programs.xwayland.enable = true;
+
+  environment.gnome.excludePackages = (with pkgs; [
+    gnome-tour
+  ]);
 
   environment.systemPackages = with pkgs; [
     sbctl
@@ -85,9 +105,11 @@
     bash
     git
     curl
+    tmux
     wget
     vim
     htop
+    google-chrome
   ];
 
   services.fwupd.enable = true;
@@ -96,5 +118,14 @@
   services.fstrim.enable = true;
 
   security.polkit.enable = true;
-  security.sudo.wheelNeedsPassword = true;
+  
+  security.sudo = {
+    wheelNeedsPassword = true;
+    extraConfig = ''
+      Defaults timestamp_timeout=60
+      %wheel ALL=(root) NOPASSWD: /run/current-system/sw/bin/nixos-rebuild switch*
+    '';
+  };
+
+  home-manager.useUserPackages = true;
 }
