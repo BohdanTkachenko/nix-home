@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 {
   imports = [
     ../common.nix
@@ -22,7 +22,18 @@
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
+    extraPackages = with pkgs; [
+      adwaita-icon-theme
+    ];
   };
 
   programs.gamemode.enable = true;
+
+  home-manager.users.dan.xdg.autostart.entries = [
+    (pkgs.makeDesktopItem {
+      name = "steam-silent";
+      desktopName = "Steam Silent";
+      exec = "steam -silent";
+    })
+  ];
 }
