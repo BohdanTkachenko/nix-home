@@ -18,4 +18,11 @@
   home-manager.users.dan.imports = [
     ../../profiles/pc-personal.nix
   ];
+
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+  };
+
+  programs.gamemode.enable = true;
 }
