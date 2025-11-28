@@ -13,7 +13,13 @@
     autostart = {
       enable = true;
       entries = [
-        "${pkgs._1password-gui}/share/applications/1password.desktop"
+        "${pkgs.makeDesktopItem {
+          name = "1password-silent";
+          desktopName = "1Password";
+          exec = "${pkgs._1password-gui}/bin/1password -silent";
+        }}/share/applications/1password-silent.desktop"
+
+        "${pkgs.spotify}/share/applications/spotify.desktop"
       ];
     };
   };
@@ -32,11 +38,11 @@
       { package = caffeine; }
       { package = dash-to-dock; }
       { package = junk-notification-cleaner; }
-      { package = just-perfection; } # temporary
+      { package = just-perfection; }
       # { package = paperwm; }
       { package = search-light; }
       { package = tiling-shell; }
-      # { package = bing-wallpaper-changer ;}
+      { package = bing-wallpaper-changer; }
     ];
   };
 
@@ -45,9 +51,19 @@
       idle-delay = 900;
     };
 
+    "org/gnome/shell/extensions/just-perfection" = {
+      quick-settings-airplane-mode = false;
+      startup-status = 0;
+    };
+
     "org/gnome/settings-daemon/plugins/power" = {
       sleep-inactive-battery-timeout = 1800;
       sleep-inactive-ac-timeout = 3600;
+    };
+
+    "org/gnome/shell/extensions/bingwallpaper" = {
+      icon-name = "low-frame-symbolic";
+      random-mode-include-only-uhd = true;
     };
 
     "org/gnome/desktop/interface" = {

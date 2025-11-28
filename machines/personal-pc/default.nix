@@ -37,11 +37,11 @@
   environment.systemPackages = with pkgs; [ mangohud ];
 
   home-manager.users.dan.xdg.autostart.entries = [
-    (pkgs.makeDesktopItem {
+    "${pkgs.makeDesktopItem {
       name = "steam-silent";
       desktopName = "Steam Silent";
       exec = "steam -silent";
-    })
+    }}/share/applications/steam-silent.desktop"
   ];
 
   home-manager.users.dan.xdg.desktopEntries.overwatch2 = {

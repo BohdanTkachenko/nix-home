@@ -98,6 +98,10 @@
     google-chrome
   ];
 
+  home-manager.users.dan.xdg.autostart.entries = [
+    "${pkgs.google-chrome}/share/applications/google-chrome.desktop"
+  ];
+
   services.fwupd.enable = true;
 
   security.polkit.enable = true;
