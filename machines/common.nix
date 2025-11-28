@@ -46,6 +46,11 @@
       targets.genericLinux.enable = lib.mkForce false;
     };
   
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
+
   programs._1password.enable = true;
   programs._1password-gui = {
     enable = true;

@@ -8,6 +8,12 @@
         name = "Bohdan Tkachenko";
       };
 
+      signing = {
+        behavior = "own";
+        backend = "ssh";
+        key = "~/.ssh/id_ed25519";
+      };
+
       aliases = {
         s = [ "status" ];
         x = [
