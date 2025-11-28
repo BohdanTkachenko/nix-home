@@ -31,29 +31,11 @@ let
   ]
   ++ flakeOutPaths;
 
+  secureBootScript = pkgs.callPackage ../scripts/init-secureboot.nix { };
+  
   configureTargetScript = pkgs.writeShellScript "configure-target-system" ''
     set -euo pipefail
-
-    echo "--> Configuring Secure Boot (Lanzaboote)..."
-    mkdir -p /etc/secureboot
-    sbctl create-keys
-
-    echo "--> Priming EFI partition..."
-    bootctl install
-
-    echo "--> Signing bootloader and kernel..."
-    sbctl sign-all
-
-    echo "--> Enrolling keys (Best Effort)..."
-    if sbctl enroll-keys --microsoft; then
-        echo "SUCCESS: Keys enrolled."
-    else
-        echo "WARNING: Could not enroll keys (BIOS likely not in Setup Mode)."
-        echo "Run 'sudo sbctl enroll-keys --microsoft' manually after reboot."
-    fi
-
-    echo "--> Registering Bootloader..."
-    /nix/var/nix/profiles/system/bin/switch-to-configuration boot
+    ${secureBootScript}/bin/init-secureboot
   '';
 
   targetDisk = targetConfig.config.disko.devices.disk.main.device;

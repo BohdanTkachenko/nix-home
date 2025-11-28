@@ -153,5 +153,9 @@
         else
           lib.nameValuePair "" null
       ) (builtins.readDir ./hosts);
+
+      packages.${system} = {
+        init-secureboot = pkgs.callPackage ./scripts/init-secureboot.nix { };
+      };
     };
 }
