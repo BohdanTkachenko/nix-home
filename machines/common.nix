@@ -32,6 +32,14 @@
     tctiEnvironment.enable = true;
   };
 
+  services.displayManager.autoLogin.user = "dan";
+  boot.initrd.systemd.enable = true;
+  systemd.services.display-manager.serviceConfig.KeyringMode = lib.mkForce "inherit";
+  security.pam.services.sddm-autologin.text = pkgs.lib.mkBefore ''
+    auth optional ${pkgs.systemd}/lib/security/pam_systemd_loadkey.so
+    auth include sddm
+  '';
+
   networking.useDHCP = lib.mkDefault true;
 
   home-manager.users.dan =
