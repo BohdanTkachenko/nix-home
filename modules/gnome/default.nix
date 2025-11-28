@@ -41,10 +41,6 @@
   };
 
   dconf.settings = with lib.hm.gvariant; {
-    "org/gnome/mutter" = {
-      experimental-features = "['scale-monitor-framebuffer']";
-    };
-
     "org/gnome/desktop/session" = {
       idle-delay = 900;
     };
@@ -100,6 +96,12 @@
     };
 
     "org/gnome/mutter" = {
+      experimental-features = [
+        "scale-monitor-framebuffer"
+        "variable-refresh-rate"
+        "xwayland-native-scaling"
+      ];
+
       overlay-key = "Super_R";
     };
 
