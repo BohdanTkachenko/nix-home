@@ -21,12 +21,35 @@
 
   programs.fish.enable = true;
 
-  boot.loader = {
-    systemd-boot = {
-      enable = true;
-      configurationLimit = 5;
+  boot = {
+    loader = {
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 5;
+      };
+      efi.canTouchEfiVariables = true;
+      timeout = 0;
     };
-    efi.canTouchEfiVariables = true;
+
+    plymouth = {
+      enable = true;
+      theme = "lone";
+      themePackages = with pkgs; [
+        (adi1090x-plymouth-themes.override {
+          selected_themes = [ "lone" ];
+        })
+      ];
+    };
+
+    consoleLogLevel = 3;
+    initrd.verbose = false;
+    kernelParams = [
+      "quiet"
+      "splash"
+      "boot.shell_on_fail"
+      "udev.log_priority=3"
+      "rd.systemd.show_status=auto"
+    ];
   };
 
   security.tpm2 = {
