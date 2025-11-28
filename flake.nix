@@ -114,25 +114,28 @@
             machineModule
           ];
         };
-      personalLaptop = mkNixos ./machines/personal-laptop;
-      personalPc = mkNixos ./machines/personal-pc;
-    in
-    {
-      nixosConfigurations = {
-        dan-idea = personalLaptop;
-        nyancat = personalPc;
 
-        installer-iso = nixpkgs.lib.nixosSystem {
+      mkNixosIso = targetConfig: nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = {
             inherit self;
-            targetConfig = personalLaptop;
+            targetConfig = targetConfig;
           };
           modules = [
             disko.nixosModules.disko
             ./nixos/installer-iso.nix
           ];
         };
+
+      personalLaptop = mkNixos ./machines/personal-laptop;
+      personalPc = mkNixos ./machines/personal-pc;
+    in
+    {
+      nixosConfigurations = {
+        dan-idea = personalLaptop;
+        dan-idea-iso = mkNixosIso personalLaptop;
+        nyancat = personalPc;
+        nyancat-iso = mkNixosIso personalPc;
       };
 
       # Standalone Home Manager configurations (for non-NixOS systems)
