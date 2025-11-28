@@ -14,6 +14,7 @@
       "video"
       "audio"
       "input"
+      "tss"
     ];
     shell = pkgs.fish;
   };
@@ -23,6 +24,12 @@
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
+  };
+
+  security.tpm2 = {
+    enable = true;
+    pkcs11.enable = true;
+    tctiEnvironment.enable = true;
   };
 
   networking.useDHCP = lib.mkDefault true;
