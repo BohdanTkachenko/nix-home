@@ -13,6 +13,7 @@
         gnome-logs
         gnome-text-editor
         loupe
+        mailspring
         papers
         seabird
       ];
