@@ -15,6 +15,7 @@
       };
 
       aliases = {
+        d = [ "diff" ];
         s = [ "status" ];
         x = [
           "log"
@@ -50,6 +51,14 @@
           "main"
           "-r"
           "@"
+        ];
+        c = [
+          "util"
+          "exec"
+          "--"
+          "sh"
+          "-c"
+          "jj desc && jj bookmark set main -r @ && jj new"
         ];
       };
     };
