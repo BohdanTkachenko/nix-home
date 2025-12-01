@@ -22,6 +22,7 @@
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
+    gamescopeSession.enable = true;
     extraPackages = with pkgs; [
       adwaita-icon-theme
     ];
@@ -30,6 +31,13 @@
         MANGOHUD = true;
         DXVK_HUD = "compiler";
       };
+    };
+  };
+  
+  programs = {
+    gamescope = {
+      enable = true;
+      capSysNice = true;
     };
   };
 
