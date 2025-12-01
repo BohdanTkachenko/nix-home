@@ -96,6 +96,7 @@
     vim
     htop
     google-chrome
+    protontricks
   ];
 
   home-manager.users.dan.xdg.autostart.entries = [
