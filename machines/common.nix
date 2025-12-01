@@ -79,7 +79,7 @@
       home = {
         username = lib.mkForce "dan";
         homeDirectory = lib.mkForce "/home/dan";
-        stateVersion = lib.mkForce "25.05";
+        stateVersion = lib.mkForce "25.11";
       };
 
       sops.age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";

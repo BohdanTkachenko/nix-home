@@ -1,6 +1,6 @@
 { ... }:
 {
-  home.stateVersion = "25.05";
+  home.stateVersion = "25.11";
   nixpkgs.config.allowUnfree = true;
   programs.home-manager.enable = true;
   targets.genericLinux.enable = true;

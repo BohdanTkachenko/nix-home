@@ -27,7 +27,8 @@
   };
 
   programs.vscode.profiles.default.extensions = with pkgs-unstable.vscode-extensions; [
-    anthropic.claude-code
+    # https://github.com/NixOS/nixpkgs/issues/464202
+    # anthropic.claude-code
     coolbear.systemd-unit-file
     davidanson.vscode-markdownlint
     foxundermoon.shell-format

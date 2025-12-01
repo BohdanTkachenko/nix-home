@@ -33,15 +33,7 @@
       };
     };
   };
-  
-  programs = {
-    gamescope = {
-      enable = true;
-      capSysNice = true;
-    };
-  };
 
-  programs.gamemode.enable = true;
   environment.systemPackages = with pkgs; [ mangohud ];
 
   home-manager.users.dan.xdg.autostart.entries = [
