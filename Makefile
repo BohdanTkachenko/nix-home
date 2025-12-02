@@ -6,14 +6,6 @@ ifneq (,$(wildcard ./.env))
     export
 endif
 
-HOME_MANAGER_HOST := $(subst ",,$(HOME_MANAGER_HOST))
-HOME_MANAGER_ENV := $(subst ",,$(HOME_MANAGER_ENV))
-
-IMPURE_FLAG :=
-ifeq ($(HOME_MANAGER_HOST), personal-pc)
-IMPURE_FLAG := --impure
-endif
-
 VERBOSE_FLAG :=
 ifdef VERBOSE
 VERBOSE_FLAG := -v
@@ -28,11 +20,6 @@ ifeq (, $(shell command -v home-manager 2>/dev/null))
 endif
 
 default: install
-
-configure: .env
-
-.env:
-	@scripts/configure.sh
 
 bootstrap: configure
 	@if [ -n "$$FORCE" ] || ! command -v home-manager &> /dev/null; then \
@@ -49,8 +36,8 @@ install: bootstrap submodules
 	@echo "Executing home-manager switch..."
 	@$(SOURCE_NIX_DAEMON) \
 	$(HM_CMD_SWITCH) \
-		--flake "path:$(mkfile_dir)#${HOME_MANAGER_HOST}" \
-		$(VERBOSE_FLAG) $(IMPURE_FLAG)
+		--flake "path:$(mkfile_dir)" \
+		$(VERBOSE_FLAG)
 
 update:
 	@echo "Updating flake inputs..."

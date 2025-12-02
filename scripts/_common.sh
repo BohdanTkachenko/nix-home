@@ -3,7 +3,6 @@ set -eu
 
 REAL_HOME=$(readlink -f "$HOME")
 HOME_MANAGER_DIR="$REAL_HOME/.config/nix"
-HOME_MANAGER_ENV_FILE="$HOME_MANAGER_DIR/.env"
 
 LOG_FILE=/tmp/nix-home_scripts.log
 LAST_COMMAND_LOG_FILE=/tmp/nix-home_scripts_last_command.log
@@ -20,10 +19,6 @@ COLOR_GREEN='\033[0;32m'
 COLOR_YELLOW='\033[0;33m'
 COLOR_BLUE='\033[0;34m'
 COLOR_CYAN='\033[0;36m'
-
-if [ -f "$HOME_MANAGER_ENV_FILE" ]; then
-  source "$HOME_MANAGER_ENV_FILE"
-fi
 
 # A simple, unified logger.
 # Usage:
@@ -116,37 +111,6 @@ log() {
   $echo "${prefix} ${color}${text}${COLOR_RESET}" | tee -a ${LOG_FILE} >&2
 }
 
-# -----------------------------------------------------------------------------
-# FUNCTION: find_hosts
-#
-# Finds all `.nix` files in a given directory that do not start with an
-# underscore (_), and prints their basenames with the .nix extension removed.
-#
-# @param $1 - The directory to search. Defaults to the current directory (".").
-# @return   - Echos a list of hostnames, one per line.
-#           - Returns exit code 1 if the directory is not found.
-#
-# USAGE:
-#   mapfile -t hosts < <(find_hosts "./my-hosts-dir")
-# -----------------------------------------------------------------------------
-find_hosts() {
-  local dir="${1:-.}"
-
-  if [[ ! -d "$dir" ]]; then
-    log error "Directory '$dir' not found." >&2
-    return 1
-  fi
-
-  (
-    shopt -s nullglob
-    for file_path in "$dir"/*.nix; do
-      local filename
-      filename=$(basename "$file_path")
-      echo "${filename%.nix}"
-    done
-  )
-}
-
 confirm() {
   log input "Do you want to continue? [Y/n] "
   read -n 1 response
@@ -169,93 +133,4 @@ warn_once_elevated() {
   fi
 }
 
-ask_before_reboot() {
-  local msg_reboot_required="A reboot is needed for changes to take effect."
-  local msg_reboot_rerun="Please run this script again after the reboot."
 
-  log critical "$msg_reboot_required $msg_reboot_rerun"
-
-  if ! confirm; then
-    exit 10
-  fi
-
-  systemctl reboot --now
-}
-
-copy_file() {
-  local src="$1"
-  local dst="$2"
-  local sudo="$3"
-
-  if [ -z "$sudo" ]; then
-    mkdir -p "$(dirname "$dst")"
-    cp "${src}" "${dst}"
-    return 0
-  fi
-
-  warn_once_elevated
-  sudo mkdir -p "$(dirname "$dst")"
-  sudo cp "${src}" "${dst}"
-}
-
-ask_file_diff() {
-  local dst="$1"
-  local diff="$2"
-
-  while true; do
-    PS3="File exists, but its contents differ for $dst"
-    local options=(accept dff skip abort)
-    select option in "${options[@]}"; do
-      case $option in
-      "accept")
-        return 0
-        ;;
-      "diff")
-        echo "${diff}" | less -R
-        continue
-        ;;
-      "skip")
-        return 1
-        ;;
-      "abort")
-        exit 1
-        ;;
-      *)
-        echo "Invalid option $REPLY"
-        continue
-        ;;
-      esac
-    done
-  done
-}
-
-maybe_copy_file() {
-  local src="$1"
-  local dst="$2"
-  local sudo="$3"
-
-  log item $dst
-
-  if ! test -f "${dst}"; then
-    log mismatch "Does not exist. Creating..."
-    copy_file "${src}" "${dst}" "${sudo}"
-    log success "Created."
-    return 11
-  fi
-
-  if ! diff=$(git diff --color --no-index -- "${dst}" "${src}"); then
-    log mismatch "Content differs. Asking user for confirmation..."
-    if ask_file_diff "${dst}" "${diff}"; then
-      log info "User confirmed. Replacing..."
-      copy_file "${src}" "${dst}" "${sudo}"
-      log success "Replaced."
-      return 12
-    fi
-
-    log skip "User declined. Skipping."
-    return 10
-  fi
-
-  log ok "Already correct."
-  return 0
-}

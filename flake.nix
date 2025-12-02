@@ -65,7 +65,6 @@
         inherit system;
         config.allowUnfree = true;
       };
-      lib = nixpkgs.lib;
 
       mkHome =
         hostSpecificModule:
@@ -115,7 +114,9 @@
           ];
         };
 
-      mkNixosIso = targetConfig: nixpkgs.lib.nixosSystem {
+      mkNixosIso =
+        targetConfig:
+        nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = {
             inherit self;
@@ -138,21 +139,10 @@
         nyancat-iso = mkNixosIso personalPc;
       };
 
-      # Standalone Home Manager configurations (for non-NixOS systems)
-      homeConfigurations = lib.mapAttrs' (
-        fileName: fileType:
-        if
-          lib.strings.hasSuffix ".nix" fileName
-          && fileType == "regular"
-          && !lib.strings.hasPrefix "_" fileName
-        then
-          let
-            hostname = lib.strings.removeSuffix ".nix" fileName;
-          in
-          lib.nameValuePair hostname (mkHome (./hosts + "/${fileName}"))
-        else
-          lib.nameValuePair "" null
-      ) (builtins.readDir ./hosts);
+      homeConfigurations = {
+        "bohdant@dan.nyc.corp.google.com" = mkHome ./hosts/work-pc.nix;
+        "bohdant@bohdant.roam.corp.google.com" = mkHome ./hosts/work-laptop.nix;
+      };
 
       packages.${system} = {
         init-secureboot = pkgs.callPackage ./scripts/init-secureboot.nix { };
