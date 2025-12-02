@@ -5,8 +5,8 @@
     enable = true;
 
     shellAliases = {
-      hm = "make -C ~/.config/home-manager";
-      hmcd = "cd ~/.config/home-manager";
+      dotfiles = "make -C ~/.config/nix";
+      dfcd = "cd ~/.config/nix";
 
       l = "eza --icons --group-directories-first -lah";
       t = "eza --icons --group-directories-first -L 2 -Tlah";

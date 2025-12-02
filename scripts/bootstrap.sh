@@ -31,7 +31,7 @@ function find_scripts() {
       name="${parts[2]}"
       ;;
     *)
-      log error "Unexpected file format: '$script'. Expected: 'priority_[category_]name.sh' or _[name].sh"
+      lo\g error "Unexpected file format: '$script'. Expected: 'priority_[category_]name.sh' or _[name].sh"
       return 1
       ;;
     esac

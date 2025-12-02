@@ -5,7 +5,7 @@ GITHUB_USER="BohdanTkachenko"
 REPO_NAME="nix-home"
 
 REAL_HOME=$(readlink -f "$HOME")
-HOME_MANAGER_DIR="$REAL_HOME/.config/home-manager"
+HOME_MANAGER_DIR="$REAL_HOME/.config/nix"
 
 HTTPS_URL="https://github.com/$GITHUB_USER/$REPO_NAME.git"
 SSH_URL="git@github.com:$GITHUB_USER/$REPO_NAME.git"

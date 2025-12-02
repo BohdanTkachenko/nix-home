@@ -2,7 +2,7 @@
 set -eu
 
 REAL_HOME=$(readlink -f "$HOME")
-HOME_MANAGER_DIR="$REAL_HOME/.config/home-manager"
+HOME_MANAGER_DIR="$REAL_HOME/.config/nix"
 HOME_MANAGER_ENV_FILE="$HOME_MANAGER_DIR/.env"
 
 LOG_FILE=/tmp/nix-home_scripts.log
