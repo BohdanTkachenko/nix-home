@@ -11,33 +11,44 @@ ifdef VERBOSE
 VERBOSE_FLAG := -v
 endif
 
-# Check if home-manager is in the PATH, and set up fallbacks if not
-HM_CMD_SWITCH := home-manager switch
-SOURCE_NIX_DAEMON :=
-ifeq (, $(shell command -v home-manager 2>/dev/null))
-	HM_CMD_SWITCH := nix run home-manager -- switch -b backup
-	SOURCE_NIX_DAEMON := if [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh; fi;
-endif
-
 default: install
 
-bootstrap: configure
-	@if [ -n "$$FORCE" ] || ! command -v home-manager &> /dev/null; then \
-		$(HOME_MANAGER_SWITCH_VERBOSE_ENV) $(HOME_MANAGER_SWITCH_IMPURE_ENV) ./scripts/bootstrap.sh; \
+setup:
+	@if test -f /etc/NIXOS; then \
+		echo "Running on NixOS, no setup needed."; \
 	else \
-		echo "home-manager is already installed. Skipping bootstrap."; \
+		$(MAKE) setup-hm; \
 	fi
+
+setup-hm:
+	sudo puppet apply scripts/setup.pp
 
 submodules:
 	@echo "Updating submodules..."
 	@git submodule update --init
 
-install: bootstrap submodules
+install-nixos:
+	@echo "Running on NixOS, using nixos-rebuild..."
+	sudo nixos-rebuild switch --flake "path:$(mkfile_dir)" $(VERBOSE_FLAG)
+
+install-hm:
 	@echo "Executing home-manager switch..."
-	@$(SOURCE_NIX_DAEMON) \
-	$(HM_CMD_SWITCH) \
+	@HM_CMD_SWITCH="home-manager switch"; \
+	SOURCE_NIX_DAEMON=""; \
+	if ! command -v home-manager >/dev/null 2>&1; then \
+		HM_CMD_SWITCH="nix run home-manager -- switch -b backup"; \
+		SOURCE_NIX_DAEMON="if [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh; fi;"; \
+	fi; \
+	$$SOURCE_NIX_DAEMON $$HM_CMD_SWITCH \
 		--flake "path:$(mkfile_dir)" \
 		$(VERBOSE_FLAG)
+
+install: submodules $(HOME)/.config/sops/age/keys.txt
+	@if test -f /etc/NIXOS; then \
+		$(MAKE) install-nixos; \
+	else \
+		$(MAKE) install-hm; \
+	fi
 
 update:
 	@echo "Updating flake inputs..."
@@ -45,17 +56,13 @@ update:
 	@echo "Applying updates..."
 	@$(MAKE) install
 
-key-decrypt:
-	mkdir "$HOME/.config/sops/age"
-	nix-shell -p age --command "age --decrypt --output='$HOME/.config/sops/age/keys.txt' key.txt.age"
-
-clean:
-	@echo "Cleaning generated files..."
-	@rm -f .env
-	@echo "Clean complete."
+$(HOME)/.config/sops/age/keys.txt:
+	@echo "Decrypting key..."
+	@mkdir -p "$(HOME)/.config/sops/age"
+	@nix-shell -p age --run "age --decrypt --output='$(HOME)/.config/sops/age/keys.txt' key.txt.age"
 
 code:
 	@echo "Opening project in VSCode..."
 	@code "$(mkfile_dir)"
 
-.PHONY: default configure bootstrap install update clean code
+.PHONY: default setup setup-hm install install-nixos install-hm update code

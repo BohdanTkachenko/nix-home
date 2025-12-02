@@ -3,5 +3,8 @@
 ## Installation
 
 ```sh
-bash -c "bash <(curl -sSL https://raw.githubusercontent.com/BohdanTkachenko/nix-home/refs/heads/main/scripts/install.sh)"
+jj git clone https://github.com/BohdanTkachenko/nix-home $HOME/.config/nix
+cd $HOME/.config/nix
+make setup
+make
 ```
