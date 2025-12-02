@@ -3,6 +3,19 @@ set -euo pipefail
 
 source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)/../_common.sh"
 
+ask_before_reboot() {
+  local msg_reboot_required="A reboot is needed for changes to take effect."
+  local msg_reboot_rerun="Please run this script again after the reboot."
+
+  log critical "$msg_reboot_required $msg_reboot_rerun"
+
+  if ! confirm; then
+    exit 10
+  fi
+
+  systemctl reboot --now
+}
+
 add_user_to_group() {
   local group="$1"
 
