@@ -14,6 +14,7 @@
 
   imports = [
     ../modules/bash
+    ../modules/direnv.nix
     ../modules/fish
     ../modules/git
     ../modules/micro

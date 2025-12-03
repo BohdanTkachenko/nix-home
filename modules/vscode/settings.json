@@ -18,7 +18,6 @@
   "csv.enabled": true,
   "editor.fontFamily": "'MesloLGL Nerd Font Mono', 'Droid Sans Mono', 'monospace', monospace",
   "editor.fontSize": 16,
-  "editor.formatOnSave": true,
   "editor.tabSize": 2,
   "editor.wordWrap": "on",
   "explorer.confirmDragAndDrop": false,
@@ -57,5 +56,6 @@
   "update.mode": "none",
   "window.menuStyle": "custom",
   "window.titleBarStyle": "native",
-  "workbench.startupEditor": "none"
+  "workbench.startupEditor": "none",
+  "editor.formatOnSave": true
 }
