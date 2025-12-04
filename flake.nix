@@ -128,8 +128,8 @@
           ];
         };
 
-      personalLaptop = mkNixos ./machines/personal-laptop;
-      personalPc = mkNixos ./machines/personal-pc;
+      personalLaptop = mkNixos ./hosts/personal-laptop.nix;
+      personalPc = mkNixos ./hosts/personal-pc.nix;
     in
     {
       nixosConfigurations = {
