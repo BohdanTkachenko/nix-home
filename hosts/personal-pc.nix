@@ -1,14 +1,15 @@
 { lib, pkgs, ... }:
 {
   imports = [
-    ../machines/common.nix
-    ../machines/hardware-common.nix
-    ../machines/hardware-cpu-intel.nix
-    ../machines/hardware-gpu-nvidia.nix
-    ../machines/hardware-bluetooth.nix
-    ../machines/hardware-ssd.nix
-    ../machines/hydration-common.nix
-    (import ../machines/disk-luks-btrfs.nix {
+    ../nixos/common.nix
+    ../nixos/hardware/common.nix
+    ../nixos/hardware/cpu-intel.nix
+    ../nixos/hardware/gpu-nvidia.nix
+    ../nixos/hardware/bluetooth.nix
+    ../nixos/hardware/keychron.nix
+    ../nixos/hardware/ssd.nix
+    ../nixos/hydration-common.nix
+    (import ../nixos/disk-luks-btrfs.nix {
       diskDevice = "/dev/disk/by-id/nvme-WD_BLACK_SN850X_4000GB_23402H800030";
     })
   ];

@@ -1,7 +1,13 @@
-# Common NixOS configuration shared across all machines
+# Base NixOS configuration shared across all machines
 { lib, pkgs, ... }:
 
 {
+  imports = [
+    ./desktop.nix
+    ./security.nix
+    ./user.nix
+  ];
+
   # NixOS release version
   system.stateVersion = "25.11";
 
@@ -29,19 +35,45 @@
 
   boot = {
     loader = {
+      systemd-boot = {
+        enable = lib.mkForce false;
+        configurationLimit = 20;
+      };
       efi.canTouchEfiVariables = true;
-      systemd-boot.enable = lib.mkForce false;
+      timeout = 0;
     };
 
     lanzaboote = {
       enable = true;
       pkiBundle = "/etc/secureboot";
     };
+
+    plymouth = {
+      enable = true;
+      theme = "lone";
+      themePackages = with pkgs; [
+        (adi1090x-plymouth-themes.override {
+          selected_themes = [ "lone" ];
+        })
+      ];
+    };
+
+    consoleLogLevel = 3;
+    initrd.verbose = false;
+    initrd.systemd.enable = true;
+    kernelParams = [
+      "quiet"
+      "splash"
+      "boot.shell_on_fail"
+      "udev.log_priority=3"
+      "rd.systemd.show_status=auto"
+    ];
   };
 
   networking = {
     networkmanager.enable = true;
     firewall.enable = true;
+    useDHCP = lib.mkDefault true;
   };
 
   time.timeZone = "America/New_York";
@@ -64,27 +96,6 @@
     keyMap = "us";
   };
 
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
-
-
-  services.xserver = {
-    enable = true;
-    displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
-  };
-
-  programs.xwayland.enable = true;
-
-  environment.gnome.excludePackages = (with pkgs; [
-    gnome-tour
-  ]);
-
   environment.systemPackages = with pkgs; [
     sbctl
     fish
@@ -95,31 +106,13 @@
     wget
     vim
     htop
-    google-chrome
-    protontricks
-  ];
-
-  home-manager.users.dan.xdg.autostart.entries = [
-    "${pkgs.google-chrome}/share/applications/google-chrome.desktop"
   ];
 
   services.fwupd.enable = true;
-
-  security.polkit.enable = true;
 
   # Inhibit sleep for 60 seconds after resume to prevent immediate re-suspend
   # (GNOME doesn't register input on lock screen fast enough, causing sleep loop)
   powerManagement.resumeCommands = ''
     ${pkgs.systemd}/bin/systemd-inhibit --what=sleep --who="post-resume-inhibit" --why="Preventing immediate re-suspend after wake" --mode=block sleep 60 &
   '';
-
-  security.sudo = {
-    wheelNeedsPassword = true;
-    extraConfig = ''
-      Defaults timestamp_timeout=60
-      %wheel ALL=(root) NOPASSWD: /run/current-system/sw/bin/nixos-rebuild switch*
-    '';
-  };
-
-  home-manager.useUserPackages = true;
 }
