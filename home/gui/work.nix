@@ -22,7 +22,7 @@
 
   imports = [
     ./common.nix
-    ../programs/1password
-    ../programs/vscode
+    ../programs/1password/work.nix
+    ../programs/vscode/work.nix
   ];
 }

@@ -10,6 +10,7 @@
 
   imports = [
     ./common.nix
+    ../programs/fish/personal.nix
     ../programs/gemini-cli
     ../programs/jujutsu
     ../programs/ssh/personal.nix

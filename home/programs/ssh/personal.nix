@@ -1,5 +1,7 @@
 { config, ... }:
 {
+  imports = [ ./common.nix ];
+
   sops.secrets.ssh_private_config = {
     sopsFile = ./private-ssh-config;
     format = "binary";

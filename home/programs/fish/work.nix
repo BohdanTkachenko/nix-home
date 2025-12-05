@@ -1,5 +1,6 @@
 { ... }:
 {
+  imports = [ ./common.nix ];
   programs.fish.interactiveShellInit = ''
     source_google_fish_package autogcert
     source_google_fish_package buildfix

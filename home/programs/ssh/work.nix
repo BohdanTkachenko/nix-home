@@ -15,6 +15,8 @@ let
   '';
 in
 {
+  imports = [ ./common.nix ];
+
   home.packages = [
     ensureGcert
     sshWrapper
