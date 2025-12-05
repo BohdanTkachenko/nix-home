@@ -9,9 +9,9 @@
   ];
 
   imports = [
-    ./cli.nix
-    ../modules/gemini-cli
-    ../modules/jujutsu
-    ../modules/ssh/personal.nix
+    ./common.nix
+    ../programs/gemini-cli
+    ../programs/jujutsu
+    ../programs/ssh/personal.nix
   ];
 }

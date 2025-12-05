@@ -34,9 +34,9 @@
   };
 
   imports = [
-    ./gui.nix
-    ../modules/1password/personal.nix
-    ../modules/easyeffects
-    ../modules/vscode/personal.nix
+    ./common.nix
+    ../programs/1password/personal.nix
+    ../programs/easyeffects
+    ../programs/vscode/personal.nix
   ];
 }

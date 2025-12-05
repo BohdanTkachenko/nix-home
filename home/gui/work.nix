@@ -21,8 +21,8 @@
   };
 
   imports = [
-    ./gui.nix
-    ../modules/1password
-    ../modules/vscode
+    ./common.nix
+    ../programs/1password
+    ../programs/vscode
   ];
 }

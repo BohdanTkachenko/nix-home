@@ -23,8 +23,8 @@
     { config, lib, ... }:
     {
       imports = [
-        ../profiles/common.nix
-        ../profiles/personal.nix
+        ../home/common.nix
+        ../home/personal.nix
       ];
 
       home = {

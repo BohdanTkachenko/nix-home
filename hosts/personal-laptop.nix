@@ -20,6 +20,6 @@
   networking.hostName = lib.mkDefault "dan-idea";
 
   home-manager.users.dan.imports = [
-    ../profiles/lenovo-thinkpad-z16-gen1.nix
+    ../home/hardware/lenovo-thinkpad-z16-gen1.nix
   ];
 }

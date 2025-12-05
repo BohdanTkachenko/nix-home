@@ -17,7 +17,7 @@
   networking.hostName = lib.mkDefault "nyancat";
 
   home-manager.users.dan.imports = [
-    ../profiles/pc-personal.nix
+    ../home/hardware/pc-personal.nix
   ];
 
   programs.steam = {

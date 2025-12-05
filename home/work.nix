@@ -4,7 +4,7 @@
   home.homeDirectory = "/usr/local/google/home/bohdant";
 
   imports = [
-    ./cli-work.nix
-    ./gui-work.nix
+    ./cli/work.nix
+    ./gui/work.nix
   ];
 }
