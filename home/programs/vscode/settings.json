@@ -15,7 +15,6 @@
     "editor.formatOnSave": true,
     "editor.formatOnSaveMode": "file"
   },
-  "csv.enabled": true,
   "editor.fontFamily": "'MesloLGL Nerd Font Mono', 'Droid Sans Mono', 'monospace', monospace",
   "editor.fontSize": 16,
   "editor.tabSize": 2,
@@ -28,31 +27,8 @@
     "*.sh.tmpl": "shellscript"
   },
   "files.autoSave": "onFocusChange",
-  "geminicodeassist.project": "autonomous-axiom-hz78w",
   "git.confirmSync": false,
-  "makefile.configureOnOpen": true,
-  "nix.enableLanguageServer": true,
-  "nix.serverSettings": {
-    "nil": {
-      "formatting": {
-        "command": [
-          "nixfmt"
-        ]
-      }
-    },
-    "nixd": {
-      "formatting": {
-        "command": [
-          "nixfmt"
-        ]
-      }
-    }
-  },
   "terminal.integrated.fontFamily": "MesloLGL Nerd Font",
-  "terraform.codelens.referenceCount": true,
-  "terraform.experimentalFeatures.prefillRequiredFields": true,
-  "terraform.experimentalFeatures.validateOnSave": true,
-  "terraform.mcp.server.enable": true,
   "update.mode": "none",
   "window.menuStyle": "custom",
   "window.titleBarStyle": "native",

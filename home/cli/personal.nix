@@ -2,7 +2,6 @@
 {
   home.packages = with pkgs-unstable; [
     act
-    claude-code
     gh
     glab
     jujutsu
@@ -10,6 +9,7 @@
 
   imports = [
     ./common.nix
+    ../programs/claude-code
     ../programs/fish/personal.nix
     ../programs/gemini-cli
     ../programs/jujutsu
