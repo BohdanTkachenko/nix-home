@@ -52,36 +52,7 @@
       tf = "tofu";
       terraform = "tofu";
       tg = "terragrunt";
-    } // (
-      let
-        letters = ["a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z"];
-        
-        # 1-letter aliases: jja -> jj a
-        oneLetterAliases = map (first: {
-          name = "jj${first}";
-          value = "jj ${first}";
-        }) letters;
-        
-        # 2-letter aliases: jjab -> jj ab  
-        twoLetterAliases = builtins.concatLists (map (first:
-          map (second: {
-            name = "jj${first}${second}";
-            value = "jj ${first}${second}";
-          }) letters
-        ) letters);
-        
-        # 3-letter aliases: jjabc -> jj abc
-        threeLetterAliases = builtins.concatLists (builtins.concatLists (map (first:
-          map (second:
-            map (third: {
-              name = "jj${first}${second}${third}";
-              value = "jj ${first}${second}${third}";
-            }) letters
-          ) letters
-        ) letters));
-      in
-        builtins.listToAttrs (oneLetterAliases ++ twoLetterAliases ++ threeLetterAliases)
-    );
+    };
 
     plugins = with pkgs.fishPlugins; [
       {

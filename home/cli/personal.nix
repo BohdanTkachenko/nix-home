@@ -12,7 +12,7 @@
     ../programs/claude-code
     ../programs/fish/personal.nix
     ../programs/gemini-cli
-    ../programs/jujutsu
+    ../programs/jujutsu/personal.nix
     ../programs/ssh/personal.nix
   ];
 }
