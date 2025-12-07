@@ -9,9 +9,9 @@
     package = pkgs-unstable.claude-code;
 
     commands = {
-      desc = ''
+      commit = ''
         ---
-        allowed-tools: Bash(jj status:*), Bash(jj log:*), Bash(jj diff:*), Bash(jj desc:*)
+        allowed-tools: Bash(jj status:*), Bash(jj log:*), Bash(jj diff:*), Bash(jj desc:*), Bash(jj new:*)
         description: Describe current jj change
         ---
         ## Context
@@ -22,7 +22,7 @@
 
         ## Task
 
-        Based on the changes above, create a jj commit description.
+        Based on the changes above, create a jj commit description and then create a new commit.
       '';
     };
   };
