@@ -20,6 +20,7 @@
     ./steam.nix
     ./user.nix
     ./waydroid.nix
+    ./hardware/kvm-switch.nix
   ];
 
   # NixOS release version
@@ -120,6 +121,7 @@
     [
       bash
       curl
+      ddcutil
       fish
       git
       htop
@@ -136,6 +138,9 @@
     ++ lib.optionals config.my.gui.enable [
       firefox
     ];
+
+  # Enable i2c for ddcutil monitor control
+  hardware.i2c.enable = true;
 
   services.fwupd.enable = true;
 
