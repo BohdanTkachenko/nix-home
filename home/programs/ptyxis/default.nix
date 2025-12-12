@@ -22,7 +22,7 @@ in
       new-tab = "<Control>t";
       new-window = "<Shift><Control>n";
       paste-clipboard = "<Control>v";
-      reset-and-clear = "'<Shift><Control>r'";
+      reset-and-clear = "<Shift><Control>r";
       search = "<Shift><Control>f";
       select-all = "<Control>a";
     };
