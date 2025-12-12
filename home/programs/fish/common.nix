@@ -77,7 +77,7 @@
       end
 
       if set -q SSH_CONNECTION && not set -q SSH_AUTH_SOCK
-        eval $(ssh-agent -c)
+        echo (set_color yellow)"Warning: SSH_AUTH_SOCK is not set. SSH agent forwarding may not be working."(set_color normal)
       end
     '';
   };
