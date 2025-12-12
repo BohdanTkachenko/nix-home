@@ -23,17 +23,22 @@ in
   ];
 
   programs.ssh = {
-    controlMaster = "auto";
-    controlPath = "~/.ssh/ctrl-%C";
-    controlPersist = "yes";
-
-    matchBlocks."*.corp.google.com" = {
-      forwardAgent = true;
-      identityAgent = null;
-    };
-
-    matchBlocks."ws" = {
-      hostname = "dan.nyc.corp.google.com";
+    enable = true;
+    enableDefaultConfig = false;
+    matchBlocks = {
+      "*" = {
+        controlMaster = "auto";
+        controlPath = "~/.ssh/ctrl-%C";
+        controlPersist = "yes";
+        forwardAgent = true;
+      };
+      "*.corp.google.com" = {
+        forwardAgent = true;
+        identityAgent = null;
+      };
+      "ws" = {
+        hostname = "dan.nyc.corp.google.com";
+      };
     };
   };
 

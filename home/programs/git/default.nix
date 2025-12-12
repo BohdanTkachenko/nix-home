@@ -10,15 +10,18 @@ in
 {
   programs.git = {
     enable = true;
-    userName = "Bohdan Tkachenko";
-    userEmail = "bohdan@tkachenko.dev";
 
     signing = {
       key = null;
       signByDefault = true;
     };
 
-    extraConfig = {
+    settings = {
+      user = {
+        name = "Bohdan Tkachenko";
+        email = "bohdan@tkachenko.dev";
+      };
+      
       gpg = {
         format = "ssh";
       };
