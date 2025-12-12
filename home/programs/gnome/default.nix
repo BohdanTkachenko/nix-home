@@ -113,7 +113,7 @@
     };
 
     "org/gnome/desktop/wm/preferences" = {
-      button-layout = "close,minimize,maximize:";
+      button-layout = "':minimize,maximize,close";
     };
 
     "org/gnome/mutter" = {
