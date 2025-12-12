@@ -13,11 +13,13 @@
     autostart = {
       enable = true;
       entries = [
-        "${pkgs.makeDesktopItem {
-          name = "1password-silent";
-          desktopName = "1Password";
-          exec = "${pkgs._1password-gui}/bin/1password -silent";
-        }}/share/applications/1password-silent.desktop"
+        "${
+          pkgs.makeDesktopItem {
+            name = "1password-silent";
+            desktopName = "1Password";
+            exec = "${pkgs._1password-gui}/bin/1password -silent";
+          }
+        }/share/applications/1password-silent.desktop"
 
         "${pkgs.spotify}/share/applications/spotify.desktop"
       ];
@@ -28,6 +30,10 @@
 
   gtk = {
     enable = true;
+    theme = {
+      name = "Adwaita-dark";
+      package = pkgs.gnome-themes-extra;
+    };
   };
 
   programs.gnome-shell = {
@@ -68,7 +74,6 @@
 
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
-      gtk-theme = "adw-gtk3-dark";
       icon-theme = "Adwaita";
       gtk-enable-primary-paste = false;
       show-battery-percentage = true;
