@@ -30,8 +30,7 @@
   "git.confirmSync": false,
   "terminal.integrated.fontFamily": "MesloLGL Nerd Font",
   "update.mode": "none",
-  "window.menuStyle": "custom",
-  "window.titleBarStyle": "native",
   "workbench.startupEditor": "none",
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "workbench.colorTheme": "Adwaita Dark & default syntax highlighting"
 }
