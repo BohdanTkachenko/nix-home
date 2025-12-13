@@ -6,13 +6,13 @@
 
   programs.jujutsu.settings.user.email = "bohdan@tkachenko.dev";
 
-  programs.jujutsu.settings.aliases.f = [
+  programs.jujutsu.settings.aliases.fetch = [
     "git"
     "fetch"
   ];
-  programs.fish.shellAbbrs.jjf = "jj f";
+  programs.fish.shellAbbrs.jjf = "jj fetch";
 
-  programs.jujutsu.settings.aliases.y = [
+  programs.jujutsu.settings.aliases.pull = [
     "util"
     "exec"
     "--"
@@ -20,13 +20,13 @@
     "-c"
     "jj git fetch && jj rebase -d main@origin"
   ];
-  programs.fish.shellAbbrs.jjy = "jj y";
+  programs.fish.shellAbbrs.jjy = "jj pull";
 
-  programs.jujutsu.settings.aliases.p = [
+  programs.jujutsu.settings.aliases.push = [
     "git"
     "push"
   ];
-  programs.fish.shellAbbrs.jjp = "jj p";
+  programs.fish.shellAbbrs.jjp = "jj push";
 
   programs.jujutsu.settings.aliases.main = [
     "bookmark"

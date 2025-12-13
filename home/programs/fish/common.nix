@@ -4,26 +4,26 @@
   programs.fish = {
     enable = true;
 
-    shellAliases = {
-      dotfiles = "make -C ~/.config/nix";
-      dfcd = "cd ~/.config/nix";
-
-      l = "eza --icons --group-directories-first -lah";
-      t = "eza --icons --group-directories-first -L 2 -Tlah";
+    functions = {
+      df = ''
+        if test -e /etc/NIXOS
+          nix-shell -p gnumake --run "make -C ~/.config/nix $argv"
+        else
+          make -C ~/.config/nix $argv
+        end
+      '';
     };
 
-    shellAbbrs = {
-      m = "micro";
-      vi = "micro";
-      vim = "micro";
-      nano = "micro";
-      ed = "micro";
-      editor = "micro";
+    shellAliases = {
+      dfcd = "cd ~/.config/nix";
 
-      tt = "eza --icons --group-directories-first -L 3 -Tlah";
+      cat = "bat --no-pager --plain";
+      less = "bat --plain";
+
+      l = "eza --extended --icons --hyperlink --group-directories-first -lah";
+      t = "l --ignore-glob '.git|.jj' -TL 2";
 
       rm = "trash";
-      cat = "bat";
 
       grep = "ug";
       egrep = "ug -E";
@@ -31,27 +31,11 @@
       xzgrep = "ug -z";
       xzegrep = "ug -zE";
       xzfgrep = "ug -zF";
+    };
 
-      gst = "git status";
-      gd = "git diff";
-      gp = "git push";
-      gl = "git pull";
-      gx = "git log";
-      gc = "git commit";
-      ga = "git add";
-      gaa = "git add -A";
-      grm = "git rm";
-      gmv = "git mv";
-      gcp = "git cp";
-      gco = "git checkout";
-      gb = "git branch";
-
-      k = "kubectl";
-      kube = "kubectl";
-
-      tf = "tofu";
-      terraform = "tofu";
-      tg = "terragrunt";
+    shellAbbrs = {
+      tt = "t -L 5";
+      ta = "t --absolute=on -L 5";
     };
 
     plugins = with pkgs.fishPlugins; [
