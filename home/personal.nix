@@ -1,5 +1,7 @@
 { config, ... }:
 {
+  custom.profile = "personal";
+
   home.username = "dan";
   home.homeDirectory = "/var/home/dan";
   sops.age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";

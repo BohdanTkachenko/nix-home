@@ -13,11 +13,14 @@
   ];
 
   imports = [
-    ../programs/bash
+    ../programs/bash.nix
     ../programs/direnv.nix
-    ../programs/git
-    ../programs/micro
+    ../programs/fish.nix
+    ../programs/git.nix
+    ../programs/jujutsu.nix
+    ../programs/micro.nix
+    ../programs/ssh
     ../programs/starship
-    ../programs/tealdeer
+    ../programs/tealdeer.nix
   ];
 }

@@ -9,10 +9,7 @@
 
   imports = [
     ./common.nix
-    ../programs/claude-code
-    ../programs/fish/personal.nix
+    ../programs/claude-code.nix
     ../programs/gemini-cli
-    ../programs/jujutsu/personal.nix
-    ../programs/ssh/personal.nix
   ];
 }

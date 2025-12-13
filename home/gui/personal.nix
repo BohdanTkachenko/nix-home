@@ -35,8 +35,6 @@
 
   imports = [
     ./common.nix
-    ../programs/1password/personal.nix
     ../programs/easyeffects
-    ../programs/vscode/personal.nix
   ];
 }

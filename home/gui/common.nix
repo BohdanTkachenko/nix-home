@@ -17,8 +17,10 @@ in
   home.packages = (map (p: config.lib.nixGL.wrap p) guiApps);
 
   imports = [
-    ../programs/fonts
-    ../programs/gnome
-    ../programs/ptyxis
+    ../programs/1password.nix
+    ../programs/fonts.nix
+    ../programs/gnome.nix
+    ../programs/ptyxis.nix
+    ../programs/vscode
   ];
 }

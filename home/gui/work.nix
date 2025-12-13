@@ -22,8 +22,6 @@
 
   imports = [
     ./common.nix
-    ../programs/1password/work.nix
-    ../programs/vscode/work.nix
-    ../programs/google-chrome/default.nix
+    ../programs/google-chrome.nix
   ];
 }
