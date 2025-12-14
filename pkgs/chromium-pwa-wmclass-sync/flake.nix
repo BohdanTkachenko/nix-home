@@ -50,7 +50,7 @@
             lib.mkEnableOption "Chromium PWA desktop file fix service";
 
           config = lib.mkIf cfg.service.enable {
-            home.packages = [ self.packages.${pkgs.system} ];
+            home.packages = [ self.packages.${pkgs.stdenv.hostPlatform.system} ];
 
             systemd.user.services.chromium-pwa-wmclass-sync = {
               Unit = {
@@ -58,7 +58,7 @@
               };
               Service = {
                 Type = "oneshot";
-                ExecStart = "${self.packages.${pkgs.system}}/bin/chromium-pwa-wmclass-sync";
+                ExecStart = "${self.packages.${pkgs.stdenv.hostPlatform.system}}/bin/chromium-pwa-wmclass-sync";
               };
               Install = {
                 WantedBy = [ "default.target" ];

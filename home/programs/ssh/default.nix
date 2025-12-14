@@ -21,21 +21,23 @@ in
 {
   programs.ssh = {
     enable = true;
+    enableDefaultConfig = false;
 
     # Personal: include sops secret config
     includes = lib.mkIf isPersonal [
       config.sops.secrets.ssh_private_config.path
     ];
 
-    # Work: custom ssh config
-    enableDefaultConfig = lib.mkIf isWork false;
-    matchBlocks = lib.mkIf isWork {
+    matchBlocks = {
+      # Default host config (required when enableDefaultConfig = false)
       "*" = {
         controlMaster = "auto";
         controlPath = "~/.ssh/ctrl-%C";
         controlPersist = "yes";
         forwardAgent = true;
       };
+    } // lib.optionalAttrs isWork {
+      # Work: additional ssh config
       "*.corp.google.com" = {
         forwardAgent = true;
         identityAgent = null;

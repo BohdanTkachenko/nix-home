@@ -109,4 +109,7 @@
   ];
 
   services.fwupd.enable = true;
+
+  # Disable NixOS xremap (using home-manager xremap instead)
+  services.xremap.enable = false;
 }

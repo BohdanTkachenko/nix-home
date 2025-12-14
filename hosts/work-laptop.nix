@@ -6,4 +6,7 @@
     ../home/hardware/lenovo-thinkpad-x1-carbon-gen12.nix
     ../home/work-laptop.nix
   ];
+
+  nixpkgs.config.allowUnfree = true;
+  services.xremap.enable = false;
 }
