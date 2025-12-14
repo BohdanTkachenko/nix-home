@@ -7,6 +7,7 @@
     ../nixos/hardware/gpu-nvidia.nix
     ../nixos/hardware/bluetooth.nix
     ../nixos/hardware/keychron.nix
+    ../nixos/hardware/moonlander.nix
     ../nixos/hardware/ssd.nix
     ../nixos/hydration-common.nix
     (import ../nixos/disk-luks-btrfs.nix {

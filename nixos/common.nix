@@ -109,10 +109,4 @@
   ];
 
   services.fwupd.enable = true;
-
-  # Inhibit sleep for 60 seconds after resume to prevent immediate re-suspend
-  # (GNOME doesn't register input on lock screen fast enough, causing sleep loop)
-  powerManagement.resumeCommands = ''
-    ${pkgs.systemd}/bin/systemd-inhibit --what=sleep --who="post-resume-inhibit" --why="Preventing immediate re-suspend after wake" --mode=block sleep 60 &
-  '';
 }
