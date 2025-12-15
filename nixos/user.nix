@@ -14,6 +14,10 @@
       "tss"
     ];
     shell = pkgs.fish;
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF8dbeUB1k/CnmuFIAaZW7Avp+hqz22DxY9pMtwFQDBb"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMRn3eyTO+PNubD7oM4+5p6oxsTM5I7nKiuHZStc2AE+"
+    ];
   };
 
   programs.fish.enable = true;

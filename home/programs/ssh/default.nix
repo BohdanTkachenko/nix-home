@@ -48,14 +48,10 @@ in
     };
   };
 
-  # Personal: sops secrets and authorized keys
+  # Personal: sops secrets
   sops.secrets.ssh_private_config = lib.mkIf isPersonal {
     sopsFile = ./private-ssh-config;
     format = "binary";
-  };
-
-  home.file.".ssh/authorized_keys" = lib.mkIf isPersonal {
-    source = ./personal_authorized_keys;
   };
 
   # Work: gcert wrappers
