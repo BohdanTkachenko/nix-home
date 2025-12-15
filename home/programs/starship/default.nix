@@ -110,12 +110,11 @@ in
         substitutions = {
           "/google/src/cloud/bohdant/" = " ";
           "/google3/" = " //";
-          "/google3" = " //"; 
+          "/google3" = " //";
         };
       };
 
       cmd_duration = {
-        show_notifications = true;
         format = "[󰔟 $duration]($style) ";
       };
 
