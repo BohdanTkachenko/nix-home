@@ -14,7 +14,9 @@
         loupe
         mailspring
         papers
+        protonvpn-gui
         seabird
+        transmission_4-gtk
       ];
     in
     (map (p: config.lib.nixGL.wrap p) guiApps);
