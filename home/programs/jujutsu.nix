@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 let
   isPersonal = config.custom.profile == "personal";
   isWork = config.custom.profile == "work";
@@ -6,6 +6,9 @@ in
 {
   programs.jujutsu = {
     enable = true;
+    package = lib.mkIf isWork (pkgs.writeScriptBin "jj" ''#!/bin/sh
+exec /usr/bin/jj "$@"
+'');
     settings = {
       user.name = "Bohdan Tkachenko";
       user.email =

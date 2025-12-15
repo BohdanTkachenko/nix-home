@@ -152,6 +152,7 @@ in
             )
           '
         '';
+        command_timeout = 5000;
       };
 
       custom.jj_descr = {
@@ -169,6 +170,7 @@ in
             )
           '
         '';
+        command_timeout = 5000;
       };
 
       git_status.disabled = true;
