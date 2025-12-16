@@ -10,6 +10,5 @@
   imports = [
     ./common.nix
     ../programs/claude-code.nix
-    ../programs/gemini-cli
   ];
 }

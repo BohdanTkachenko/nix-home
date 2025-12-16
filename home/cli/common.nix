@@ -16,6 +16,7 @@
     ../programs/bash.nix
     ../programs/direnv.nix
     ../programs/fish.nix
+    ../programs/gemini-cli
     ../programs/git.nix
     ../programs/jujutsu.nix
     ../programs/micro.nix

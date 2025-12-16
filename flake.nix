@@ -66,12 +66,15 @@
         config.allowUnfree = true;
       };
 
+
       mkHome =
-        hostSpecificModule:
+        hostSpecificModule: isWorkPC: isWorkLaptop:
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = {
             inherit nixgl pkgs-unstable;
+            isWorkPC = isWorkPC;
+            isWorkLaptop = isWorkLaptop;
           };
           modules = [
             chromium-pwa-wmclass-sync.homeManagerModules.default
@@ -140,8 +143,8 @@
       };
 
       homeConfigurations = {
-        "bohdant@dan.nyc.corp.google.com" = mkHome ./hosts/work-pc.nix;
-        "bohdant@bohdant.roam.corp.google.com" = mkHome ./hosts/work-laptop.nix;
+        "bohdant@dan.nyc.corp.google.com" = mkHome ./hosts/work-pc.nix true false;
+        "bohdant@bohdant.roam.corp.google.com" = mkHome ./hosts/work-laptop.nix false true;
       };
 
       packages.${system} = {
