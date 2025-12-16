@@ -7,27 +7,26 @@
   isWorkPC ? false,
   ...
 }:
-
-{
-  home.packages =
+let
+  geminiPkg =
     if isWorkPC then
-      [
-        (pkgs.writeScriptBin "gemini" ''
-          #!/bin/sh
-          /google/bin/releases/gemini-cli/tools/gemini --gfg "$@"
-        '')
-      ]
+      (pkgs.writeScriptBin "gemini" ''
+        #!/bin/sh
+        /google/bin/releases/gemini-cli/tools/gemini --gfg "$@"
+      '')
     else if isWorkLaptop then
-      [
-        (pkgs.writeScriptBin "gemini" ''
-          #!/bin/sh
-          "${pkgs-unstable.gemini-cli}/bin/gemini --proxy=false "$@"
-        '')
-      ]
+      (pkgs.writeScriptBin "gemini" ''
+        #!/bin/sh
+        "${pkgs-unstable.gemini-cli}/bin/gemini --proxy=false "$@"
+      '')
     else
-      [
-        pkgs-unstable.gemini-cli
-      ];
+      pkgs-unstable.gemini-cli;
+in
+{
+  programs.gemini-cli = {
+    enable = true;
+    package = geminiPkg;
+  };
 
   home.file.".gemini/settings.json" = lib.mkIf (!isWorkPC) {
     source = lib.mkForce (
