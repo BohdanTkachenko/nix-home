@@ -137,6 +137,7 @@
     };
 
     "org/gnome/shell/extensions/dash-to-dock" = {
+      click-action = "show-windows";
       dock-fixed = true;
       show-apps-at-top = true;
       always-center-icons = true;
