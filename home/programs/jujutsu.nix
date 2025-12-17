@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   isPersonal = config.custom.profile == "personal";
   isWork = config.custom.profile == "work";
@@ -6,72 +11,62 @@ in
 {
   programs.jujutsu = {
     enable = true;
-    package = lib.mkIf isWork (pkgs.writeScriptBin "jj" ''#!/bin/sh
-exec /usr/bin/jj "$@"
-'');
+    package = lib.mkIf isWork (
+      pkgs.writeScriptBin "jj" ''
+        #!/bin/sh
+        exec /usr/bin/jj "$@"
+      ''
+    );
     settings = {
       user.name = "Bohdan Tkachenko";
-      user.email =
-        if isPersonal then "bohdan@tkachenko.dev" else "bohdant@google.com";
+      user.email = if isPersonal then "bohdan@tkachenko.dev" else "bohdant@google.com";
 
       signing.behavior = "own";
       signing.backend = "ssh";
       signing.key = "~/.ssh/id_ed25519";
 
-      aliases = lib.mkMerge [
-        # Personal aliases (git-based workflow)
-        (lib.mkIf isPersonal {
-          fetch = [
-            "git"
-            "fetch"
+      aliases = [
+        {
+          backend = [
+            "util"
+            "exec"
+            "--"
+            "sh"
+            "-c"
+            "if jj git root > /dev/null 2>&1; then echo 'git'; elif jj piper repo info > /dev/null 2>&1; then echo 'piper'; else echo 'native'; fi"
           ];
+
+          commit = [
+            "util"
+            "exec"
+            "--"
+            "sh"
+            "-c"
+            "case $(jj backend) in git) jj desc && jj bookmark set main -r @ && jj new ;; piper) jj desc && jj new ;; *) echo 'Unsupported backend'; ;; esac"
+          ];
+
           pull = [
             "util"
             "exec"
             "--"
             "sh"
             "-c"
-            "jj git fetch && jj rebase -d main@origin"
+            "case $(jj backend) in git) jj git fetch && jj rebase -d main@origin ;; piper) jj sync ;; *) echo 'Unsupported backend'; ;; esac"
           ];
-          push = [
-            "git"
-            "push"
-          ];
-          main = [
-            "bookmark"
-            "set"
-            "main"
-            "-r"
-            "@"
-          ];
-          c = [
-            "util"
-            "exec"
-            "--"
-            "sh"
-            "-c"
-            "jj desc && jj bookmark set main -r @ && jj new"
-          ];
-        })
 
-        # Work aliases (sync/upload workflow)
-        (lib.mkIf isWork {
-          y = [ "sync" ];
-          p = [ "upload" ];
-          c = [
+          push = [
             "util"
             "exec"
             "--"
             "sh"
             "-c"
-            "jj desc && jj new"
+            "case $(jj backend) in git) jj git push ;; piper) jj upload ;; *) echo 'Unsupported backend'; ;; esac"
           ];
-        })
+        }
       ];
     };
   };
 
-  # Common fish abbreviations
   programs.fish.shellAbbrs = lib.mkMerge [
     {
       jjd = "jj diff";
@@ -80,21 +75,9 @@ exec /usr/bin/jj "$@"
       jjq = "jj squash";
       jjj = "jj desc";
       jjx = "jj log";
-      jjc = "jj c";
-    }
-
-    # Personal-specific abbrs
-    (lib.mkIf isPersonal {
-      jjf = "jj fetch";
-      jjy = "jj pull";
+      jjc = "jj commit";
       jjp = "jj push";
-      jjm = "jj main";
-    })
-
-    # Work-specific abbrs
-    (lib.mkIf isWork {
-      jjy = "jj y";
-      jjp = "jj p";
-    })
+      jju = "jj pull";
+    }
   ];
 }
