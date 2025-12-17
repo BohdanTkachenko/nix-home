@@ -63,7 +63,7 @@ in
           Run the following two commands with the new commit message:
 
           ```sh
-          jj desc -m "<provide your generated commit message here>" && jj new
+          jj describe -m "<provide your generated commit message here>" && jj new
           ```
         '';
       };
