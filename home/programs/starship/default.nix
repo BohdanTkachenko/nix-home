@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ config, lib, ... }:
 let
   langs = [
     "buf"
@@ -108,7 +108,7 @@ in
       directory = {
         truncation_length = 0;
         substitutions = {
-          "/google/src/cloud/bohdant/" = " ";
+          "/google/src/cloud/${config.home.username}/" = " ";
           "/google3/" = " //";
           "/google3" = " //";
         };
