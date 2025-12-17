@@ -25,45 +25,43 @@ in
       signing.backend = "ssh";
       signing.key = "~/.ssh/id_ed25519";
 
-      aliases = [
-        {
-          backend = [
-            "util"
-            "exec"
-            "--"
-            "sh"
-            "-c"
-            "if jj git root > /dev/null 2>&1; then echo 'git'; elif jj piper repo info > /dev/null 2>&1; then echo 'piper'; else echo 'native'; fi"
-          ];
+      aliases = {
+        backend = [
+          "util"
+          "exec"
+          "--"
+          "sh"
+          "-c"
+          "if jj git root > /dev/null 2>&1; then echo 'git'; elif jj piper repo info > /dev/null 2>&1; then echo 'piper'; else echo 'native'; fi"
+        ];
 
-          commit = [
-            "util"
-            "exec"
-            "--"
-            "sh"
-            "-c"
-            "case $(jj backend) in git) jj desc && jj bookmark set main -r @ && jj new ;; piper) jj desc && jj new ;; *) echo 'Unsupported backend'; ;; esac"
-          ];
+        main = [
+          "util"
+          "exec"
+          "--"
+          "sh"
+          "-c"
+          "case $(jj backend) in git) jj bookmark set -r @- main && jj rebase -d main@origin ;; *) echo 'Unsupported backend'; ;; esac"
+        ];
 
-          pull = [
-            "util"
-            "exec"
-            "--"
-            "sh"
-            "-c"
-            "case $(jj backend) in git) jj git fetch && jj rebase -d main@origin ;; piper) jj sync ;; *) echo 'Unsupported backend'; ;; esac"
-          ];
+        pull = [
+          "util"
+          "exec"
+          "--"
+          "sh"
+          "-c"
+          "case $(jj backend) in git) jj git fetch && jj rebase -d main@origin ;; piper) jj sync ;; *) echo 'Unsupported backend'; ;; esac"
+        ];
 
-          push = [
-            "util"
-            "exec"
-            "--"
-            "sh"
-            "-c"
-            "case $(jj backend) in git) jj git push ;; piper) jj upload ;; *) echo 'Unsupported backend'; ;; esac"
-          ];
-        }
-      ];
+        push = [
+          "util"
+          "exec"
+          "--"
+          "sh"
+          "-c"
+          "case $(jj backend) in git) jj git push ;; piper) jj upload ;; *) echo 'Unsupported backend'; ;; esac"
+        ];
+      };
     };
   };
 
