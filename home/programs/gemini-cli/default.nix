@@ -8,16 +8,17 @@
   ...
 }:
 let
+  workPreinstalledGeminiBin = "/google/bin/releases/gemini-cli/tools/gemini";
   geminiPkg =
     if isWorkPC then
       (pkgs.writeScriptBin "gemini" ''
         #!/bin/sh
-        /google/bin/releases/gemini-cli/tools/gemini --gfg "$@"
+        ${workPreinstalledGeminiBin} --gfg "$@"
       '')
     else if isWorkLaptop then
       (pkgs.writeScriptBin "gemini" ''
         #!/bin/sh
-        "${pkgs-unstable.gemini-cli}/bin/gemini --proxy=false "$@"
+        ${workPreinstalledGeminiBin} --proxy=false "$@"
       '')
     else
       pkgs-unstable.gemini-cli;

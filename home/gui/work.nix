@@ -1,4 +1,8 @@
-{ ... }:
+{
+  config,
+  pkgs,
+  ...
+}:
 {
   home.packages =
     with pkgs;
@@ -15,7 +19,7 @@
         "obsidian.desktop"
         "Google Gemini.desktop"
         "Duckie.desktop"
-        "${pkgs.google-chrome}/share/applications/google-chrome.desktop"
+        "google-chrome.desktop"
         "Cider.desktop"
         "org.gnome.Ptyxis.desktop"
         "Gmail.desktop"

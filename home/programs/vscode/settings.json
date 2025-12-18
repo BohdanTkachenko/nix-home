@@ -32,6 +32,5 @@
   "update.mode": "none",
   "workbench.startupEditor": "none",
   "editor.formatOnSave": true,
-  "workbench.colorTheme": "Adwaita Dark & default syntax highlighting",
   "claudeCode.preferredLocation": "panel"
 }
