@@ -1,13 +1,10 @@
 {
   config,
   lib,
+  isWork,
   pkgs,
   ...
 }:
-let
-  isPersonal = config.custom.profile == "personal";
-  isWork = config.custom.profile == "work";
-in
 {
   programs.jujutsu = {
     enable = true;
@@ -19,7 +16,7 @@ in
     );
     settings = {
       user.name = "Bohdan Tkachenko";
-      user.email = if isPersonal then "bohdan@tkachenko.dev" else "bohdant@google.com";
+      user.email = if isWork then "bohdant@google.com" else "bohdan@tkachenko.dev";
 
       signing.behavior = "own";
       signing.backend = "ssh";

@@ -1,5 +1,6 @@
 {
   config,
+  isWork,
   lib,
   pkgs,
   pkgs-unstable,
@@ -29,8 +30,6 @@
   programs.vscode.profiles.default.extensions =
     with pkgs-unstable.vscode-extensions;
     [
-      # https://github.com/NixOS/nixpkgs/issues/464202
-      # anthropic.claude-code
       coolbear.systemd-unit-file
       davidanson.vscode-markdownlint
       foxundermoon.shell-format
@@ -42,7 +41,9 @@
       tamasfe.even-better-toml
       yzhang.markdown-all-in-one
     ]
-    ++ lib.optionals (config.custom.profile == "personal") [
+    ++ lib.optionals (!isWork) [
+      # https://github.com/NixOS/nixpkgs/issues/464202
+      # anthropic.claude-code
       hashicorp.hcl
       hashicorp.terraform
     ];

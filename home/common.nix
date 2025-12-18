@@ -2,7 +2,6 @@
 {
   imports = [
     ../overlays
-    ../lib/options.nix
   ];
 
   home.stateVersion = "25.11";

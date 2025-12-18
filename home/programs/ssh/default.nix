@@ -1,8 +1,11 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  isWork,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  isPersonal = config.custom.profile == "personal";
-  isWork = config.custom.profile == "work";
-
   # Work-specific gcert helpers
   minHours = 10;
   minSeconds = minHours * 60 * 60;
@@ -24,7 +27,7 @@ in
     enableDefaultConfig = false;
 
     # Personal: include sops secret config
-    includes = lib.mkIf isPersonal [
+    includes = lib.mkIf (!isWork) [
       config.sops.secrets.ssh_private_config.path
     ];
 
@@ -36,7 +39,8 @@ in
         controlPersist = "yes";
         forwardAgent = true;
       };
-    } // lib.optionalAttrs isWork {
+    }
+    // lib.optionalAttrs isWork {
       # Work: additional ssh config
       "*.corp.google.com" = {
         forwardAgent = true;
@@ -49,7 +53,7 @@ in
   };
 
   # Personal: sops secrets
-  sops.secrets.ssh_private_config = lib.mkIf isPersonal {
+  sops.secrets.ssh_private_config = lib.mkIf (!isWork) {
     sopsFile = ./private-ssh-config;
     format = "binary";
   };

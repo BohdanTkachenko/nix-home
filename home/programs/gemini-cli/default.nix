@@ -3,8 +3,8 @@
   lib,
   pkgs,
   pkgs-unstable,
-  isWorkLaptop ? false,
-  isWorkPC ? false,
+  isWorkLaptop,
+  isWorkPC,
   ...
 }:
 let

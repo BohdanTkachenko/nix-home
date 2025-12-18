@@ -1,5 +1,5 @@
 {
-  config,
+  isWork,
   lib,
   pkgs,
   ...
@@ -71,7 +71,7 @@
         end
       ''
 
-      (lib.mkIf (config.custom.profile == "work") ''
+      (lib.mkIf isWork ''
         source_google_fish_package autogcert
         source_google_fish_package buildfix
         source_google_fish_package citc_prompt
