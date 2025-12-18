@@ -1,0 +1,5 @@
+{
+  imports = [
+    ./google-chrome.nix
+  ];
+}

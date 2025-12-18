@@ -3,18 +3,24 @@
   pkgs,
   ...
 }:
-let
-  guiApps = with pkgs; [
-    cameractrls-gtk4
-    mission-center
-    obsidian
-    spotify
-  ];
-in
 {
   programs.chromium-pwa-wmclass-sync.service.enable = true;
 
-  home.packages = (map (p: config.lib.nixGL.wrap p) guiApps);
+  home.packages =
+    with pkgs;
+    let
+      guiApps = [
+        cameractrls-gtk4
+        mission-center
+        obsidian
+        spotify
+      ];
+    in
+    (map (p: config.lib.nixGL.wrap p) guiApps);
+
+  xdg.autostart.entries = [
+    "${pkgs.google-chrome}/share/applications/google-chrome.desktop"
+  ];
 
   imports = [
     ../programs/1password.nix

@@ -3,6 +3,7 @@
 
 {
   imports = [
+    ../overlays
     ./desktop.nix
     ./security.nix
     ./user.nix

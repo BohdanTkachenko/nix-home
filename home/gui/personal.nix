@@ -1,25 +1,20 @@
 { pkgs, config, ... }:
 {
-  home.packages =
-    with pkgs;
-    let
-      guiApps = [
-        baobab
-        brave
-        firefox
-        gnome-calculator
-        gnome-extension-manager
-        gnome-logs
-        gnome-text-editor
-        loupe
-        mailspring
-        papers
-        protonvpn-gui
-        seabird
-        transmission_4-gtk
-      ];
-    in
-    (map (p: config.lib.nixGL.wrap p) guiApps);
+  home.packages = with pkgs; [
+    baobab
+    brave
+    firefox
+    gnome-calculator
+    gnome-extension-manager
+    gnome-logs
+    gnome-text-editor
+    loupe
+    mailspring
+    papers
+    protonvpn-gui
+    seabird
+    transmission_4-gtk
+  ];
 
   dconf.settings = {
     "org/gnome/shell" = {

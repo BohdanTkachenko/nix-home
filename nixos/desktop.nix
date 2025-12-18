@@ -23,16 +23,15 @@
 
   programs.xwayland.enable = true;
 
-  environment.gnome.excludePackages = (with pkgs; [
-    gnome-tour
-  ]);
+  environment.gnome.excludePackages = (
+    with pkgs;
+    [
+      gnome-tour
+    ]
+  );
 
   environment.systemPackages = with pkgs; [
     google-chrome
     protontricks
-  ];
-
-  home-manager.users.dan.xdg.autostart.entries = [
-    "${pkgs.google-chrome}/share/applications/google-chrome.desktop"
   ];
 }

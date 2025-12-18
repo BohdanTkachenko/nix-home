@@ -1,12 +1,21 @@
 { ... }:
 {
+  home.packages =
+    with pkgs;
+    let
+      guiApps = [
+        google-chrome
+      ];
+    in
+    (map (p: config.lib.nixGL.wrap p) guiApps);
+
   dconf.settings = {
     "org/gnome/shell" = {
       favorite-apps = [
         "obsidian.desktop"
         "Google Gemini.desktop"
         "Duckie.desktop"
-        "google-chrome.desktop"
+        "${pkgs.google-chrome}/share/applications/google-chrome.desktop"
         "Cider.desktop"
         "org.gnome.Ptyxis.desktop"
         "Gmail.desktop"
@@ -22,6 +31,5 @@
 
   imports = [
     ./common.nix
-    ../programs/google-chrome.nix
   ];
 }

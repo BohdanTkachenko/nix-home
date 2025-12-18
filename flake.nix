@@ -66,15 +66,15 @@
         config.allowUnfree = true;
       };
 
-
       mkHome =
-        hostSpecificModule: isWorkPC: isWorkLaptop:
+        hostSpecificModule: isLaptop:
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = {
             inherit nixgl pkgs-unstable;
-            isWorkPC = isWorkPC;
-            isWorkLaptop = isWorkLaptop;
+            isWork = true;
+            isWorkPC = !isLaptop;
+            isWorkLaptop = isLaptop;
           };
           modules = [
             chromium-pwa-wmclass-sync.homeManagerModules.default
@@ -90,6 +90,9 @@
           inherit system;
           specialArgs = {
             inherit pkgs-unstable;
+            isWork = false;
+            isWorkPC = false;
+            isWorkLaptop = false;
           };
           modules = [
             sops-nix.nixosModules.sops
@@ -102,6 +105,7 @@
                 extraSpecialArgs = {
                   inherit pkgs-unstable;
                   nixgl = null;
+                  isWork = false;
                   isWorkPC = false;
                   isWorkLaptop = false;
                 };
@@ -145,8 +149,8 @@
       };
 
       homeConfigurations = {
-        "bohdant@dan.nyc.corp.google.com" = mkHome ./hosts/work-pc.nix true false;
-        "bohdant@bohdant.roam.corp.google.com" = mkHome ./hosts/work-laptop.nix false true;
+        "bohdant@dan.nyc.corp.google.com" = mkHome ./hosts/work-pc.nix false;
+        "bohdant@bohdant.roam.corp.google.com" = mkHome ./hosts/work-laptop.nix true;
       };
 
       packages.${system} = {
