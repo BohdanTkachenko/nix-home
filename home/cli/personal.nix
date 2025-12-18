@@ -4,7 +4,6 @@
     act
     gh
     glab
-    jujutsu
   ];
 
   imports = [
