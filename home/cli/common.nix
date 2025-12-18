@@ -15,6 +15,7 @@
   imports = [
     ../programs/bash.nix
     ../programs/direnv.nix
+    ../programs/dotfiles.nix
     ../programs/fish.nix
     ../programs/gemini-cli
     ../programs/git.nix

@@ -9,19 +9,7 @@
   programs.fish = {
     enable = true;
 
-    functions = {
-      df = ''
-        if test -e /etc/NIXOS
-          nix-shell -p gnumake --run "make -C ~/.config/nix $argv"
-        else
-          make -C ~/.config/nix $argv
-        end
-      '';
-    };
-
     shellAliases = {
-      dfcd = "cd ~/.config/nix";
-
       cat = "bat --no-pager --plain";
       less = "bat --plain";
 
