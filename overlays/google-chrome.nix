@@ -1,7 +1,8 @@
-{ isWork, ... }:
+{ browser-previews-pkgs, isWork, ... }:
 let
   customFlags = [
-    "--enable-features=AcceleratedVideoEncoder,AcceleratedVideoDecoder,VaapiVideoDecoder,VaapiIgnoreDriverChecks,WebUIDarkMode"
+    "--disable-features=HardwareMediaKeyHandling"
+    "--enable-features=AcceleratedVideoEncoder,WebUIDarkMode"
     "--force-dark-mode"
     "--ignore-gpu-blocklist"
     "--disable-gpu-driver-bug-workaround"
@@ -9,32 +10,40 @@ let
     "--enable-smooth-scrolling"
   ];
   flagsStr = builtins.concatStringsSep " " customFlags;
+
+  mkWrapper =
+    final: pkg: systemBinaryName:
+    if !isWork then
+      pkg.override { commandLineArgs = customFlags; }
+    else
+      let
+        name = final.lib.getName pkg;
+        systemBinaryPath = "/usr/bin/${systemBinaryName}";
+        chromeWrapper = final.writeShellScriptBin systemBinaryName ''
+          exec "${systemBinaryPath}" ${flagsStr} "$@"
+        '';
+        desktopItem = final.runCommand "${name}-desktop" { } ''
+          mkdir -p "$out/share/applications"
+          for sourceDesktop in $(find "${pkg}/share/applications" -iname "*.desktop"); do
+            outDesktopFile="$out/share/applications/$(basename "$sourceDesktop")"
+            cp "$sourceDesktop" "$outDesktopFile"
+            sed -i "s|\(${final.lib.getExe pkg}\)\(.*\)|"${systemBinaryPath}" ${flagsStr}\2|g" "$outDesktopFile"
+          done
+        '';
+      in
+      final.symlinkJoin {
+        name = "${name}-system-wrapped";
+        paths = [
+          chromeWrapper
+          desktopItem
+        ];
+      };
 in
 {
   nixpkgs.overlays = [
     (final: prev: {
-      google-chrome =
-        if !isWork then
-          prev.google-chrome.override { commandLineArgs = customFlags; }
-        else
-          let
-            wrapperName = "google-chrome-stable";
-            chromeWrapper = final.writeShellScriptBin wrapperName ''
-              exec /usr/bin/google-chrome-stable ${flagsStr} "$@"
-            '';
-            desktopItem = final.runCommand "google-chrome-desktop" { } ''
-              mkdir -p $out/share/applications
-              cp ${prev.google-chrome}/share/applications/google-chrome.desktop $out/share/applications/google-chrome.desktop
-              sed -i 's|^Exec=.*|Exec=${chromeWrapper}/bin/${wrapperName} %U|' $out/share/applications/google-chrome.desktop
-            '';
-          in
-          final.symlinkJoin {
-            name = "google-chrome-system-wrapped";
-            paths = [
-              chromeWrapper
-              desktopItem
-            ];
-          };
+      google-chrome = mkWrapper final prev.google-chrome "google-chrome-stable";
+      google-chrome-beta = mkWrapper final browser-previews-pkgs.google-chrome-beta "google-chrome-beta";
     })
   ];
 }

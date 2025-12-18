@@ -8,6 +8,11 @@
       url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     };
 
+    browser-previews = {
+      url = "github:nix-community/browser-previews";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nixgl = {
       url = "github:nix-community/nixGL";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -54,6 +59,7 @@
       nixgl,
       nixpkgs,
       nixpkgs-unstable,
+      browser-previews,
       sops-nix,
       xremap,
       ...
@@ -72,6 +78,7 @@
           inherit pkgs;
           extraSpecialArgs = {
             inherit nixgl pkgs-unstable;
+            browser-previews-pkgs = browser-previews.packages.${system};
             isWork = true;
             isWorkPC = !isLaptop;
             isWorkLaptop = isLaptop;
@@ -90,6 +97,7 @@
           inherit system;
           specialArgs = {
             inherit pkgs-unstable;
+            browser-previews-pkgs = browser-previews.packages.${system};
             isWork = false;
             isWorkPC = false;
             isWorkLaptop = false;
@@ -104,6 +112,7 @@
                 useUserPackages = true;
                 extraSpecialArgs = {
                   inherit pkgs-unstable;
+                  browser-previews-pkgs = browser-previews.packages.${system};
                   nixgl = null;
                   isWork = false;
                   isWorkPC = false;

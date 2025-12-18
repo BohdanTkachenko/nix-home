@@ -9,6 +9,7 @@
     let
       guiApps = [
         google-chrome
+        google-chrome-beta
       ];
     in
     (map (p: config.lib.nixGL.wrap p) guiApps);
