@@ -102,6 +102,8 @@
                 extraSpecialArgs = {
                   inherit pkgs-unstable;
                   nixgl = null;
+                  isWorkPC = false;
+                  isWorkLaptop = false;
                 };
                 sharedModules = [
                   chromium-pwa-wmclass-sync.homeManagerModules.default
