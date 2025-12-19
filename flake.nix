@@ -165,5 +165,12 @@
       packages.${system} = {
         init-secureboot = pkgs.callPackage ./scripts/init-secureboot.nix { };
       };
+
+      devShells.${system}.default = pkgs.mkShell {
+        packages = with pkgs; [
+          sops
+          gnumake
+        ];
+      };
     };
 }
