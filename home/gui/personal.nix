@@ -23,6 +23,8 @@
         "google-chrome.desktop"
         "org.gnome.Ptyxis.desktop"
         "code.desktop"
+        "WhatsApp Web.desktop"
+        "Messages.desktop"
         "spotify.desktop"
         "1password.desktop"
         "org.gnome.Nautilus.desktop"
