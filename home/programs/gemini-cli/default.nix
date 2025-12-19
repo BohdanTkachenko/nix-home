@@ -1,32 +1,13 @@
 {
   config,
+  isWorkPC,
   lib,
   pkgs,
-  pkgs-unstable,
-  isWorkLaptop,
-  isWorkPC,
   ...
 }:
-let
-  workPreinstalledGeminiBin = "/google/bin/releases/gemini-cli/tools/gemini";
-  geminiPkg =
-    if isWorkPC then
-      (pkgs.writeScriptBin "gemini" ''
-        #!/bin/sh
-        ${workPreinstalledGeminiBin} --gfg "$@"
-      '')
-    else if isWorkLaptop then
-      (pkgs.writeScriptBin "gemini" ''
-        #!/bin/sh
-        ${workPreinstalledGeminiBin} --proxy=false "$@"
-      '')
-    else
-      pkgs-unstable.gemini-cli;
-in
 {
   programs.gemini-cli = {
     enable = true;
-    package = geminiPkg;
 
     commands = {
       commit = {
