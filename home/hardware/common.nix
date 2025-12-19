@@ -9,6 +9,8 @@
 
   services.xremap = {
     enable = lib.mkForce true;
+    watch = true;
+    mouse = true;
     withGnome = true;
     config.keymap = [
       {
@@ -16,6 +18,12 @@
         remap = {
           "C-left" = "C-pageup";
           "C-right" = "C-pagedown";
+        };
+      }
+      {
+        name = "Disable mouse middle click";
+        remap = {
+          BTN_MIDDLE = "KEY_RESERVED";
         };
       }
     ];
