@@ -6,6 +6,13 @@
   pkgs,
   ...
 }:
+let
+  allowedShellCommands = lib.lists.map (cmd: "run_shell_command(${cmd})") [
+    "jj diff"
+    "jj log"
+    "jj status"
+  ];
+in
 {
   programs.gemini-cli.enable = true;
 
@@ -14,6 +21,11 @@
     ide.enabled = true;
     ide.hasSeenNudge = true;
     security.auth.selectedType = "oauth-personal";
+    security.enablePermanentToolApproval = true;
+    tools.allowed = allowedShellCommands;
+    tools.autoAccept = true;
+    tools.shell.pager = lib.getExe pkgs.bat;
+    tools.shell.showColor = true;
     ui.accessibility.disableLoadingPhrases = true;
     ui.footer.hideSandboxStatus = true;
     ui.showCitations = true;

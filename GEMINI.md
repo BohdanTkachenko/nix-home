@@ -38,9 +38,9 @@ the consumers of your library:
    with `MAJOR` in Semantic Versioning). A BREAKING CHANGE can be part of
    commits of any type.
 4. _types_ other than `fix:` and `feat:` are allowed, for example
-   @commitlint/config-conventional (based on the Angular convention) recommends
-   `build:`, `chore:`, `ci:`, `docs:`, `style:`, `refactor:`, `perf:`, `test:`,
-   and others.
+   `@commitlint/config-conventional` (based on the Angular convention)
+   recommends `build:`, `chore:`, `ci:`, `docs:`, `style:`, `refactor:`,
+   `perf:`, `test:`, and others.
 5. footers other than `BREAKING CHANGE: <description>` may be provided and
    follow a convention similar to git trailer format.
 
