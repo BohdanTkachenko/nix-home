@@ -10,15 +10,15 @@ let
   defaultProfileUuid = "C0FFEE-C0DE-FEED-FACE-AC1DDEADBEEF";
   defaultProfile = {
     label = "The Coffee Coder";
-    opacity = lib.gvariant.mkDouble 0.9;
     palette = "Japanesque";
+    opacity = lib.gvariant.mkDouble 0.9;
     cell-height-scale = 1.0;
+    use-custom-command = false;
   };
 
   workWorkstationUuid = "60061E-CAFE-F00D-FA57-0FF1CEACCE55";
   workWorkstationProfile = defaultProfile // {
     label = "The Free Food Eater";
-    palette = "VS Code";
     use-custom-command = true;
     custom-command = "ssh ws";
   };
