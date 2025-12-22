@@ -8,6 +8,6 @@
 
   imports = [
     ./common.nix
-    ../programs/claude-code.nix
+    ../programs/ai/claude-code.nix
   ];
 }

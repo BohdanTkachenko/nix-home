@@ -17,7 +17,7 @@
     ../programs/direnv.nix
     ../programs/dotfiles.nix
     ../programs/fish.nix
-    ../programs/gemini-cli
+    ../programs/ai/gemini-cli.nix
     ../programs/git.nix
     ../programs/jujutsu.nix
     ../programs/micro.nix
