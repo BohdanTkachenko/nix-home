@@ -37,25 +37,19 @@
       !{jj status}
       ```
 
-      ### Recent commits history:
-
-      ```
-      !{jj log -r "present(p4base)..@" --no-graph -n 10 -T builtin_log_detailed}
-      ```
-
       ### Full diff:
 
       ```diff
       !{jj diff}
       ```
+
       ## Task
 
-      Based on the changes above; create a single atomic Jujutsu commit
-      with a descriptive message. Utilize Conventional Commits only if
-      previous commits use them; otherwise do not use Conventional Commits.
+      Based on the changes above create a single atomic Jujutsu commit
+      with a descriptive message.
 
-      This is intended as a low effort way for the user to commit; so avoid
-      asking user questions; unless absolutely necessary. User may ask you
+      This is intended as a low effort way for the user to commit so avoid
+      asking user questions unless absolutely necessary. User may ask you
       to correct the message as needed.
 
       Run the following two commands with the new commit message:
