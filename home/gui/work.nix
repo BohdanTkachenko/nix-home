@@ -4,15 +4,15 @@
   ...
 }:
 {
-  home.packages =
-    with pkgs;
-    let
-      guiApps = [
-        google-chrome
-        google-chrome-beta
-      ];
-    in
-    (map (p: config.lib.nixGL.wrap p) guiApps);
+  registry.debian.packages = [
+    "google-chrome-stable"
+    "google-chrome-beta"
+  ];
+
+  home.packages = with pkgs; [
+    google-chrome
+    google-chrome-beta
+  ];
 
   dconf.settings = {
     "org/gnome/shell" = {

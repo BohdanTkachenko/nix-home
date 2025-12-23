@@ -41,6 +41,14 @@
       tamasfe.even-better-toml
       yzhang.markdown-all-in-one
     ]
+    ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+      {
+        name = "puppet-vscode";
+        publisher = "puppet";
+        version = "1.5.5";
+        sha256 = "A2Fse+KBUWr+ViQ8JTKoFQAxfYriikhNx1lh5HtLHxc=";
+      }
+    ]
     ++ lib.optionals (!isWork) [
       # https://github.com/NixOS/nixpkgs/issues/464202
       # anthropic.claude-code

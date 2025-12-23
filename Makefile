@@ -21,7 +21,7 @@ setup:
 	fi
 
 setup-hm:
-	sudo puppet apply scripts/setup.pp
+	sudo puppet apply scripts
 
 submodules:
 	@echo "Updating submodules..."

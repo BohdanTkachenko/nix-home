@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  isWork,
   isWorkLaptop,
   ...
 }:
@@ -25,9 +26,13 @@ let
 in
 
 {
-  home.packages = with pkgs; [
-    (config.lib.nixGL.wrap ptyxis)
-  ];
+  registry.debian.packages = [ "ptyxis" ];
+  home.packages = lib.mkIf (!isWork) (
+    with pkgs;
+    [
+      ptyxis
+    ]
+  );
 
   dconf.settings = {
     "org/gnome/Ptyxis/Shortcuts" = {

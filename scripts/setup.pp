@@ -22,7 +22,7 @@ class setup {
 
   if $real_user and $real_user != '' and $real_user != 'root' {
     $channel_name = 'nixpkgs'
-    $channel_url = 'https://nixos.org/channels/nixos-25.05'
+    $channel_url = 'https://nixos.org/channels/nixos-25.11'
 
     exec { "add_nix_channel_${channel_name}":
       command => "/usr/bin/nix-channel --add ${channel_url} ${channel_name}",

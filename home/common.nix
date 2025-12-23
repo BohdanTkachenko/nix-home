@@ -2,6 +2,7 @@
 {
   imports = [
     ../overlays
+    ./registry.nix
   ];
 
   home.stateVersion = "25.11";
