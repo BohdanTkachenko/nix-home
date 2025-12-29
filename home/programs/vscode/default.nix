@@ -7,53 +7,44 @@
   ...
 }:
 {
-  home.packages = with pkgs-unstable; [
-    # Nix
-    nix
-    nil
-    nixfmt-rfc-style
-    # Terraform
-    terraform-ls
-    # Terraform wrapper that executes tofu
-    (pkgs.writeShellScriptBin "terraform" ''
-      exec ${pkgs-unstable.opentofu}/bin/tofu "$@"
-    '')
-  ];
+  home.packages =
+    with pkgs-unstable;
+    [
+      nix
+      nil
+      nixfmt-rfc-style
+    ]
+    ++ lib.optionals (!isWork) [
+      puppet
+      terraform-ls
+      (pkgs.writeShellScriptBin "terraform" ''
+        exec ${pkgs-unstable.opentofu}/bin/tofu "$@"
+      '')
+    ];
 
-  programs = {
-    vscode = {
-      enable = true;
-      package = (config.lib.nixGL.wrap pkgs-unstable.vscode);
-    };
-  };
-
+  programs.vscode.enable = true;
+  programs.vscode.package = (config.lib.nixGL.wrap pkgs-unstable.vscode.fhs);
+  programs.vscode.mutableExtensionsDir = false;
   programs.vscode.profiles.default.extensions =
-    with pkgs-unstable.vscode-extensions;
+    with pkgs.nix-vscode-extensions.vscode-marketplace;
     [
       coolbear.systemd-unit-file
       davidanson.vscode-markdownlint
       foxundermoon.shell-format
       jnoortheen.nix-ide
+      mkhl.direnv
       ms-python.black-formatter
       ms-python.python
       ms-vscode.makefile-tools
-      rust-lang.rust-analyzer
-      tamasfe.even-better-toml
+      puppet.puppet-vscode
       yzhang.markdown-all-in-one
     ]
-    ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-      {
-        name = "puppet-vscode";
-        publisher = "puppet";
-        version = "1.5.5";
-        sha256 = "A2Fse+KBUWr+ViQ8JTKoFQAxfYriikhNx1lh5HtLHxc=";
-      }
-    ]
     ++ lib.optionals (!isWork) [
-      # https://github.com/NixOS/nixpkgs/issues/464202
-      # anthropic.claude-code
+      anthropic.claude-code
       hashicorp.hcl
       hashicorp.terraform
+      rust-lang.rust-analyzer
+      tamasfe.even-better-toml
     ];
 
   home.file.".config/Code/User/settings.json".source = lib.mkForce (

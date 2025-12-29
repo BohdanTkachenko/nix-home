@@ -35,5 +35,6 @@
   "editor.rulers": [
 
     80
-  ]
+  ],
+  "claudeCode.preferredLocation": "panel"
 }

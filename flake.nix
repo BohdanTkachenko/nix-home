@@ -13,6 +13,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-vscode-extensions = {
+      url = "github:nix-community/nix-vscode-extensions";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     nixgl = {
       url = "github:nix-community/nixGL";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -60,6 +65,7 @@
       nixpkgs,
       nixpkgs-unstable,
       browser-previews,
+      nix-vscode-extensions,
       sops-nix,
       xremap,
       ...
@@ -77,7 +83,7 @@
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = {
-            inherit nixgl pkgs-unstable;
+            inherit nixgl pkgs-unstable nix-vscode-extensions;
             browser-previews-pkgs = browser-previews.packages.${system};
             isWork = true;
             isWorkPC = !isLaptop;
@@ -96,7 +102,7 @@
         nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = {
-            inherit pkgs-unstable;
+            inherit pkgs-unstable nix-vscode-extensions;
             browser-previews-pkgs = browser-previews.packages.${system};
             isWork = false;
             isWorkPC = false;
@@ -111,7 +117,7 @@
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 extraSpecialArgs = {
-                  inherit pkgs-unstable;
+                  inherit pkgs-unstable nix-vscode-extensions;
                   browser-previews-pkgs = browser-previews.packages.${system};
                   nixgl = null;
                   isWork = false;
