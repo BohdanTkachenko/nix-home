@@ -1,5 +1,10 @@
 # Base NixOS configuration shared across all machines
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   imports = [
@@ -121,4 +126,7 @@
 
   # Disable NixOS xremap (using home-manager xremap instead)
   services.xremap.enable = false;
+
+  # SOPS secrets
+  sops.age.keyFile = "${config.users.users.dan.home}/.config/sops/age/keys.txt";
 }

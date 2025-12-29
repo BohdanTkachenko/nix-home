@@ -2,6 +2,7 @@
 {
   imports = [
     ../nixos/common.nix
+    ../nixos/wireguard.nix
     ../nixos/hardware/common.nix
     ../nixos/hardware/cpu-amd.nix
     ../nixos/hardware/gpu-amd.nix
