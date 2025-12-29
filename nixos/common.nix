@@ -8,6 +8,7 @@
     ./minecraft.nix
     ./podman.nix
     ./security.nix
+    ./steam.nix
     ./user.nix
   ];
 
