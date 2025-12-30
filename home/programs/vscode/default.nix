@@ -15,7 +15,6 @@
       nixfmt-rfc-style
     ]
     ++ lib.optionals (!isWork) [
-      puppet
       terraform-ls
       (pkgs.writeShellScriptBin "terraform" ''
         exec ${pkgs-unstable.opentofu}/bin/tofu "$@"
@@ -31,6 +30,7 @@
       coolbear.systemd-unit-file
       davidanson.vscode-markdownlint
       foxundermoon.shell-format
+      jjk.jjk
       jnoortheen.nix-ide
       mkhl.direnv
       ms-python.black-formatter
@@ -47,7 +47,31 @@
       tamasfe.even-better-toml
     ];
 
-  home.file.".config/Code/User/settings.json".source = lib.mkForce (
-    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix/home/programs/vscode/settings.json"
-  );
+  programs.vscode.profiles.default.userSettings = {
+    # Fonts
+    editor.fontFamily = "'MesloLGL Nerd Font Mono', 'Droid Sans Mono', 'monospace', monospace";
+    editor.fontSize = 16;
+    terminal.integrated.fontFamily = "MesloLGL Nerd Font";
+
+    # Disable updates
+    extensions.autoCheckUpdates = false;
+    extensions.autoUpdate = false;
+    update.mode = "none";
+
+    # Formatting
+    editor.formatOnSave = true;
+    "[dockerfile]".editor.defaultFormatter = "ms-azuretools.vscode-containers";
+    "[markdown]".editor.defaultFormatter = "esbenp.prettier-vscode";
+    "[terraform-vars]".editor.defaultFormatter = "hashicorp.terraform";
+    "[terraform]".editor.defaultFormatter = "hashicorp.terraform";
+
+    # General
+    editor.rulers = [ 80 ];
+    editor.tabSize = 2;
+    editor.wordWrap = "on";
+    explorer.confirmDragAndDrop = false;
+    files.autoSave = "onFocusChange";
+    workbench.startupEditor = "none";
+    puppet.editorService.enable = false;
+  };
 }
