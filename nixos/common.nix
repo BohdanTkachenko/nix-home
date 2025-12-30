@@ -5,6 +5,7 @@
   imports = [
     ../overlays
     ./desktop.nix
+    ./minecraft.nix
     ./podman.nix
     ./security.nix
     ./user.nix
