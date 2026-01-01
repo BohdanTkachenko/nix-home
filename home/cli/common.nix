@@ -5,6 +5,7 @@
     btop
     eza
     fd
+    procs
     ripgrep
     trash-cli
     ugrep
