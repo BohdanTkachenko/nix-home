@@ -1,7 +1,6 @@
 { ... }:
 {
   imports = [
-    ../overlays
     ./registry.nix
   ];
 
