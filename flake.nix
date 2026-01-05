@@ -178,5 +178,12 @@
           sops
         ];
       };
+
+      checks.${system} = {
+        default = import ./tests {
+          inherit self pkgs;
+          lib = pkgs.lib;
+        };
+      };
     };
 }
