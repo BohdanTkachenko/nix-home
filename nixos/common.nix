@@ -129,4 +129,6 @@
 
   # SOPS secrets
   sops.age.keyFile = "${config.users.users.dan.home}/.config/sops/age/keys.txt";
+
+  environment.variables.EDITOR = "micro";
 }
