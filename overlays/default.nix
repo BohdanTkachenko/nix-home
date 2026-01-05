@@ -7,5 +7,6 @@
   imports = [
     ./gemini-cli.nix
     ./google-chrome.nix
+    ./jujutsu.nix
   ];
 }

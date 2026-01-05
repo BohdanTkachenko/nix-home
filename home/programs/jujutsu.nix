@@ -3,22 +3,12 @@
   lib,
   isWork,
   pkgs,
-  pkgs-unstable,
   ...
 }:
 {
   programs.jujutsu = {
     enable = true;
-    package =
-      if isWork
-      then
-        (
-          pkgs.writeScriptBin "jj" ''
-            #!/bin/sh
-            exec /usr/bin/jj "$@"
-          ''
-        )
-      else pkgs-unstable.jujutsu;
+    package = pkgs.jujutsu;
     settings = {
       user.name = "Bohdan Tkachenko";
       user.email = if isWork then "bohdant@google.com" else "bohdan@tkachenko.dev";
