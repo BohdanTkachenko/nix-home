@@ -1,5 +1,12 @@
 { ... }:
 {
+  # Add ThinkPad Extra Buttons to xremap's device list while still matching
+  # standard keyboards (built-in and external via substring match)
+  services.xremap.deviceNames = [
+    "keyboard"
+    "ThinkPad Extra Buttons"
+  ];
+
   services.xremap.config.modmap = [
     {
       name = "Remap special function keys to media keys";
