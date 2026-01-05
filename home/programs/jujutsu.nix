@@ -61,11 +61,17 @@
     {
       jjd = "jj diff";
       jjs = "jj status";
-      jje = "jj edit";
-      jjq = "jj squash";
-      jjj = "jj desc";
       jjx = "jj log";
+      jje = "jj edit";
+      jjep = "jj edit @-";
+      jjen = "jj edit @+";
+      jjq = "jj squash";
+      jjt = "jj split";
+      jja = "jj abandon";
+      jjj = "jj desc";
+      jjn = "jj new";
       jjc = "jj commit";
+      jjm = "jj main";
       jjp = "jj push";
       jju = "jj pull";
     }
