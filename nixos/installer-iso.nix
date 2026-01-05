@@ -103,7 +103,7 @@ in
 
   isoImage.squashfsCompression = "zstd -Xcompression-level 6";
 
-  isoImage.isoName = lib.mkForce "nixos-dan.iso";
+  image.fileName = lib.mkForce "nixos-dan.iso";
   isoImage.volumeID = lib.mkForce "NIXOS_CUSTOM";
   isoImage.storeContents = dependencies;
 
