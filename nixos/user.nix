@@ -12,6 +12,7 @@
       "audio"
       "input"
       "tss"
+      "adbusers"
     ];
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [

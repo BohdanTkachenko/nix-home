@@ -120,9 +120,13 @@
     wget
     vim
     htop
+    androidenv.androidPkgs.platform-tools
   ];
 
   services.fwupd.enable = true;
+
+  # Android Debug Bridge
+  programs.adb.enable = true;
 
   # Disable NixOS xremap (using home-manager xremap instead)
   services.xremap.enable = false;
