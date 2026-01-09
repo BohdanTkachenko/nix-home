@@ -72,6 +72,8 @@
         config.allowUnfree = true;
       };
 
+      overlayModules = (import ./overlays).imports;
+
       mkHome =
         hostSpecificModule: isLaptop:
         home-manager.lib.homeManagerConfiguration {
@@ -88,6 +90,7 @@
             sops-nix.homeManagerModules.sops
             xremap.homeManagerModules.default
           ]
+          ++ overlayModules
           ++ [ hostSpecificModule ];
         };
 
