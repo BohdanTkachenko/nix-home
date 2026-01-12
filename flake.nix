@@ -93,8 +93,9 @@
             chromium-pwa-wmclass-sync.homeManagerModules.default
             sops-nix.homeManagerModules.sops
             xremap.homeManagerModules.default
-          ]
-          ++ [ hostSpecificModule ];
+            ./overlays
+            hostSpecificModule
+          ];
         };
 
       mkNixos =
@@ -184,6 +185,51 @@
           inherit self pkgs;
           lib = pkgs.lib;
         };
+      };
+
+      checks.${system} = {
+        google-chrome-overlay = pkgs.callPackage ./tests/google-chrome-overlay.nix { };
+        fix-chrome-autostart = pkgs.runCommand "test-fix-chrome-autostart" {
+          nativeBuildInputs = [ pkgs.python3 ];
+          FIX_CHROME_AUTOSTART_SCRIPT = ./overlays/fix-chrome-autostart.py;
+        } ''
+          python3 ${./tests/fix-chrome-autostart.py}
+          touch $out
+        '';
+        # Verify the actual home-manager config generates correct systemd units
+        home-manager-chrome-units =
+          let
+            hm = self.homeConfigurations."bohdant@dan.nyc.corp.google.com";
+            unitDir = "${hm.activationPackage}/home-files/.config/systemd/user";
+          in
+          pkgs.runCommand "test-hm-chrome-units" { } ''
+            echo "Checking home-manager generates Chrome autostart fixer units..."
+
+            for variant in google-chrome-stable google-chrome-beta; do
+              echo "Checking $variant..."
+
+              service="${unitDir}/fix-''${variant}-autostart.service"
+              path="${unitDir}/fix-''${variant}-autostart.path"
+
+              # Check files exist
+              test -f "$service" || { echo "FAIL: $service not found"; exit 1; }
+              test -f "$path" || { echo "FAIL: $path not found"; exit 1; }
+
+              # Verify service has correct ExecStart
+              grep -q "fix-chrome-autostart" "$service" || { echo "FAIL: service missing ExecStart"; exit 1; }
+
+              # Verify path unit watches autostart directory
+              grep -q "PathChanged=.*autostart" "$path" || { echo "FAIL: path not watching autostart"; exit 1; }
+
+              # Verify path unit will be enabled (has Install section with WantedBy)
+              grep -q "WantedBy=paths.target" "$path" || { echo "FAIL: path unit won't be enabled"; exit 1; }
+
+              echo "PASS: $variant"
+            done
+
+            echo "All home-manager unit checks passed!"
+            touch $out
+          '';
       };
     };
 }
