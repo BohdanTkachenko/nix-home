@@ -8,6 +8,8 @@
     ../home/work.nix
   ];
 
+  home.homeDirectory = "/usr/local/google/home/bohdant";
+
   nixpkgs.config.allowUnfree = true;
   services.xremap.enable = false;
 }
