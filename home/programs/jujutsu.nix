@@ -53,7 +53,18 @@
           "-c"
           "case $(jj backend) in git) jj git push ;; piper) jj upload ;; *) echo 'Unsupported backend'; ;; esac"
         ];
-      };
+      }
+      // (
+        if isWork then
+          {
+            mv = [
+              "piper"
+              "rename"
+            ];
+          }
+        else
+          { }
+      );
     };
   };
 
