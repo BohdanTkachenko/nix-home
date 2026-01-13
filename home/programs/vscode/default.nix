@@ -1,6 +1,7 @@
 {
   config,
   isWork,
+  isWorkPC,
   lib,
   pkgs,
   pkgs-unstable,
@@ -22,7 +23,12 @@
     ];
 
   programs.vscode.enable = true;
-  programs.vscode.package = (config.lib.nixGL.wrap pkgs-unstable.vscode.fhs);
+  programs.vscode.package =
+    # On the work PC, the home directory is under /usr, which conflicts with
+    # the bubblewrap sandbox used by the vscode-fhs package. The sandbox
+    # hides the host's /usr, making the home directory inaccessible.
+    # As a workaround, we use the non-FHS version of VS Code on this specific machine.
+    if isWorkPC then pkgs-unstable.vscode else (config.lib.nixGL.wrap pkgs-unstable.vscode.fhs);
   programs.vscode.mutableExtensionsDir = false;
   programs.vscode.profiles.default.extensions =
     with pkgs.nix-vscode-extensions.vscode-marketplace;
