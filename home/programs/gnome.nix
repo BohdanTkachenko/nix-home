@@ -43,7 +43,6 @@
       { package = blur-my-shell; }
       { package = caffeine; }
       { package = dash-to-dock; }
-      { package = junk-notification-cleaner; }
       { package = just-perfection; }
       # { package = paperwm; }
       { package = search-light; }
