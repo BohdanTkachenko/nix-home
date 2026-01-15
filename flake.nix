@@ -185,9 +185,6 @@
           inherit self pkgs;
           lib = pkgs.lib;
         };
-      };
-
-      checks.${system} = {
         google-chrome-overlay = pkgs.callPackage ./tests/google-chrome-overlay.nix { };
         fix-chrome-autostart = pkgs.runCommand "test-fix-chrome-autostart" {
           nativeBuildInputs = [ pkgs.python3 ];
