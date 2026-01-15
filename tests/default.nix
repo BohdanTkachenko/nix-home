@@ -5,6 +5,7 @@
 }:
 let
   testDirs = [
+    ./home
     ./overlays
   ];
 

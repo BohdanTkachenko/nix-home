@@ -1,0 +1,3 @@
+[
+  ./programs/ai/ask.nix
+]
