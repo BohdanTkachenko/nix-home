@@ -1,6 +1,7 @@
 {
   isWork,
   lib,
+  pkgs,
   pkgs-unstable,
   ...
 }:
@@ -12,7 +13,11 @@ let
       exit 1
     fi
 
-    ${pkgs-unstable.claude-code}/bin/claude --no-session-persistence --model haiku --print "$*" | ${pkgs-unstable.glow}/bin/glow
+    ${pkgs-unstable.claude-code}/bin/claude \
+      --no-session-persistence \
+      --model haiku \
+      --print "$*" \
+    | ${pkgs-unstable.glow}/bin/glow
   '';
 
   ask-gemini = pkgs-unstable.writeShellScriptBin "ask-gemini" ''
@@ -21,20 +26,25 @@ let
       exit 1
     fi
 
-    ${pkgs-unstable.gemini-cli}/bin/gemini -p "$*" | ${pkgs-unstable.glow}/bin/glow
+    ${pkgs.gemini-cli}/bin/gemini \
+      --extensions "" \
+      --allowed-mcp-server-names "" \
+      "$*" 2>/tmp/ask-gemini.error.log \
+    | ${pkgs-unstable.glow}/bin/glow
   '';
 
   ask = pkgs-unstable.writeShellScriptBin "ask" ''
-    exec ${if isWork then ask-gemini else ask-claude}/bin/${if isWork then "ask-gemini" else "ask-claude"} "$@"
+    exec ${if isWork then ask-gemini else ask-claude}/bin/${
+      if isWork then "ask-gemini" else "ask-claude"
+    } "$@"
   '';
 in
 {
-  home.packages =
-    [
-      ask
-      ask-gemini
-    ]
-    ++ lib.optionals (!isWork) [
-      ask-claude
-    ];
+  home.packages = [
+    ask
+    ask-gemini
+  ]
+  ++ lib.optionals (!isWork) [
+    ask-claude
+  ];
 }
