@@ -11,6 +11,7 @@ let
     "jj diff"
     "jj log"
     "jj status"
+    "jj show"
   ];
 in
 {
@@ -43,17 +44,15 @@ in
     prompt = ''
       ## Context
 
-      ### List of all changes made:
+      ### Current commit description and changes in current revision:
 
       ```
-      !{jj status}
+      !{jj show --stat --git --ignore-all-space}
       ```
 
-      ### Full diff:
+      ### Recent commits
 
-      ```diff
-      !{jj diff}
-      ```
+      !{jj log --no-graph --limit 5}
 
       ## Task
 

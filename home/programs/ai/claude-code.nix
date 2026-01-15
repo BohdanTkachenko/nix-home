@@ -16,9 +16,11 @@
         ---
         ## Context
 
-        - Current jj status: !`jj status`
-        - Current jj diff: !`jj diff`
-        - Recent commits: !`jj log --no-graph --limit 5`
+        ### Current commit description and changes in current revision:
+
+        !`jj show --stat --git --ignore-all-space`
+
+        ### Recent commits: !`jj log --no-graph --limit 5`
 
         ## Task
 
