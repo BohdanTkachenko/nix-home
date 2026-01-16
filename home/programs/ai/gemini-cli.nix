@@ -17,27 +17,38 @@ in
 {
   programs.gemini-cli.enable = true;
 
-  programs.gemini-cli.settings = {
-    general.preferredEditor = "vim";
-    ide.enabled = true;
-    ide.hasSeenNudge = true;
-    security.auth.selectedType = "oauth-personal";
-    security.enablePermanentToolApproval = true;
-    tools.allowed = allowedShellCommands;
-    tools.autoAccept = true;
-    tools.shell.pager = lib.getExe pkgs.bat;
-    tools.shell.showColor = true;
-    ui.accessibility.disableLoadingPhrases = true;
-    ui.footer.hideSandboxStatus = true;
-    ui.showCitations = true;
-    ui.showLineNumbers = false;
-    ui.theme = "Atom One";
-  }
-  // lib.optionalAttrs (!isWork) {
-    general.disableAutoUpdate = true;
-    general.disableUpdateNags = true;
-    privacy.usageStatisticsEnabled = false;
-  };
+  # Flake has a default value for this option and it is persisting it into
+  # sessionVariables which requires reboot or re-login to change it.
+  # For Gemini CLI this env variable takes precedence over a config file.
+  # This makes it impossible to specify the model using config.
+  # Setting this to an empty value allows Gemini CLI to look into the config
+  # instead.
+  programs.gemini-cli.defaultModel = "";
+
+  programs.gemini-cli.settings =
+    lib.recursiveUpdate
+      {
+        general.checkpointing.enabled = true;
+        general.preferredEditor = "vim";
+        general.previewFeatures = true;
+        ide.enabled = true;
+        ide.hasSeenNudge = true;
+        model.name = "gemini-3-pro-preview";
+        security.auth.selectedType = "oauth-personal";
+        security.enablePermanentToolApproval = true;
+        tools.allowed = allowedShellCommands;
+        tools.autoAccept = true;
+        tools.shell.pager = lib.getExe pkgs.bat;
+        tools.shell.showColor = true;
+        ui.theme = "Atom One";
+      }
+      (
+        lib.optionalAttrs (!isWork) {
+          general.disableAutoUpdate = true;
+          general.disableUpdateNags = true;
+          privacy.usageStatisticsEnabled = false;
+        }
+      );
 
   programs.gemini-cli.commands.commit = {
     description = "Generates a Jujutsu commit message based on diff.";
@@ -47,12 +58,12 @@ in
       ### Current commit description and changes in current revision:
 
       ```
-      !{jj show --stat --git --ignore-all-space}
+      !{jj show --stat --git --ignore-all-space --no-pager}
       ```
 
       ### Recent commits
 
-      !{jj log --no-graph --limit 5}
+      !{jj log --no-graph --limit 5 --no-pager}
 
       ## Task
 
