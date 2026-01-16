@@ -19,6 +19,11 @@
     in
     (map (p: config.lib.nixGL.wrap p) guiApps);
 
+  registry.debian.packages = [
+    "google-chrome-stable"
+    "google-chrome-beta"
+  ];
+
   xdg.autostart.entries = [
     "${pkgs.google-chrome}/share/applications/google-chrome.desktop"
   ];

@@ -4,11 +4,6 @@
   ...
 }:
 {
-  registry.debian.packages = [
-    "google-chrome-stable"
-    "google-chrome-beta"
-  ];
-
   home.packages = with pkgs; [
     google-chrome
     google-chrome-beta
