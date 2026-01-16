@@ -32,7 +32,6 @@ in
         general.previewFeatures = true;
         ide.enabled = true;
         ide.hasSeenNudge = true;
-        model.name = "gemini-3-pro-preview";
         security.auth.selectedType = "oauth-personal";
         security.enablePermanentToolApproval = true;
         tools.allowed = allowedShellCommands;
