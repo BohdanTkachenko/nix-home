@@ -11,7 +11,7 @@
     commands = {
       commit = ''
         ---
-        allowed-tools: Bash(jj status:*), Bash(jj log:*), Bash(jj diff:*), Bash(jj desc:*), Bash(jj new:*)
+        allowed-tools: Bash(jj status:*), Bash(jj log:*), Bash(jj diff:*), Bash(jj desc:*), Bash(jj new:*), Bash(jj show:*)
         description: Describe current jj change
         ---
         ## Context
