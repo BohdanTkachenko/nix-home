@@ -49,7 +49,7 @@
     };
 
     chromium-pwa-wmclass-sync = {
-      url = "path:./pkgs/chromium-pwa-wmclass-sync";
+      url = "github:BohdanTkachenko/chromium-pwa-wmclass-sync";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

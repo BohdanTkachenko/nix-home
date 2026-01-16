@@ -29,14 +29,18 @@
         ]
       },
       "locked": {
-        "path": "./pkgs/chromium-pwa-wmclass-sync",
-        "type": "path"
+        "lastModified": 1768604071,
+        "narHash": "sha256-Oq41g7CeGMTfWcpLsUfo466SDGuOr09Z3wM6bMtBk04=",
+        "owner": "BohdanTkachenko",
+        "repo": "chromium-pwa-wmclass-sync",
+        "rev": "7d8067189164cfba07db824e0401e2b12f70c283",
+        "type": "github"
       },
       "original": {
-        "path": "./pkgs/chromium-pwa-wmclass-sync",
-        "type": "path"
-      },
-      "parent": []
+        "owner": "BohdanTkachenko",
+        "repo": "chromium-pwa-wmclass-sync",
+        "type": "github"
+      }
     },
     "crane": {
       "locked": {

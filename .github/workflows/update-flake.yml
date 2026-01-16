@@ -15,17 +15,7 @@ jobs:
 
       - uses: cachix/install-nix-action@v25
 
-      - run: |
-          # Calculate the store path for the local input to treat it as immutable during update
-          store_path="$(nix-store --add-fixed --recursive sha256 pkgs/chromium-pwa-wmclass-sync)"
-          
-          # Update flake.lock, pinning the local input to its store path to avoid "mutable lock" error
-          nix flake update \
-            --override-input chromium-pwa-wmclass-sync "path:$store_path" \
-            --flake path:.
-          
-          # Revert the local input in flake.lock back to the relative path
-          sed -i "s|$store_path|./pkgs/chromium-pwa-wmclass-sync|g" flake.lock
+      - run: nix flake update
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
