@@ -28,7 +28,6 @@ in
   programs.gemini-cli.settings =
     lib.recursiveUpdate
       {
-        general.checkpointing.enabled = true;
         general.preferredEditor = "vim";
         general.previewFeatures = true;
         ide.enabled = true;
