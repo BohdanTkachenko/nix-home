@@ -20,6 +20,7 @@
     ../programs/fish.nix
     ../programs/ai/ask.nix
     ../programs/ai/gemini-cli.nix
+    ../programs/audio-fix.nix
     ../programs/git.nix
     ../programs/jujutsu.nix
     ../programs/micro.nix
