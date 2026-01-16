@@ -36,6 +36,7 @@
       coolbear.systemd-unit-file
       davidanson.vscode-markdownlint
       foxundermoon.shell-format
+      github.vscode-github-actions
       jjk.jjk
       jnoortheen.nix-ide
       mkhl.direnv
