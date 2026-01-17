@@ -13,7 +13,7 @@
     [
       nix
       nil
-      nixfmt-rfc-style
+      nixfmt
     ]
     ++ lib.optionals (!isWork) [
       terraform-ls
