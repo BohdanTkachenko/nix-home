@@ -36,6 +36,6 @@
     ../programs/fonts.nix
     ../programs/gnome.nix
     ../programs/ptyxis.nix
-    ../programs/vscode
+    ../programs/vscode.nix
   ];
 }
