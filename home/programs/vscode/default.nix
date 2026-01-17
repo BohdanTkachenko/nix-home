@@ -37,6 +37,8 @@
       davidanson.vscode-markdownlint
       foxundermoon.shell-format
       github.vscode-github-actions
+      google.gemini-cli-vscode-ide-companion
+      google.geminicodeassist
       jjk.jjk
       jnoortheen.nix-ide
       mkhl.direnv
@@ -79,6 +81,11 @@
     explorer.confirmDragAndDrop = false;
     files.autoSave = "onFocusChange";
     workbench.startupEditor = "none";
+
+    # Extensions
     puppet.editorService.enable = false;
+    claudeCode.preferredLocation = "sidebar";
+    geminicodeassist.project = "gen-lang-client-0113783863";
+    http.systemCertificatesNode = true; # Needed for Gemini Code Assist
   };
 }
