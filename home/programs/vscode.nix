@@ -46,6 +46,7 @@
       ms-python.python
       ms-vscode.makefile-tools
       puppet.puppet-vscode
+      thenuprojectcontributors.vscode-nushell-lang
       yzhang.markdown-all-in-one
     ]
     ++ lib.optionals (!isWork) [
@@ -87,5 +88,6 @@
     claudeCode.preferredLocation = "sidebar";
     geminicodeassist.project = "gen-lang-client-0113783863";
     http.systemCertificatesNode = true; # Needed for Gemini Code Assist
+    nushellLanguageServer.nushellExecutablePath = "${pkgs-unstable.nushell}/bin/nu";
   };
 }
