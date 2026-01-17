@@ -10,6 +10,8 @@
     enable = true;
     package = pkgs.jujutsu;
     settings = {
+      ui.diff-formatter = ":git";
+
       user.name = "Bohdan Tkachenko";
       user.email = if isWork then "bohdant@google.com" else "bohdan@tkachenko.dev";
 
