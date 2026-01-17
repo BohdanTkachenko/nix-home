@@ -29,11 +29,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1768604071,
-        "narHash": "sha256-Oq41g7CeGMTfWcpLsUfo466SDGuOr09Z3wM6bMtBk04=",
+        "lastModified": 1768611582,
+        "narHash": "sha256-cB8kwYcl+Ts3JoxDeTCqIIFoixaGXgVUYZu1WjyU54E=",
         "owner": "BohdanTkachenko",
         "repo": "chromium-pwa-wmclass-sync",
-        "rev": "7d8067189164cfba07db824e0401e2b12f70c283",
+        "rev": "00e7b27442ea702c13625ade06946603b1487fb4",
         "type": "github"
       },
       "original": {
