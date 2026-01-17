@@ -1,6 +1,13 @@
-{ lib, pkgs, browser-previews-pkgs, isWork, ... }:
+{
+  lib,
+  pkgs,
+  browser-previews-pkgs,
+  isWork,
+  isNvidia ? false,
+  ...
+}:
 let
-  customFlags = [
+  baseFlags = [
     "--disable-features=HardwareMediaKeyHandling"
     "--enable-features=AcceleratedVideoEncoder,WebUIDarkMode"
     "--force-dark-mode"
@@ -9,6 +16,10 @@ let
     "--enable-zero-copy"
     "--enable-smooth-scrolling"
   ];
+  nvidiaFlags = [
+    "--disable-accelerated-video-decode"
+  ];
+  customFlags = baseFlags ++ (lib.optionals isNvidia nvidiaFlags);
   flagsStr = builtins.concatStringsSep " " customFlags;
 
   autostartFixerScript = pkgs.stdenv.mkDerivation {
@@ -25,8 +36,11 @@ let
     '';
   };
 
-  mkWrapper = pkg: systemBinaryName:
-    if !isWork then pkg.override { commandLineArgs = customFlags; } else
+  mkWrapper =
+    pkg: systemBinaryName:
+    if !isWork then
+      pkg.override { commandLineArgs = customFlags; }
+    else
       pkgs.stdenv.mkDerivation {
         pname = lib.getName pkg;
         version = pkg.version;
@@ -73,9 +87,21 @@ let
   };
 
   chromeConfigs = [
-    { pkg = pkgs.google-chrome; bin = "google-chrome-stable"; search = "/opt/google/chrome/google-chrome"; }
-    { pkg = browser-previews-pkgs.google-chrome-beta; bin = "google-chrome-beta"; search = "/opt/google/chrome-beta/google-chrome-beta"; }
-    { pkg = browser-previews-pkgs.google-chrome-dev; bin = "google-chrome-unstable"; search = "/opt/google/chrome-unstable/google-chrome"; }
+    {
+      pkg = pkgs.google-chrome;
+      bin = "google-chrome-stable";
+      search = "/opt/google/chrome/google-chrome";
+    }
+    {
+      pkg = browser-previews-pkgs.google-chrome-beta;
+      bin = "google-chrome-beta";
+      search = "/opt/google/chrome-beta/google-chrome-beta";
+    }
+    {
+      pkg = browser-previews-pkgs.google-chrome-dev;
+      bin = "google-chrome-unstable";
+      search = "/opt/google/chrome-unstable/google-chrome";
+    }
   ];
 
   autostartFixers = lib.mkMerge (map (c: mkAutostartFixer c.bin c.search) chromeConfigs);
@@ -91,4 +117,3 @@ in
 
   systemd.user = lib.mkIf isWork autostartFixers;
 }
-
