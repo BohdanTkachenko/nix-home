@@ -55,6 +55,12 @@
           "-c"
           "case $(jj backend) in git) jj git push ;; piper) jj upload ;; *) echo 'Unsupported backend'; ;; esac"
         ];
+
+        parents = [
+          "log"
+          "-r"
+          "@ | parents(@)"
+        ];
       }
       // (
         if isWork then
