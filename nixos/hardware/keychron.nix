@@ -1,6 +1,4 @@
-# Keychron devices - udev rules for configurator app
+{ pkgs, ... }:
 {
-  services.udev.extraRules = ''
-    KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="3434", MODE="0660", GROUP="users", TAG+="uaccess", TAG+="udev-acl"
-  '';
+  environment.systemPackages = with pkgs; [ keychron-udev-rules ];
 }
