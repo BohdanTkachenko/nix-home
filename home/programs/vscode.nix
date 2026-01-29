@@ -39,7 +39,6 @@
       github.vscode-github-actions
       google.gemini-cli-vscode-ide-companion
       google.geminicodeassist
-      jjk.jjk
       jnoortheen.nix-ide
       mkhl.direnv
       ms-python.black-formatter
@@ -47,6 +46,7 @@
       ms-vscode.makefile-tools
       puppet.puppet-vscode
       thenuprojectcontributors.vscode-nushell-lang
+      visualjj.visualjj
       yzhang.markdown-all-in-one
     ]
     ++ lib.optionals (!isWork) [
