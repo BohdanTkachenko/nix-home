@@ -89,5 +89,6 @@
     geminicodeassist.project = "gen-lang-client-0113783863";
     http.systemCertificatesNode = true; # Needed for Gemini Code Assist
     nushellLanguageServer.nushellExecutablePath = "${pkgs-unstable.nushell}/bin/nu";
+    "visualjj.showSourceControlColocated" = true;
   };
 }
