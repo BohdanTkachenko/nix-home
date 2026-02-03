@@ -20,6 +20,7 @@
     teamspeak_server
     teamspeak6-client
     transmission_4-gtk
+    xournalpp
   ];
 
   dconf.settings = {
