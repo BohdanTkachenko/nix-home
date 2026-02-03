@@ -21,7 +21,7 @@
 
   networking.hostName = lib.mkDefault "nyancat";
 
-  home-manager.users.dan.imports = [
+  home-manager.sharedModules = [
     ../home/hardware/pc-personal.nix
   ];
 }

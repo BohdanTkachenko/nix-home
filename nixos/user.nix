@@ -1,45 +1,79 @@
 # User configuration and Home Manager setup
-{ pkgs, ... }:
-
 {
-  users.users.dan = {
-    isNormalUser = true;
+  pkgs,
+  lib,
+  config,
+  ...
+}:
+
+let
+  # Shared settings for all users
+  sharedGroups = [
+    "wheel"
+    "networkmanager"
+    "video"
+    "audio"
+    "input"
+    "tss"
+    "adbusers"
+  ];
+  sharedHomeImports = [
+    ../home/common.nix
+    ../home/personal.nix
+  ];
+  primaryUser = builtins.head (builtins.attrNames config.my.users);
+in
+{
+  options.my.users = lib.mkOption {
+    type = lib.types.attrsOf (
+      lib.types.submodule {
+        options = {
+          description = lib.mkOption { type = lib.types.str; };
+          sshKeys = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [ ];
+          };
+        };
+      }
+    );
+    default = { };
+  };
+
+  config.my.users.dan = {
     description = "Dan";
-    extraGroups = [
-      "wheel"
-      "networkmanager"
-      "video"
-      "audio"
-      "input"
-      "tss"
-      "adbusers"
-    ];
-    shell = pkgs.fish;
-    openssh.authorizedKeys.keys = [
+    sshKeys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF8dbeUB1k/CnmuFIAaZW7Avp+hqz22DxY9pMtwFQDBb"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMRn3eyTO+PNubD7oM4+5p6oxsTM5I7nKiuHZStc2AE+"
     ];
   };
 
-  programs.fish.enable = true;
+  config.my.users.maria = {
+    description = "Maria";
+  };
 
-  home-manager.useUserPackages = true;
-  home-manager.users.dan =
+  config.users.users = lib.mapAttrs (name: cfg: {
+    isNormalUser = true;
+    description = cfg.description;
+    extraGroups = sharedGroups;
+    shell = pkgs.fish;
+    openssh.authorizedKeys.keys = cfg.sshKeys;
+  }) config.my.users;
+
+  config.programs.fish.enable = true;
+  config.home-manager.useUserPackages = true;
+
+  config.home-manager.users = lib.mapAttrs (
+    name: _:
     { config, lib, ... }:
     {
-      imports = [
-        ../home/common.nix
-        ../home/personal.nix
-      ];
-
+      imports = sharedHomeImports;
       home = {
-        username = lib.mkForce "dan";
-        homeDirectory = lib.mkForce "/home/dan";
+        username = lib.mkForce name;
+        homeDirectory = lib.mkForce "/home/${name}";
         stateVersion = lib.mkForce "25.11";
       };
-
-      sops.age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
-
+      sops.age.keyFile = lib.mkForce "/etc/sops/age/keys.txt";
       targets.genericLinux.enable = lib.mkForce false;
-    };
+    }
+  ) config.my.users;
 }

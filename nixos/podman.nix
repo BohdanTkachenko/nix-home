@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
   virtualisation = {
     containers.enable = true;
@@ -13,9 +13,6 @@
     podman-compose
   ];
 
-  users.users.dan = {
-    extraGroups = [
-      "podman"
-    ];
-  };
+  users.groups.podman.members = builtins.attrNames config.my.users;
+
 }

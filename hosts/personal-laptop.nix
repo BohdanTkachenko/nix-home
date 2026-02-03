@@ -20,7 +20,7 @@
 
   networking.hostName = lib.mkDefault "dan-idea";
 
-  home-manager.users.dan.imports = [
+  home-manager.sharedModules = [
     ../home/hardware/lenovo-thinkpad-z16-gen1.nix
   ];
 }

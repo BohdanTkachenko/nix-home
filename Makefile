@@ -43,10 +43,12 @@ install-hm:
 		--flake "path:$(mkfile_dir)" \
 		$(VERBOSE_FLAG)
 
-install: submodules $(HOME)/.config/sops/age/keys.txt
+install: submodules
 	@if test -f /etc/NIXOS; then \
+		$(MAKE) /etc/sops/age/keys.txt; \
 		$(MAKE) install-nixos; \
 	else \
+		$(MAKE) $(HOME)/.config/sops/age/keys.txt; \
 		$(MAKE) install-hm; \
 	fi
 
@@ -57,9 +59,16 @@ update:
 	@$(MAKE) install
 
 $(HOME)/.config/sops/age/keys.txt:
-	@echo "Decrypting key..."
+	@echo "Decrypting key to $(HOME)/.config/sops/age/keys.txt..."
 	@mkdir -p "$(HOME)/.config/sops/age"
 	@nix-shell -p age --run "age --decrypt --output='$(HOME)/.config/sops/age/keys.txt' key.txt.age"
+
+/etc/sops/age/keys.txt:
+	@echo "Decrypting key to /etc/sops/age/keys.txt..."
+	@sudo mkdir -p /etc/sops/age
+	@nix-shell -p age --run "age --decrypt key.txt.age" | sudo tee /etc/sops/age/keys.txt > /dev/null
+	@sudo chown root:wheel /etc/sops/age/keys.txt
+	@sudo chmod 640 /etc/sops/age/keys.txt
 
 code:
 	@echo "Opening project in VSCode..."

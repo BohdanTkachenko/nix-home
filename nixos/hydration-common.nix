@@ -7,6 +7,9 @@
 }:
 
 let
+  primaryUser = builtins.head (builtins.attrNames config.my.users);
+  primaryHome = config.users.users.${primaryUser}.home;
+
   mkHydrationService =
     {
       name,
@@ -21,7 +24,7 @@ let
         unitConfig.ConditionPathExists = "!${path}";
         wants = [ "network-online.target" ];
         after = [ "network-online.target" ];
-        wantedBy = [ "default.target" ];
+        wantedBy = [ "multi-user.target" ];
 
         path = with pkgs; [
           git
@@ -35,6 +38,8 @@ let
           Restart = "on-failure";
           RestartSec = "10s";
           StartLimitIntervalSec = 0;
+          User = primaryUser;
+          Group = "users";
 
           ExecStart = pkgs.writeShellScript "hydrate-${name}-logic" ''
             notify-send "Hydration: ${name}" "Cloning ${repo}..."
@@ -53,15 +58,15 @@ let
 in
 {
   systemd.tmpfiles.rules = [
-    "L+ /etc/nixos - - - - ${config.users.users.dan.home}/.config/nix"
+    "L+ /etc/nixos - - - - ${primaryHome}/.config/nix"
   ];
 
-  systemd.user.services = lib.listToAttrs [
+  systemd.services = lib.listToAttrs [
     (mkHydrationService {
       name = "nixos-config";
       description = "Clone NixOS Config";
       repo = "https://github.com/BohdanTkachenko/nix-home.git";
-      path = "${config.users.users.dan.home}/.config/nix";
+      path = "${primaryHome}/.config/nix";
     })
   ];
 }
