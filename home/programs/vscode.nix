@@ -45,6 +45,7 @@
       ms-python.python
       ms-vscode.makefile-tools
       puppet.puppet-vscode
+      tauri-apps.tauri-vscode
       thenuprojectcontributors.vscode-nushell-lang
       visualjj.visualjj
       yzhang.markdown-all-in-one
@@ -71,7 +72,7 @@
     # Formatting
     editor.formatOnSave = true;
     "[dockerfile]".editor.defaultFormatter = "ms-azuretools.vscode-containers";
-    "[markdown]".editor.defaultFormatter = "esbenp.prettier-vscode";
+    "[markdown]".editor.defaultFormatter = "yzhang.markdown-all-in-one";
     "[terraform-vars]".editor.defaultFormatter = "hashicorp.terraform";
     "[terraform]".editor.defaultFormatter = "hashicorp.terraform";
 
@@ -90,5 +91,6 @@
     http.systemCertificatesNode = true; # Needed for Gemini Code Assist
     nushellLanguageServer.nushellExecutablePath = "${pkgs-unstable.nushell}/bin/nu";
     "visualjj.showSourceControlColocated" = true;
+    "rust-analyzer.runnables.command" = "${pkgs-unstable.cargo}/bin/cargo";
   };
 }
