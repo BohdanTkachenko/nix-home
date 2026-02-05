@@ -136,11 +136,18 @@
     };
 
     "org/gnome/shell/extensions/dash-to-dock" = {
-      click-action = "focus-or-appspread";
-      extend-height = true;
-      dock-fixed = true;
-      show-apps-at-top = true;
       always-center-icons = true;
+      apply-custom-theme = true;
+      click-action = "focus-or-appspread";
+      custom-theme-shrink = false;
+      dash-max-icon-size = 64;
+      dock-fixed = true;
+      extend-height = false;
+      hot-keys = false;
+      isolate-monitors = true;
+      show-apps-at-top = true;
+      show-show-apps-button = false;
+      show-trash = false;
     };
 
     "org/gnome/shell/extensions/search-light" = {
