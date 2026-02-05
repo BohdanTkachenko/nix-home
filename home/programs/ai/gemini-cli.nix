@@ -35,6 +35,7 @@ in
   programs.gemini-cli.settings =
     lib.recursiveUpdate
       {
+        context.fileFiltering.enableRecursiveFileSearch = true;
         general.preferredEditor = "vim";
         general.previewFeatures = true;
         ide.enabled = true;
