@@ -8,10 +8,17 @@
 }:
 let
   allowedShellCommands = lib.lists.map (cmd: "run_shell_command(${cmd})") [
+    "cat"
+    "echo"
+    "eza"
+    "jj describe"
     "jj diff"
     "jj log"
-    "jj status"
     "jj show"
+    "jj status"
+    "jj write-current-commit-message-to-tmp-file"
+    "ls"
+    "mktemp"
   ];
 in
 {
@@ -49,9 +56,13 @@ in
       );
 
   programs.gemini-cli.commands.commit = {
-    description = "Generates a Jujutsu commit message based on diff.";
+    description = "Generates a Jujutsu commit based on diff and an optional user input.";
     prompt = ''
+      # Task: Generate a Jujutsu commit based on diff and an optional user input.
+
       ## Context
+
+      !{TMP_FILE=$(jj write-current-commit-message-to-tmp-file) && echo "Current commit message was extracted to a temporary file: $TMP_FILE"}
 
       ### Current commit description and changes in current revision:
 
@@ -61,22 +72,25 @@ in
 
       ### Recent commits
 
+      ```
       !{jj log --no-graph --limit 5 --no-pager}
+      ```
 
       ## Task
 
-      Based on the changes above create a single atomic Jujutsu commit
-      with a descriptive message.
+      Based on the changes above create a single atomic Jujutsu commit with a descriptive message.
 
-      This is intended as a low effort way for the user to commit so avoid
-      asking user questions unless absolutely necessary. User may ask you
-      to correct the message as needed.
+      The user may provide additional instructions or context for the commit message. If it is not empty, you MUST incorporate its content into the generated commit message to reflect the user's specific requests. The user's raw command is appended below your instructions.
 
-      Run the following two commands with the new commit message:
+      This is intended as a low effort way for the user to commit so avoid asking user questions unless further clarificatation is required.
 
-      ```sh
-      jj describe -m "<provide your generated commit message here>" && jj new
-      ```
+      ## Behavior
+
+      **IMPORTANT NOTE: NEVER ask user for the confirmation. Just perform actions below.**
+
+      1. Generate the new commit message based on the diff, log and any additional user instructions and overwrite file !{echo $TMP_FILE} with this commit message.
+      2. Run the following command to apply the new message: `cat !{echo $TMP_FILE} | jj describe --stdin`
+      3. Run the following command to create a new commit: `jj new`
     '';
   };
 }
