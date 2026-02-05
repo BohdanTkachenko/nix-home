@@ -16,7 +16,6 @@
         antigravity
         cameractrls-gtk4
         mission-center
-        netflix
         obsidian
         spotify
       ];
