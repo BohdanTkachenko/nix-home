@@ -8,5 +8,6 @@
     ./gemini-cli.nix
     ./google-chrome.nix
     ./jujutsu.nix
+    ./web-apps.nix
   ];
 }

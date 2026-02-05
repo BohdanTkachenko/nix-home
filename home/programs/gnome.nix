@@ -22,6 +22,9 @@
         }/share/applications/1password-silent.desktop"
 
         "${pkgs.spotify}/share/applications/spotify.desktop"
+
+        "${pkgs.webApps.stable.googleMessages}/share/applications/Google Messages.desktop"
+        "${pkgs.webApps.stable.whatsApp}/share/applications/WhatsApp.desktop"
       ];
     };
   };

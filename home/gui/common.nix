@@ -37,5 +37,6 @@
     ../programs/gnome.nix
     ../programs/ptyxis.nix
     ../programs/vscode.nix
+    ../programs/web-apps.nix
   ];
 }
