@@ -18,7 +18,7 @@
 
         ### Current commit description and changes in current revision:
 
-        !`jj show --stat --ignore-all-space`
+        !`jj show --ignore-all-space`
 
         ### Recent commits: !`jj log --no-graph --limit 5`
 

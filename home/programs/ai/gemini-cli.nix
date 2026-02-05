@@ -56,7 +56,7 @@ in
       ### Current commit description and changes in current revision:
 
       ```
-      !{jj show --stat --ignore-all-space --no-pager}
+      !{jj show --ignore-all-space --no-pager}
       ```
 
       ### Recent commits
