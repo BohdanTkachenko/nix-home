@@ -61,15 +61,6 @@
           "-r"
           "@ | parents(@)"
         ];
-
-        write-current-commit-message-to-tmp-file = [
-          "util"
-          "exec"
-          "--"
-          "sh"
-          "-c"
-          "TMP_FILE=$(mktemp /tmp/jj-commit-message.XXXXXX) && jj log --no-graph -r @ -T description > $TMP_FILE && echo $TMP_FILE"
-        ];
       }
       // (
         if isWork then

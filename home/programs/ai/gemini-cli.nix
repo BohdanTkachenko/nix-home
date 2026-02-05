@@ -7,19 +7,63 @@
   ...
 }:
 let
-  allowedShellCommands = lib.lists.map (cmd: "run_shell_command(${cmd})") [
+  allowedCommands = [
     "cat"
     "echo"
     "eza"
-    "jj describe"
-    "jj diff"
-    "jj log"
-    "jj show"
-    "jj status"
-    "jj write-current-commit-message-to-tmp-file"
+    "tee"
     "ls"
     "mktemp"
   ];
+  allowedSubcommands = {
+    jj = [
+      "describe"
+      "diff"
+      "log"
+      "show"
+      "status"
+    ];
+    rm = [
+      ".*.jj/tmp/jj-commit-message.*"
+    ];
+  };
+
+  writeCommitMsg = lib.getExe (
+    pkgs.writers.writeNuBin "write-commit-msg" ''
+      let commit_id = (jj log --no-graph -r @ -T commit_id)
+
+      let tmp_dir = ([(pwd), ".jj", "tmp"] | path join)
+      mkdir $tmp_dir
+      ls $tmp_dir 
+      | where type == file and modified < ((date now) - 1hr) 
+      | each { |it| rm $it.name }
+
+      let tmp_file = $"($tmp_dir)/jj-commit-message.($commit_id)"
+
+      jj log --no-graph -r @ -T description | save -f $tmp_file
+
+      print $tmp_file
+    ''
+  );
+
+  policyFile =
+    let
+      toolName = "run_shell_command";
+      decision = "allow";
+      priority = 100;
+    in
+    (pkgs.formats.toml { }).generate "nix.toml" {
+      rule = [
+        {
+          inherit toolName decision priority;
+          commandPrefix = allowedCommands ++ [ writeCommitMsg ];
+        }
+      ]
+      ++ (lib.attrsets.mapAttrsToList (command: subcommands: {
+        inherit toolName decision priority;
+        commandRegex = "${command} (${builtins.concatStringsSep "|" subcommands})";
+      }) allowedSubcommands);
+    };
 in
 {
   programs.gemini-cli.enable = true;
@@ -42,7 +86,6 @@ in
         ide.hasSeenNudge = true;
         security.auth.selectedType = "oauth-personal";
         security.enablePermanentToolApproval = true;
-        tools.allowed = allowedShellCommands;
         tools.autoAccept = true;
         tools.shell.pager = lib.getExe pkgs.bat;
         tools.shell.showColor = true;
@@ -56,6 +99,13 @@ in
         }
       );
 
+  # Gemini CLI ignores symlinks. As a workaround, copy the file instead.
+  home.activation.copyGeminiPolicy = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    run mkdir -p $HOME/.gemini/policies
+    run cp -f "${policyFile}" "$HOME/.gemini/policies/nix.toml"
+    run chmod 644 "$HOME/.gemini/policies/nix.toml"
+  '';
+
   programs.gemini-cli.commands.commit = {
     description = "Generates a Jujutsu commit based on diff and an optional user input.";
     prompt = ''
@@ -63,7 +113,7 @@ in
 
       ## Context
 
-      !{TMP_FILE=$(jj write-current-commit-message-to-tmp-file) && echo "Current commit message was extracted to a temporary file: $TMP_FILE"}
+      !{TMP_FILE=$(${writeCommitMsg}) && echo "Current commit message was extracted to a temporary file: $TMP_FILE"}
 
       ### Current commit description and changes in current revision:
 
@@ -90,8 +140,11 @@ in
       **IMPORTANT NOTE: NEVER ask user for the confirmation. Just perform actions below.**
 
       1. Generate the new commit message based on the diff, log and any additional user instructions and overwrite file !{echo $TMP_FILE} with this commit message.
-      2. Run the following command to apply the new message: `cat !{echo $TMP_FILE} | jj describe --stdin`
+      2. Run the following command to apply the new message and cleanup: `cat !{echo $TMP_FILE} | jj describe --stdin && rm !{echo $TMP_FILE}`
       3. Run the following command to create a new commit: `jj new`
+
+      ## Optional context provided by the user
+
     '';
   };
 }
