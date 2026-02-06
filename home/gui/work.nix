@@ -9,6 +9,12 @@
     google-chrome-beta
   ];
 
+  xdg.autostart.entries = [
+    "${pkgs.webApps.stable.googleCalendar}/share/applications/google-calendar-stable.desktop"
+    "${pkgs.webApps.stable.gmail}/share/applications/gmail-stable.desktop"
+    "${pkgs.webApps.stable.googleChat}/share/applications/google-chat-stable.desktop"
+  ];
+
   dconf.settings = {
     "org/gnome/shell" = {
       favorite-apps = [

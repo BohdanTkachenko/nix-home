@@ -23,8 +23,8 @@
 
         "${pkgs.spotify}/share/applications/spotify.desktop"
 
-        "${pkgs.webApps.stable.googleMessages}/share/applications/Google Messages.desktop"
-        "${pkgs.webApps.stable.whatsApp}/share/applications/WhatsApp.desktop"
+        "${pkgs.webApps.stable.googleMessages}/share/applications/google-messages-stable.desktop"
+        "${pkgs.webApps.stable.whatsApp}/share/applications/whatsapp-stable.desktop"
       ];
     };
   };
