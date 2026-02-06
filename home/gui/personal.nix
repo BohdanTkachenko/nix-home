@@ -25,12 +25,12 @@
   dconf.settings = {
     "org/gnome/shell" = {
       favorite-apps = [
-        "Google Gemini.desktop"
+        "google-gemini-stable.desktop"
         "google-chrome.desktop"
         "org.gnome.Ptyxis.desktop"
         "code.desktop"
-        "WhatsApp.desktop"
-        "Google Messages.desktop"
+        "whatsapp-stable.desktop"
+        "google-messages-stable.desktop"
         "spotify.desktop"
         "1password.desktop"
         "org.gnome.Nautilus.desktop"

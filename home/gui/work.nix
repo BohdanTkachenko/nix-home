@@ -13,17 +13,17 @@
     "org/gnome/shell" = {
       favorite-apps = [
         "obsidian.desktop"
-        "Google Gemini.desktop"
+        "google-gemini-stable.desktop"
         "Duckie.desktop"
         "google-chrome.desktop"
         "Cider.desktop"
         "org.gnome.Ptyxis.desktop"
-        "Gmail.desktop"
-        "Google Chat.desktop"
-        "Google Meet.desktop"
-        "Google Calendar.desktop"
+        "gmail-stable.desktop"
+        "google-chat-stable.desktop"
+        "google-meet-stable.desktop"
+        "google-calendar-stable.desktop"
         "spotify.desktop"
-        "WhatsApp.desktop"
+        "whatsapp-stable.desktop"
         "1password.desktop"
       ];
     };

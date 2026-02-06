@@ -32,6 +32,52 @@ let
       };
     };
 
+    googleCalendar = {
+      name = "Google Calendar";
+      url = "https://calendar.google.com";
+      categories = [
+        "Calendar"
+        "Network"
+      ];
+      genericName = "Calendar";
+      icon = builtins.fetchurl {
+        name = "googleCalendar.png";
+        url = "https://www.gstatic.com/images/branding/product/2x/calendar_512dp.png";
+        sha256 = "065wk88jr78m62kxw70prl5ap0kl28d05qlacgnixbmnhvllzvvf";
+      };
+    };
+
+    gmail = {
+      name = "Gmail";
+      url = "https://mail.google.com";
+      categories = [
+        "Email"
+        "Network"
+      ];
+      genericName = "Email client";
+      icon = builtins.fetchurl {
+        name = "gmail.png";
+        url = "https://www.gstatic.com/images/branding/product/2x/gmail_512dp.png";
+        sha256 = "09wmr05mzq2snyxbb0qfyg8qlly6h07p2jx1zf8d7sq9fxsa4735";
+      };
+    };
+
+    googleChat = {
+      name = "Google Chat";
+      url = "https://chat.google.com";
+      categories = [
+        "Chat"
+        "InstantMessaging"
+        "Network"
+      ];
+      genericName = "Instant messaging";
+      icon = builtins.fetchurl {
+        name = "googleChat.png";
+        url = "https://www.gstatic.com/images/branding/product/2x/chat_512dp.png";
+        sha256 = "0mfhm2m3l0hvdf5c2q4mybyggmzfgy30b479y0m15q08xj03k3h2";
+      };
+    };
+
     googleMessages = {
       name = "Google Messages";
       url = "https://messages.google.com/web/?pwa=1";
@@ -150,7 +196,7 @@ in
               sanitizedName = lib.toLower (builtins.replaceStrings [ " " ] [ "-" ] name);
               binaryName = "${sanitizedName}-${browser.channel}";
               desktopItem = final.makeDesktopItem {
-                name = name;
+                name = binaryName;
                 exec = binaryName;
                 desktopName = "${name}${browser.suffix}";
                 inherit
