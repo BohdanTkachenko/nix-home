@@ -32,7 +32,7 @@ let
     pkgs.writers.writeNuBin "write-commit-msg" ''
       let commit_id = (jj log --no-graph -r @ -T commit_id)
 
-      let tmp_dir = ([(pwd), ".jj", "tmp"] | path join)
+      let tmp_dir = ([(jj root), ".jj", "tmp"] | path join)
       mkdir $tmp_dir
       ls $tmp_dir 
       | where type == file and modified < ((date now) - 1hr) 
