@@ -106,42 +106,49 @@ in
             stable = {
               package = final.google-chrome;
               bin = "google-chrome-stable";
+              channel = "stable";
               suffix = "";
+              profile = "Default";
             };
             beta = {
               package = final.google-chrome-beta;
               bin = "google-chrome-beta";
+              channel = "beta";
               suffix = " (Beta)";
+              profile = "Profile_1";
             };
             dev = {
               package = final.google-chrome-dev;
               bin = "google-chrome-unstable";
+              channel = "unstable";
               suffix = " (Unstable)";
+              profile = "Profile_2";
             };
           };
 
           # Generate Chrome app WM class from URL (e.g., "https://web.whatsapp.com" -> "chrome-web.whatsapp.com__-Default")
           mkWMClass =
-            url:
+            url: profile:
             let
               withoutScheme = builtins.elemAt (lib.splitString "://" url) 1;
               host = builtins.head (lib.splitString "/" withoutScheme);
             in
-            "chrome-${host}__-Default";
+            "chrome-${host}__-${profile}";
 
           mkWebApp =
             browser:
             {
               name,
               url,
-              binaryName ? lib.toLower (builtins.replaceStrings [ " " ] [ "-" ] name),
               icon ? "google-chrome",
               categories ? [ "Network" ],
               genericName ? "",
               startupNotify ? true,
-              startupWMClass ? mkWMClass url,
+              startupWMClass ? mkWMClass url browser.profile,
             }:
             let
+              sanitizedName = lib.toLower (builtins.replaceStrings [ " " ] [ "-" ] name);
+              binaryName = "${sanitizedName}-${browser.channel}";
               desktopItem = final.makeDesktopItem {
                 name = name;
                 exec = binaryName;

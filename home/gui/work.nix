@@ -23,7 +23,7 @@
         "Google Meet.desktop"
         "Google Calendar.desktop"
         "spotify.desktop"
-        "WhatsApp Web.desktop"
+        "WhatsApp.desktop"
         "1password.desktop"
       ];
     };
