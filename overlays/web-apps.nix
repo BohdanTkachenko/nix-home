@@ -172,14 +172,22 @@ in
             };
           };
 
-          # Generate Chrome app WM class from URL (e.g., "https://web.whatsapp.com" -> "chrome-web.whatsapp.com__-Default")
+          # Generate Chrome app WM class from URL
+          # Chrome format: chrome-{host}__{path_with_underscores}-{profile}
+          # Examples:
+          #   https://web.whatsapp.com         -> chrome-web.whatsapp.com__-Default
+          #   https://messages.google.com/web/ -> chrome-messages.google.com__web_-Default
           mkWMClass =
             url: profile:
             let
               withoutScheme = builtins.elemAt (lib.splitString "://" url) 1;
-              host = builtins.head (lib.splitString "/" withoutScheme);
+              withoutQuery = builtins.head (lib.splitString "?" withoutScheme);
+              parts = lib.splitString "/" withoutQuery;
+              host = builtins.head parts;
+              pathParts = builtins.tail parts;
+              pathStr = lib.concatStringsSep "_" pathParts;
             in
-            "chrome-${host}__-${profile}";
+            "chrome-${host}__${pathStr}-${profile}";
 
           mkWebApp =
             browser:
