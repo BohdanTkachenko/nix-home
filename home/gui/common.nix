@@ -17,6 +17,7 @@
         cameractrls-gtk4
         mission-center
         obsidian
+        riff
         spotify
       ];
     in

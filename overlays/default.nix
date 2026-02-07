@@ -8,6 +8,7 @@
     ./gemini-cli.nix
     ./google-chrome.nix
     ./jujutsu.nix
+    ./riff-overlay.nix
     ./web-apps.nix
   ];
 }
