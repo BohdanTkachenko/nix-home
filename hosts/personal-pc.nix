@@ -6,6 +6,7 @@
 
   imports = [
     ../nixos/common.nix
+    ../nixos/wireguard.nix
     ../nixos/hardware/common.nix
     ../nixos/hardware/cpu-intel.nix
     ../nixos/hardware/gpu-nvidia.nix

@@ -32,6 +32,28 @@
       ipv6.method = "disabled";
     };
 
+    profiles.proton-il-vpn = {
+      connection = {
+        id = "Proton IL";
+        type = "wireguard";
+        interface-name = "wg-proton-il";
+        autoconnect = "false";
+      };
+      wireguard = {
+        private-key = "$WG_PROTON_IL_PRIVATE_KEY";
+        private-key-flags = "0";
+      };
+      "wireguard-peer.C6GJzhSJVSKXNhagTOHn587mLXnvtvOGkOi4l2tN6hs=" = {
+        endpoint = "$WG_PROTON_IL_ENDPOINT:51820";
+        allowed-ips = "0.0.0.0/0; ::/0;";
+      };
+      ipv4 = {
+        method = "manual";
+        address1 = "10.2.0.2/32";
+        dns = "10.2.0.1;";
+      };
+    };
+
     profiles.proton-nj-vpn = {
       connection = {
         id = "Proton NJ";
