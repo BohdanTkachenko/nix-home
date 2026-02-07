@@ -11,9 +11,9 @@ let
       ];
       genericName = "AI assistant";
       icon = builtins.fetchurl {
-        name = "googleGemini.svg";
-        url = "https://www.gstatic.com/lamda/images/gemini_sparkle_aurora_33f86dc0c0257da337c63.svg";
-        sha256 = "1cyc3csq8y8lgrqfr5mp4wdhm36ngazn6z1kv9bh436whqzz6vgm";
+        name = "googleGemini.png";
+        url = "https://www.gstatic.com/images/branding/product/2x/gemini_512dp.png";
+        sha256 = "127bb7s1mmlki2x4gh01lwah1pwrwwmdh061x8ivcq1vabxzs7i3";
       };
     };
 
@@ -26,7 +26,7 @@ let
       ];
       genericName = "Video conferencing";
       icon = builtins.fetchurl {
-        name = "googleMeet.svg";
+        name = "googleMeet.png";
         url = "https://www.gstatic.com//meet/icons/logo_meet_2020q4_512dp_4ac4a724a69a35b5b08c6a711c9717c2.png";
         sha256 = "0n47sbbry25d1hdjrr7r2zygfpaimzizv9hm1smlxn8ghksmhnif";
       };
@@ -89,8 +89,8 @@ let
       genericName = "SMS messaging";
       icon = builtins.fetchurl {
         name = "googleMessages.png";
-        url = "https://ssl.gstatic.com/android-messages-web/images/2022.3/1x/messages_2022_round_512dp.png";
-        sha256 = "0ka5hzllrgy0cndv082zqjjrx2labz0ivmjc9mj63cd4c1c0f7mh";
+        url = "https://www.gstatic.com/images/branding/product/2x/messages_512dp.png";
+        sha256 = "0ccmhzsaxxfi61nbazc9zarqnab6d7lv03drgzwrn7f337zfir1m";
       };
     };
 
@@ -137,7 +137,7 @@ let
       genericName = "Video streaming";
       icon = builtins.fetchurl {
         name = "youtube.png";
-        url = "https://www.gstatic.com/youtube/img/branding/favicon/favicon_192x192_v2.png";
+        url = "https://www.gstatic.com/images/branding/product/2x/youtube_512dp.png";
         sha256 = "0dg9nf97f9rav2jj04l1jc7r2zqzwp80g7n7k59brsjgrd0ps31n";
       };
     };
