@@ -91,7 +91,10 @@
     };
 
     "org/gnome/desktop/input-sources" = {
-      xkb-options = [ "grp:sclk_toggle" ];
+      xkb-options = [
+        "grp:sclk_toggle"
+        "grp:toggle"
+      ];
       sources = [
         (mkTuple [
           "xkb"
