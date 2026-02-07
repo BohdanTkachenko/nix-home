@@ -138,7 +138,7 @@ let
       icon = builtins.fetchurl {
         name = "youtube.png";
         url = "https://www.gstatic.com/images/branding/product/2x/youtube_512dp.png";
-        sha256 = "0dg9nf97f9rav2jj04l1jc7r2zqzwp80g7n7k59brsjgrd0ps31n";
+        sha256 = "1mysfw7fh713f1ng40h49iffdpydkimvxr25zbd4b93m68r56ccx";
       };
     };
   };
