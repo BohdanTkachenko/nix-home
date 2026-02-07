@@ -75,6 +75,8 @@
     consoleLogLevel = 3;
     initrd.verbose = false;
     initrd.systemd.enable = true;
+    initrd.systemd.tpm2.enable = true;
+    initrd.luks.devices.cryptroot.crypttabExtraOpts = [ "tpm2-device=auto" ];
     kernelParams = [
       "quiet"
       "splash"
