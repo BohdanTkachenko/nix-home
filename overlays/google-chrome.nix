@@ -9,7 +9,7 @@
 let
   baseFlags = [
     "--disable-features=HardwareMediaKeyHandling"
-    "--enable-features=AcceleratedVideoEncoder,WebUIDarkMode"
+    "--enable-features=AcceleratedVideoEncoder,WebUIDarkMode,Glic,TabstripComboButton,GlicDevelopmentCookies,ContextualCueing,GlicKeyboardShortcutNewBadge,GlicRollout"
     "--force-dark-mode"
     "--ignore-gpu-blocklist"
     "--disable-gpu-driver-bug-workaround"
