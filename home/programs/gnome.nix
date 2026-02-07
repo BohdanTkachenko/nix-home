@@ -146,7 +146,7 @@
       apply-custom-theme = true;
       click-action = "focus-or-appspread";
       custom-theme-shrink = false;
-      dash-max-icon-size = 64;
+      dash-max-icon-size = 48;
       dock-fixed = true;
       extend-height = false;
       hot-keys = false;
