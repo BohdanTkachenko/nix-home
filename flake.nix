@@ -178,8 +178,13 @@
 
       devShells.${system}.default = pkgs.mkShell {
         packages = with pkgs; [
+          asn
           gnumake
+          inetutils
+          iperf
           sops
+          traceroute
+          wireguard-tools
         ];
       };
 
@@ -189,13 +194,16 @@
           lib = pkgs.lib;
         };
         google-chrome-overlay = pkgs.callPackage ./tests/google-chrome-overlay.nix { };
-        fix-chrome-autostart = pkgs.runCommand "test-fix-chrome-autostart" {
-          nativeBuildInputs = [ pkgs.python3 ];
-          FIX_CHROME_AUTOSTART_SCRIPT = ./overlays/fix-chrome-autostart.py;
-        } ''
-          python3 ${./tests/fix-chrome-autostart.py}
-          touch $out
-        '';
+        fix-chrome-autostart =
+          pkgs.runCommand "test-fix-chrome-autostart"
+            {
+              nativeBuildInputs = [ pkgs.python3 ];
+              FIX_CHROME_AUTOSTART_SCRIPT = ./overlays/fix-chrome-autostart.py;
+            }
+            ''
+              python3 ${./tests/fix-chrome-autostart.py}
+              touch $out
+            '';
         # Verify the actual home-manager config generates correct systemd units
         home-manager-chrome-units =
           let
