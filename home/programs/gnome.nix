@@ -6,6 +6,17 @@
     gnome-themes-extra
   ];
 
+  home.activation = {
+    refreshGnomeShell = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      # Only run if we are inside a graphical session
+      if [ -n "$XDG_DATA_DIRS" ]; then
+        $DRY_RUN_CMD mkdir -p $HOME/.local/share/applications $HOME/.local/share/icons
+        $DRY_RUN_CMD touch $HOME/.local/share/applications $HOME/.local/share/icons
+        $DRY_RUN_CMD ${pkgs.desktop-file-utils}/bin/update-desktop-database $HOME/.local/share/applications
+      fi
+    '';
+  };
+
   xdg = {
     enable = true;
     mime.enable = true;
