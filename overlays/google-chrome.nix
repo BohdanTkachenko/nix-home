@@ -15,6 +15,7 @@ let
     "--disable-gpu-driver-bug-workaround"
     "--enable-zero-copy"
     "--enable-smooth-scrolling"
+    "--disable-vulkan"
   ];
   nvidiaFlags = [
     "--disable-accelerated-video-decode"
