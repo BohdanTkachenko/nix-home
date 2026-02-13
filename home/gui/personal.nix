@@ -5,6 +5,7 @@
 }:
 {
   home.packages = with pkgs; [
+    alpaca
     baobab
     brave
     firefox
