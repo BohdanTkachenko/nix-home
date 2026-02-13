@@ -22,6 +22,12 @@
     transmission_4-gtk
     wireshark
     xournalpp
+
+    # 3D printing
+    bambu-studio
+    freecad
+    openscad-unstable
+    orca-slicer
   ];
 
   dconf.settings = {
