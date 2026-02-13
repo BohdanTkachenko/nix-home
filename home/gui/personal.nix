@@ -8,7 +8,6 @@
     alpaca
     baobab
     brave
-    firefox
     gnome-calculator
     gnome-extension-manager
     gnome-logs

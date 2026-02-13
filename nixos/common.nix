@@ -113,15 +113,17 @@
   };
 
   environment.systemPackages = with pkgs; [
-    sbctl
-    fish
     bash
-    git
     curl
-    tmux
-    wget
-    vim
+    firefox
+    fish
+    git
     htop
+    jj
+    sbctl
+    tmux
+    vim
+    wget
     androidenv.androidPkgs.platform-tools
   ];
 
