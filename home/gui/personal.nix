@@ -46,6 +46,6 @@
 
   imports = [
     ./common.nix
-    ../programs/easyeffects
+    ../programs/easyeffects.nix
   ];
 }
