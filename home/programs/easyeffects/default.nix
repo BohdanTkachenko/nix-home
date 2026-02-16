@@ -3,7 +3,14 @@
 let
   lib = pkgs.lib;
 
-  presetsPath = ./presets/JackHack96;
+  presetsRepo = pkgs.fetchFromGitHub {
+    owner = "JackHack96";
+    repo = "EasyEffects-Presets";
+    rev = "d77a61eb01c36e2c794bddc25423445331e99915";
+    hash = "sha256-or5kH/vTwz7IO0Vz7W4zxK2ZcbL/P3sO9p5+EdcC2DA=";
+  };
+
+  presetsPath = presetsRepo;
   irsPath = presetsPath + "/irs";
 
   loadPreset = filename: {
