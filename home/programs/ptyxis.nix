@@ -80,7 +80,7 @@ in
     };
 
     "org/gnome/Ptyxis" = {
-      default-profile-uuid = defaultProfileUuid;
+      default-profile-uuid = if isWorkLaptop then workWorkstationUuid else defaultProfileUuid;
       profile-uuids = [ defaultProfileUuid ] ++ (if isWorkLaptop then [ workWorkstationUuid ] else [ ]);
       use-system-font = true;
     };
