@@ -17,8 +17,6 @@
     papers
     protonvpn-gui
     seabird
-    teamspeak_server
-    teamspeak6-client
     transmission_4-gtk
     wireshark
     xournalpp

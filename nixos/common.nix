@@ -42,11 +42,6 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  services.teamspeak3 = {
-    enable = true;
-    openFirewall = true;
-  };
-
   boot = {
     loader = {
       systemd-boot = {
