@@ -16,13 +16,8 @@ in
     pkgs.webApps.stable.googleMeet
 
     # Personal only
-    personalPkg.facebookMessenger
-    personalPkg.gmail
-    personalPkg.googleCalendar
     personalPkg.googleGemini
-    personalPkg.googleMeet
     personalPkg.googleMessages
     personalPkg.whatsApp
-    personalPkg.youtube
   ];
 }
