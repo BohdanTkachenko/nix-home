@@ -1,10 +1,12 @@
 keys:
   - &dan-nyancat age1r9qtc606j72exkafnq0f7spp0xdwty5n0ks389mxtlryqr0qsyjqe2hakl
   - &dan-idea age1n969uhtu3mum8falnm746knzlnx8zexwjfttvq490f8u3yr79d3qeh6s2f
+  - &dan-work-pc age1cvfvcpt63vhngg3q2yr0kr73fa4at2naqcjzvrf9evwjm4nmr3gqpgfs4g
   - &dan-age age1cxwjkmzr7rqehyve297ha6kclq99f5fhwnakgghwg03j40scmp5qumhcpg
 creation_rules:
   - key_groups:
       - age:
           - *dan-nyancat
           - *dan-idea
+          - *dan-work-pc
           - *dan-age

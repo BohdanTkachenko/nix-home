@@ -180,6 +180,7 @@
         packages = with pkgs; [
           asn
           gnumake
+          just
           inetutils
           iperf
           sops

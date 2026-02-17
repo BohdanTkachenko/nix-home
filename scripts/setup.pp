@@ -37,7 +37,15 @@ class setup {
       command => "/usr/bin/nix-channel --update ${channel_name}",
       user    => $real_user,
       require => Package['nix'],
+      notify  => Exec["home_manager_switch"],
       path    => ['/bin', '/usr/bin', '/usr/sbin'],
+    }
+
+    exec { 'home_manager_switch':
+      command => "/bin/su -c 'nix run --extra-experimental-features nix-command --extra-experimental-features flakes home-manager -- switch --flake \"path:/usr/local/google/home/bohdant/.config/nix\" -b backup' - ${real_user}",
+      require => Exec["update_nix_channel_${channel_name}"],
+      path    => ['/bin', '/usr/bin', '/usr/sbin'],
+      logoutput => true,
     }
   } else {
     notify { 'Skipping Nix channel setup for root user': }
