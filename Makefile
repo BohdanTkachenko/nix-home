@@ -23,10 +23,6 @@ setup:
 setup-hm:
 	sudo puppet apply scripts
 
-submodules:
-	@echo "Updating submodules..."
-	@git submodule update --init
-
 install-nixos:
 	@echo "Running on NixOS, using nixos-rebuild..."
 	sudo nixos-rebuild switch --flake "path:$(mkfile_dir)" $(VERBOSE_FLAG)
@@ -43,7 +39,7 @@ install-hm:
 		--flake "path:$(mkfile_dir)" \
 		$(VERBOSE_FLAG)
 
-install: submodules
+install:
 	@if test -f /etc/NIXOS; then \
 		$(MAKE) /etc/sops/age/keys.txt; \
 		$(MAKE) install-nixos; \
