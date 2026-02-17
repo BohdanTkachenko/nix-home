@@ -41,10 +41,8 @@ install-hm:
 
 install:
 	@if test -f /etc/NIXOS; then \
-		$(MAKE) /etc/sops/age/keys.txt; \
 		$(MAKE) install-nixos; \
 	else \
-		$(MAKE) $(HOME)/.config/sops/age/keys.txt; \
 		$(MAKE) install-hm; \
 	fi
 
@@ -54,20 +52,16 @@ update:
 	@echo "Applying updates..."
 	@$(MAKE) install
 
-$(HOME)/.config/sops/age/keys.txt:
-	@echo "Decrypting key to $(HOME)/.config/sops/age/keys.txt..."
-	@mkdir -p "$(HOME)/.config/sops/age"
-	@nix-shell -p age --run "age --decrypt --output='$(HOME)/.config/sops/age/keys.txt' key.txt.age"
+SOPS_FILES := nixos/secrets/wireguard.yaml home/programs/ssh/private-ssh-config
 
-/etc/sops/age/keys.txt:
-	@echo "Decrypting key to /etc/sops/age/keys.txt..."
-	@sudo mkdir -p /etc/sops/age
-	@nix-shell -p age --run "age --decrypt key.txt.age" | sudo tee /etc/sops/age/keys.txt > /dev/null
-	@sudo chown root:wheel /etc/sops/age/keys.txt
-	@sudo chmod 640 /etc/sops/age/keys.txt
+rekey:
+	@export SOPS_AGE_KEY=$$(nix-shell -p ssh-to-age --run "ssh-to-age -private-key -i $$HOME/.ssh/id_ed25519") && \
+	for f in $(SOPS_FILES); do \
+		sops updatekeys -y "$(mkfile_dir)/$$f"; \
+	done
 
 code:
 	@echo "Opening project in VSCode..."
 	@code "$(mkfile_dir)"
 
-.PHONY: default setup setup-hm install install-nixos install-hm update code
+.PHONY: default setup setup-hm install install-nixos install-hm update rekey code

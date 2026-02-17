@@ -2,7 +2,7 @@
 {
   home.username = "dan";
   home.homeDirectory = "/var/home/dan";
-  sops.age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
+  sops.age.sshKeyPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
 
   imports = [
     ./cli/personal.nix

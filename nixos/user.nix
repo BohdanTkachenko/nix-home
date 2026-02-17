@@ -72,7 +72,7 @@ in
         homeDirectory = lib.mkForce "/home/${name}";
         stateVersion = lib.mkForce "25.11";
       };
-      sops.age.keyFile = lib.mkForce "/etc/sops/age/keys.txt";
+      sops.age.sshKeyPaths = lib.mkForce [ "/home/${primaryUser}/.ssh/id_ed25519" ];
       targets.genericLinux.enable = lib.mkForce false;
     }
   ) config.my.users;

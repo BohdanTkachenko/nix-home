@@ -131,7 +131,7 @@
   services.xremap.enable = false;
 
   # SOPS secrets
-  sops.age.keyFile = "${config.users.users.dan.home}/.config/sops/age/keys.txt";
+  sops.age.sshKeyPaths = [ "${config.users.users.dan.home}/.ssh/id_ed25519" ];
 
   environment.variables.EDITOR = "micro";
 }
