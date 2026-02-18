@@ -5,6 +5,7 @@
   ];
 
   imports = [
+    ./bambu-studio.nix
     ./gemini-cli.nix
     ./google-chrome.nix
     ./jujutsu.nix
