@@ -20,6 +20,7 @@ let
     ${ensureGcert}/bin/ensure-gcert
     exec /usr/bin/ssh "$@"
   '';
+  hasSopsKeys = !isWork && config.home.username == "dan";
 in
 {
   programs.ssh = {
@@ -27,7 +28,7 @@ in
     enableDefaultConfig = false;
 
     # Personal: include sops secret config
-    includes = lib.mkIf (!isWork) [
+    includes = lib.mkIf hasSopsKeys [
       config.sops.secrets.ssh_private_config.path
     ];
 
@@ -53,7 +54,7 @@ in
   };
 
   # Personal: sops secrets
-  sops.secrets.ssh_private_config = lib.mkIf (!isWork) {
+  sops.secrets.ssh_private_config = lib.mkIf hasSopsKeys {
     sopsFile = ./private-ssh-config;
     format = "binary";
   };
