@@ -7,7 +7,7 @@
 }:
 
 let
-  primaryUser = builtins.head (builtins.attrNames config.my.users);
+  primaryUser = "dan";
   primaryHome = config.users.users.${primaryUser}.home;
 
   mkHydrationService =
