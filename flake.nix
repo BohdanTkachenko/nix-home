@@ -52,10 +52,15 @@
       url = "github:BohdanTkachenko/chromium-pwa-wmclass-sync";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    winapps = {
+      url = "github:winapps-org/winapps";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    {
+    inputs@{
       self,
       chromium-pwa-wmclass-sync,
       disko,
@@ -104,7 +109,7 @@
         nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = {
-            inherit pkgs-unstable nix-vscode-extensions;
+            inherit inputs system pkgs-unstable nix-vscode-extensions;
             browser-previews-pkgs = browser-previews.packages.${system};
             isWork = false;
             isWorkPC = false;
@@ -120,7 +125,7 @@
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 extraSpecialArgs = {
-                  inherit pkgs-unstable nix-vscode-extensions;
+                  inherit inputs system pkgs-unstable nix-vscode-extensions;
                   browser-previews-pkgs = browser-previews.packages.${system};
                   nixgl = null;
                   isWork = false;

@@ -1,4 +1,8 @@
-{ pkgs, config, ... }:
+{ pkgs, lib, config, ... }:
+let
+  userNames = builtins.attrNames config.my.users;
+  indexedUsers = lib.imap0 (i: name: { inherit i name; }) userNames;
+in
 {
   virtualisation = {
     containers.enable = true;
@@ -13,6 +17,27 @@
     podman-compose
   ];
 
-  users.groups.podman.members = builtins.attrNames config.my.users;
+  users.groups.podman.members = userNames;
 
+  # Rootless podman support for all users
+  users.users = builtins.listToAttrs (map (u: {
+    name = u.name;
+    value = {
+      linger = true;
+
+      subUidRanges = [
+        {
+          startUid = 100000 + u.i * 65536;
+          count = 65536;
+        }
+      ];
+
+      subGidRanges = [
+        {
+          startGid = 100000 + u.i * 65536;
+          count = 65536;
+        }
+      ];
+    };
+  }) indexedUsers);
 }

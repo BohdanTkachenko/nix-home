@@ -16,6 +16,7 @@ let
     "input"
     "tss"
     "adbusers"
+    "kvm"
   ];
   sharedHomeImports = [
     ../home/common.nix
@@ -66,7 +67,9 @@ in
     name: _:
     { config, lib, ... }:
     {
-      imports = sharedHomeImports;
+      imports = sharedHomeImports ++ lib.optionals (name == "dan") [
+        ../home/services/winapps.nix
+      ];
       home = {
         username = lib.mkForce name;
         homeDirectory = lib.mkForce "/home/${name}";
