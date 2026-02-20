@@ -20,6 +20,12 @@
       signing.key = "~/.ssh/id_ed25519";
 
       aliases = {
+        lm = [
+          "log"
+          "-r"
+          "main::@"
+        ];
+
         backend = [
           "util"
           "exec"
@@ -81,6 +87,7 @@
       jjd = "jj diff";
       jjs = "jj status";
       jjx = "jj log";
+      jjl = "jj lm";
       jje = "jj edit";
       jjep = "jj edit @-";
       jjen = "jj edit @+";
