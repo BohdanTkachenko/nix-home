@@ -1,14 +1,13 @@
 # Extract current commit message to a temp file
-def "main write" [] {
+def "main write" [tmp_dir: path] {
   let commit_id = (jj log --no-graph -r @ -T commit_id)
 
-  let tmp_dir = ([(jj root), ".jj", "tmp"] | path join)
   mkdir $tmp_dir
   ls $tmp_dir
   | where type == file and modified < ((date now) - 1hr)
   | each { |it| rm $it.name }
 
-  let tmp_file = $"($tmp_dir)/jj-commit-message.($commit_id)"
+  let tmp_file = $"($tmp_dir)/($commit_id)"
 
   jj log --no-graph -r @ -T description | save -f $tmp_file
 
@@ -23,6 +22,6 @@ def "main apply" [tmp_file: path] {
 
 def main [] {
   print "Usage: jj-commit-msg <write|apply>"
-  print "  write         - Extract current commit message to temp file"
+  print "  write <dir>   - Extract current commit message to a file"
   print "  apply <file>  - Apply commit message from file and delete it"
 }

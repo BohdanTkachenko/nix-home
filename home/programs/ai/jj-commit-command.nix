@@ -23,10 +23,10 @@ let
   #   Claude: !`command`
   #   Gemini: !{command}
   toClaudeSyntax = str:
-    builtins.replaceStrings [ "%!\`" "\`!%" ] [ "!\`" "\`" ] str;
+    builtins.replaceStrings [ "{{TMP_DIR}}" "%!\`" "\`!%" ] [ "/tmp/jj-commit-msg" "!\`" "\`" ] str;
 
   toGeminiSyntax = str:
-    builtins.replaceStrings [ "%!\`" "\`!%" ] [ "!{" "}" ] str;
+    builtins.replaceStrings [ "{{TMP_DIR}}" "%!\`" "\`!%" ] [ "${config.home.homeDirectory}/.gemini/tmp/jj-commit-msg" "!{" "}" ] str;
 
   # Read markdown template and substitute jjCommitMsg path
   markdown = builtins.replaceStrings
@@ -46,8 +46,8 @@ let
         "Bash(jj show:*)"
         "Bash(${jjCommitMsg} write)"
         "Bash(${jjCommitMsg} apply *)"
-        "Read(*.jj/tmp/jj-commit-message.*)"
-        "Write(*.jj/tmp/jj-commit-message.*)"
+        "Read(/tmp/jj-commit-msg/.*)"
+        "Write(/tmp/jj-commit-msg/.*)"
       ];
       toolsList = lib.concatMapStringsSep "\n" (t: "- ${t}") allowedTools;
     in

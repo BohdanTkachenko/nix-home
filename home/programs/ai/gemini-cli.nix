@@ -70,6 +70,7 @@ in
   config.programs.gemini-cli.settings =
     lib.recursiveUpdate
       {
+        context.includeDirectories = ["${config.home.homeDirectory}/.gemini/tmp/jj-commit-msg"];
         context.fileFiltering.enableRecursiveFileSearch = true;
         general.preferredEditor = "vim";
         general.previewFeatures = true;
