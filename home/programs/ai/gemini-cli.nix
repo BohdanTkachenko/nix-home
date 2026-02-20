@@ -74,6 +74,9 @@ in
         context.fileFiltering.enableRecursiveFileSearch = true;
         general.preferredEditor = "vim";
         general.previewFeatures = true;
+        general.sessionRetention.enabled = true;
+        general.sessionRetention.warningAcknowledged = true;
+        general.sessionRetention.maxAge = "120d";
         ide.enabled = true;
         ide.hasSeenNudge = true;
         security.auth.selectedType = "oauth-personal";
