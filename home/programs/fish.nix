@@ -16,8 +16,6 @@
       l = "eza --extended --icons --hyperlink --group-directories-first -lah";
       t = "l --ignore-glob '.git|.jj' -TL 2";
 
-      rm = "trash";
-
       grep = "ug";
       egrep = "ug -E";
       fgrep = "ug -F";
