@@ -43,6 +43,32 @@ let
         commandRegex = "${command} (${builtins.concatStringsSep "|" subcommands})";
       }) allowedSubcommands);
     };
+  settings = lib.recursiveUpdate
+    {
+      context.includeDirectories = ["${config.home.homeDirectory}/.gemini/tmp/jj-commit-msg"];
+      context.fileFiltering.enableRecursiveFileSearch = true;
+      general.preferredEditor = "vim";
+      general.previewFeatures = true;
+      general.sessionRetention.enabled = true;
+      general.sessionRetention.warningAcknowledged = true;
+      general.sessionRetention.maxAge = "120d";
+      ide.enabled = true;
+      ide.hasSeenNudge = true;
+      security.auth.selectedType = "oauth-personal";
+      security.enablePermanentToolApproval = true;
+      tools.autoAccept = true;
+      tools.shell.pager = lib.getExe pkgs.bat;
+      tools.shell.showColor = true;
+      ui.theme = "Atom One";
+    }
+    (
+      lib.optionalAttrs (!isWork) {
+        general.disableAutoUpdate = true;
+        general.disableUpdateNags = true;
+        privacy.usageStatisticsEnabled = false;
+      }
+    );
+  settingsFile = (pkgs.formats.json { }).generate "gemini-cli-settings.json" settings;
 in
 {
   imports = [
@@ -59,46 +85,14 @@ in
 
   config.programs.gemini-cli.enable = true;
 
-  # Flake has a default value for this option and it is persisting it into
-  # sessionVariables which requires reboot or re-login to change it.
-  # For Gemini CLI this env variable takes precedence over a config file.
-  # This makes it impossible to specify the model using config.
-  # Setting this to an empty value allows Gemini CLI to look into the config
-  # instead.
+  # The flake sets a default GEMINI_MODEL env var which takes precedence over
+  # the config file, making it impossible to change the model via settings.
+  # Setting this to empty allows Gemini CLI to use the config file instead.
   config.programs.gemini-cli.defaultModel = "";
 
-  config.programs.gemini-cli.settings =
-    lib.recursiveUpdate
-      {
-        context.includeDirectories = ["${config.home.homeDirectory}/.gemini/tmp/jj-commit-msg"];
-        context.fileFiltering.enableRecursiveFileSearch = true;
-        general.preferredEditor = "vim";
-        general.previewFeatures = true;
-        general.sessionRetention.enabled = true;
-        general.sessionRetention.warningAcknowledged = true;
-        general.sessionRetention.maxAge = "120d";
-        ide.enabled = true;
-        ide.hasSeenNudge = true;
-        security.auth.selectedType = "oauth-personal";
-        security.enablePermanentToolApproval = true;
-        tools.autoAccept = true;
-        tools.shell.pager = lib.getExe pkgs.bat;
-        tools.shell.showColor = true;
-        ui.theme = "Atom One";
-      }
-      (
-        lib.optionalAttrs (!isWork) {
-          general.disableAutoUpdate = true;
-          general.disableUpdateNags = true;
-          privacy.usageStatisticsEnabled = false;
-        }
-      );
-
-  # Gemini CLI ignores symlinks. As a workaround, copy the file instead.
-  config.home.activation.copyGeminiPolicy = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    run mkdir -p $HOME/.gemini/policies
-    run cp -f "${policyFile}" "$HOME/.gemini/policies/nix.toml"
-    run chmod 644 "$HOME/.gemini/policies/nix.toml"
-  '';
+  config.anti-drift.files = {
+    ".gemini/settings.json" = { source = settingsFile; json = true; };
+    ".gemini/policies/nix.toml" = { source = policyFile; };
+  };
 
 }

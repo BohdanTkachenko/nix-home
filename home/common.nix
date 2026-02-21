@@ -1,6 +1,7 @@
 { ... }:
 {
   imports = [
+    ./modules/anti-drift.nix
     ./registry.nix
   ];
 
