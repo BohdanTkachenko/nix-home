@@ -24,6 +24,29 @@ in
   programs.claude-code = {
     enable = true;
     package = claude-code-wrapped;
+    settings = {
+      permissions = {
+        allow = [
+          "Search"
+          "WebSearch"
+          "WebFetch"
+          "Read(/nix/store/**)"
+          "Grep"
+          "Glob"
+          "Bash(wc:*)"
+          "Bash(tree:*)"
+          "Bash(diff:*)"
+          "Bash(rg:*)"
+          "Bash(grep:*)"
+          "Bash(find:*)"
+          "Bash(fd:*)"
+          "Bash(cat:*)"
+          "Bash(head:*)"
+          "Bash(tail:*)"
+          "Bash(ls:*)"
+        ];
+      };
+    };
   };
 
   xdg.desktopEntries.ssh-askpass = {
