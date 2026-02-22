@@ -7,12 +7,17 @@ let
 
   fileEntries = lib.attrsToList cfg.files;
 
+  # .gemini/settings.json → .gemini--settings.json.diff
+  flatDriftName = path:
+    (builtins.replaceStrings [ "/" ] [ "--" ] path) + ".diff";
+
   perFileScript = lib.concatMapStringsSep "\n" (entry:
     let
       path = entry.name;
       opts = entry.value;
       target = "$HOME/${path}";
       baseline = "${target}.nix-baseline";
+      driftFile = "${cfg.driftDir}/${flatDriftName path}";
       normalize = if opts.json then
         ''$jq --sort-keys . "$1" 2>/dev/null || cat "$1"''
       else
@@ -25,17 +30,28 @@ let
 
       run mkdir -p "$(dirname "${target}")"
 
+      # Check for existing drift file
+      if [ -f "${driftFile}" ]; then
+        unresolvedDriftFiles+=("${driftFile}")
+      fi
+
       # Detect drift
       if [ -f "${target}" ] && [ -e "${baseline}" ]; then
         normalizedBaseline=$(normalize_${builtins.replaceStrings [ "." "-" "/" ] [ "_" "_" "_" ] path} "${baseline}")
         normalizedCurrent=$(normalize_${builtins.replaceStrings [ "." "-" "/" ] [ "_" "_" "_" ] path} "${target}")
 
         if [ "$normalizedBaseline" != "$normalizedCurrent" ]; then
-          driftedFiles+=("${path}")
+          # Save drift diff to repo
+          run mkdir -p "${cfg.driftDir}"
           $diff -u \
             <(echo "$normalizedBaseline") \
             <(echo "$normalizedCurrent") \
-            --label "nix-managed" --label "current" >&2 || true
+            --label "nix-managed" --label "current" \
+            > "${driftFile}" || true
+          unresolvedDriftFiles+=("${driftFile}")
+
+          noteEcho "anti-drift: drift detected in ~/${path}"
+          cat "${driftFile}" >&2
         fi
       fi
 
@@ -48,6 +64,11 @@ let
   ) fileEntries;
 in
 {
+  options.anti-drift.driftDir = lib.mkOption {
+    type = lib.types.str;
+    description = "Directory to store drift files (should be inside your config repo)";
+  };
+
   options.anti-drift.files = lib.mkOption {
     type = lib.types.attrsOf (lib.types.submodule {
       options = {
@@ -75,18 +96,18 @@ in
       jq="${jq}"
       diff="${diff}"
 
-      driftedFiles=()
+      unresolvedDriftFiles=()
 
       ${perFileScript}
 
-      if [ ''${#driftedFiles[@]} -gt 0 ]; then
+      if [ ''${#unresolvedDriftFiles[@]} -gt 0 ]; then
         noteEcho ""
-        noteEcho "anti-drift: the following files were modified outside of Nix:"
-        for f in "''${driftedFiles[@]}"; do
-          noteEcho "  ~/$f"
+        noteEcho "anti-drift: unresolved drift files found:"
+        for f in "''${unresolvedDriftFiles[@]}"; do
+          noteEcho "  $f"
         done
         noteEcho ""
-        noteEcho "To preserve changes, add them to your Nix configuration before rebuilding."
+        noteEcho "Review and delete these files, then rebuild."
         exit 1
       fi
     '';
