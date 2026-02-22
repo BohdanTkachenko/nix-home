@@ -12,6 +12,7 @@
     gnome-extension-manager
     gnome-logs
     gnome-text-editor
+    jstest-gtk
     loupe
     mailspring
     papers
