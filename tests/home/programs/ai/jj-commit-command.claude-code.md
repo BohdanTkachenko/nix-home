@@ -4,17 +4,17 @@ allowed-tools:
 - Bash(jj log:*)
 - Bash(jj diff:*)
 - Bash(jj show:*)
-- Bash(~~JJ_COMMIT_MSG~~ write)
+- Bash(~~JJ_COMMIT_MSG~~ write *)
 - Bash(~~JJ_COMMIT_MSG~~ apply *)
-- Read(*.jj/tmp/jj-commit-message.*)
-- Write(*.jj/tmp/jj-commit-message.*)
+- Read(//tmp/jj-commit-msg/*)
+- Write(//tmp/jj-commit-msg/*)
 description: Generates a Jujutsu commit based on diff and an optional user input.
 ---
 # Task: Generate a Jujutsu commit based on diff and an optional user input.
 
 ## Context
 
-Current commit message was extracted to: !`~~JJ_COMMIT_MSG~~ write`
+Current commit message was extracted to: !`~~JJ_COMMIT_MSG~~ write /tmp/jj-commit-msg`
 
 ### Current commit description and changes in current revision:
 

@@ -44,10 +44,10 @@ let
         "Bash(jj log:*)"
         "Bash(jj diff:*)"
         "Bash(jj show:*)"
-        "Bash(${jjCommitMsg} write)"
+        "Bash(${jjCommitMsg} write *)"
         "Bash(${jjCommitMsg} apply *)"
-        "Read(/tmp/jj-commit-msg/.*)"
-        "Write(/tmp/jj-commit-msg/.*)"
+        "Read(//tmp/jj-commit-msg/*)"
+        "Write(//tmp/jj-commit-msg/*)"
       ];
       toolsList = lib.concatMapStringsSep "\n" (t: "- ${t}") allowedTools;
     in

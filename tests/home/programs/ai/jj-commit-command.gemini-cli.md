@@ -2,7 +2,7 @@
 
 ## Context
 
-Current commit message was extracted to: !{~~JJ_COMMIT_MSG~~ write}
+Current commit message was extracted to: !{~~JJ_COMMIT_MSG~~ write /home/dan/.gemini/tmp/jj-commit-msg}
 
 ### Current commit description and changes in current revision:
 
