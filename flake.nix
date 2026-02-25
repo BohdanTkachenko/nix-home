@@ -93,7 +93,6 @@
             isWork = true;
             isWorkPC = !isLaptop;
             isWorkLaptop = isLaptop;
-            isNvidia = false;
           };
           modules = [
             chromium-pwa-wmclass-sync.homeManagerModules.default
@@ -105,7 +104,7 @@
         };
 
       mkNixos =
-        machineModule: isNvidia:
+        machineModule:
         nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = {
@@ -114,7 +113,6 @@
             isWork = false;
             isWorkPC = false;
             isWorkLaptop = false;
-            inherit isNvidia;
           };
           modules = [
             sops-nix.nixosModules.sops
@@ -131,7 +129,6 @@
                   isWork = false;
                   isWorkPC = false;
                   isWorkLaptop = false;
-                  inherit isNvidia;
                 };
                 sharedModules = [
                   chromium-pwa-wmclass-sync.homeManagerModules.default
@@ -161,8 +158,8 @@
           ];
         };
 
-      personalLaptop = mkNixos ./hosts/personal-laptop.nix false;
-      personalPc = mkNixos ./hosts/personal-pc.nix true;
+      personalLaptop = mkNixos ./hosts/personal-laptop.nix;
+      personalPc = mkNixos ./hosts/personal-pc.nix;
     in
     {
       nixosConfigurations = {

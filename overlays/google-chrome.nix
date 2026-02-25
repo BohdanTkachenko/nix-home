@@ -3,7 +3,6 @@
   pkgs,
   browser-previews-pkgs,
   isWork,
-  isNvidia ? false,
   ...
 }:
 let
@@ -17,10 +16,7 @@ let
     "--enable-smooth-scrolling"
     "--disable-vulkan"
   ];
-  nvidiaFlags = [
-    "--disable-accelerated-video-decode"
-  ];
-  customFlags = baseFlags ++ (lib.optionals isNvidia nvidiaFlags);
+  customFlags = baseFlags;
   flagsStr = builtins.concatStringsSep " " customFlags;
 
   autostartFixerScript = pkgs.stdenv.mkDerivation {

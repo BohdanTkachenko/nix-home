@@ -9,7 +9,7 @@
     ../nixos/wireguard.nix
     ../nixos/hardware/common.nix
     ../nixos/hardware/cpu-intel.nix
-    ../nixos/hardware/gpu-nvidia.nix
+    ../nixos/hardware/gpu-amd.nix
     ../nixos/hardware/bluetooth.nix
     ../nixos/hardware/keychron.nix
     ../nixos/hardware/moonlander.nix
