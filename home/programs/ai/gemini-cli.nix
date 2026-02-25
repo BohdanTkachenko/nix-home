@@ -43,6 +43,7 @@ let
         commandRegex = "${command} (${builtins.concatStringsSep "|" subcommands})";
       }) allowedSubcommands);
     };
+  # Schema: https://raw.githubusercontent.com/google-gemini/gemini-cli/refs/heads/main/packages/cli/src/config/settingsSchema.ts
   settings = lib.recursiveUpdate
     {
       context.includeDirectories = ["${config.home.homeDirectory}/.gemini/tmp/jj-commit-msg"];
@@ -63,8 +64,7 @@ let
     }
     (
       lib.optionalAttrs (!isWork) {
-        general.disableAutoUpdate = true;
-        general.disableUpdateNags = true;
+        general.enableAutoUpdate = false;
         privacy.usageStatisticsEnabled = false;
       }
     );
