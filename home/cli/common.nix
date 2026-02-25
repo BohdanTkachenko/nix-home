@@ -5,6 +5,7 @@
     btop
     eza
     fd
+    nushell
     procs
     ripgrep
     trash-cli
