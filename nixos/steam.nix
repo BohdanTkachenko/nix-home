@@ -7,6 +7,7 @@
     gamescopeSession.enable = true;
     extraPackages = with pkgs; [
       adwaita-icon-theme
+      min-ed-launcher
     ];
     package = pkgs.steam.override {
       extraEnv = {
@@ -37,5 +38,16 @@
     type = "Application";
     categories = [ "Game" ];
     settings.StartupWMClass = "steam_app_2357570";
+  };
+
+  home-manager.users.dan.xdg.desktopEntries.eliteDangerous = {
+    name = "Elite Dangerous";
+    comment = "Play this game on Steam";
+    exec = "steam steam://rungameid/359320";
+    icon = "steam_icon_359320";
+    terminal = false;
+    type = "Application";
+    categories = [ "Game" ];
+    settings.StartupWMClass = "steam_app_359320";
   };
 }
