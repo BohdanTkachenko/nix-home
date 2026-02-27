@@ -15,31 +15,6 @@ let
         --set SUDO_ASKPASS "${pkgs.seahorse}/libexec/seahorse/ssh-askpass"
     '';
   };
-
-  settingsFile = (pkgs.formats.json { }).generate "claude-code-settings.json" {
-    "$schema" = "https://json.schemastore.org/claude-code-settings.json";
-    permissions = {
-      allow = [
-        "Search"
-        "WebSearch"
-        "WebFetch"
-        "Read(/nix/store/**)"
-        "Grep"
-        "Glob"
-        "Bash(wc:*)"
-        "Bash(tree:*)"
-        "Bash(diff:*)"
-        "Bash(rg:*)"
-        "Bash(grep:*)"
-        "Bash(find:*)"
-        "Bash(fd:*)"
-        "Bash(cat:*)"
-        "Bash(head:*)"
-        "Bash(tail:*)"
-        "Bash(ls:*)"
-      ];
-    };
-  };
 in
 {
   imports = [
@@ -51,7 +26,33 @@ in
     package = claude-code-wrapped;
   };
 
-  anti-drift.files.".claude/settings.json" = { source = settingsFile; json = true; };
+  anti-drift.files.".claude/settings.json" = {
+    source = (pkgs.formats.json { }).generate "claude-code-settings.json" {
+      "$schema" = "https://json.schemastore.org/claude-code-settings.json";
+      permissions = {
+        allow = [
+          "Search"
+          "WebSearch"
+          "WebFetch"
+          "Read(/nix/store/**)"
+          "Grep"
+          "Glob"
+          "Bash(wc:*)"
+          "Bash(tree:*)"
+          "Bash(diff:*)"
+          "Bash(rg:*)"
+          "Bash(grep:*)"
+          "Bash(find:*)"
+          "Bash(fd:*)"
+          "Bash(cat:*)"
+          "Bash(head:*)"
+          "Bash(tail:*)"
+          "Bash(ls:*)"
+        ];
+      };
+    };
+    json = true;
+  };
 
   xdg.desktopEntries.ssh-askpass = {
     name = "ssh-askpass";
