@@ -30,6 +30,9 @@ let
 
       run mkdir -p "$(dirname "${target}")"
 
+      # --- ${path} ---
+      noteEcho "Processing ${target}"
+
       # Check for existing drift file
       if [ -f "${driftFile}" ]; then
         unresolvedDriftFiles+=("${driftFile}")
