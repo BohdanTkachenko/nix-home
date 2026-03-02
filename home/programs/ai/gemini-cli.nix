@@ -61,6 +61,10 @@ let
       tools.shell.pager = lib.getExe pkgs.bat;
       tools.shell.showColor = true;
       ui.theme = "Atom One";
+      ui.footer.hideContextPercentage = false;
+      ui.footer.hideSandboxStatus = true;
+      ui.showStatusInTitle = true;
+      ui.useAlternateBuffer = true;
     }
     (
       lib.optionalAttrs (!isWork) {
