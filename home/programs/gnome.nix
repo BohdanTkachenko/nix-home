@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }:
+{
+  isWorkPC,
+  lib,
+  pkgs,
+  ...
+}:
 {
   home.packages = with pkgs; [
     adw-gtk3
@@ -23,20 +28,27 @@
 
     autostart = {
       enable = true;
-      entries = [
-        "${
-          pkgs.makeDesktopItem {
-            name = "1password-silent";
-            desktopName = "1Password";
-            exec = "${pkgs._1password-gui}/bin/1password -silent";
-          }
-        }/share/applications/1password-silent.desktop"
+      entries =
+        (
+          if !isWorkPC then
+            [
+              "${
+                pkgs.makeDesktopItem {
+                  name = "1password-silent";
+                  desktopName = "1Password";
+                  exec = "${pkgs._1password-gui}/bin/1password -silent";
+                }
+              }/share/applications/1password-silent.desktop"
+            ]
+          else
+            [ ]
+        )
+        ++ [
+          "${pkgs.spotify}/share/applications/spotify.desktop"
 
-        "${pkgs.spotify}/share/applications/spotify.desktop"
-
-        "${pkgs.webApps.stable.googleMessages}/share/applications/google-messages-stable.desktop"
-        "${pkgs.webApps.stable.whatsApp}/share/applications/whatsapp-stable.desktop"
-      ];
+          "${pkgs.webApps.stable.googleMessages}/share/applications/google-messages-stable.desktop"
+          "${pkgs.webApps.stable.whatsApp}/share/applications/whatsapp-stable.desktop"
+        ];
     };
   };
 
