@@ -98,11 +98,15 @@ let
         ui.footer.hideSandboxStatus = true;
         ui.showStatusInTitle = true;
         ui.useAlternateBuffer = true;
+        general.enableAutoUpdate = false;
+        privacy.usageStatisticsEnabled = false;
+        advanced.autoConfigureMemory = true;
       }
       (
-        lib.optionalAttrs (!isWork) {
-          general.enableAutoUpdate = false;
-          privacy.usageStatisticsEnabled = false;
+        lib.optionalAttrs (isWork) {
+          general.enableAutoUpdate = true;
+          privacy.usageStatisticsEnabled = true;
+          context.fileFiltering.enableRecursiveFileSearch = false;
         }
       );
   settingsFile = (pkgs.formats.json { }).generate "gemini-cli-settings.json" settings;
