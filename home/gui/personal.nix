@@ -8,6 +8,7 @@
     alpaca
     baobab
     brave
+    dissent
     gnome-calculator
     gnome-extension-manager
     gnome-logs
