@@ -44,34 +44,35 @@ let
       }) allowedSubcommands);
     };
   # Schema: https://raw.githubusercontent.com/google-gemini/gemini-cli/refs/heads/main/packages/cli/src/config/settingsSchema.ts
-  settings = lib.recursiveUpdate
-    {
-      context.includeDirectories = ["${config.home.homeDirectory}/.gemini/tmp/jj-commit-msg"];
-      context.fileFiltering.enableRecursiveFileSearch = true;
-      general.preferredEditor = "vim";
-      general.previewFeatures = true;
-      general.sessionRetention.enabled = true;
-      general.sessionRetention.warningAcknowledged = true;
-      general.sessionRetention.maxAge = "120d";
-      ide.enabled = true;
-      ide.hasSeenNudge = true;
-      security.auth.selectedType = "oauth-personal";
-      security.enablePermanentToolApproval = true;
-      tools.autoAccept = true;
-      tools.shell.pager = lib.getExe pkgs.bat;
-      tools.shell.showColor = true;
-      ui.theme = "Atom One";
-      ui.footer.hideContextPercentage = false;
-      ui.footer.hideSandboxStatus = true;
-      ui.showStatusInTitle = true;
-      ui.useAlternateBuffer = true;
-    }
-    (
-      lib.optionalAttrs (!isWork) {
-        general.enableAutoUpdate = false;
-        privacy.usageStatisticsEnabled = false;
+  settings =
+    lib.recursiveUpdate
+      {
+        context.includeDirectories = [ "${config.home.homeDirectory}/.gemini/tmp/jj-commit-msg" ];
+        context.fileFiltering.enableRecursiveFileSearch = true;
+        general.preferredEditor = "vim";
+        general.previewFeatures = true;
+        general.sessionRetention.enabled = true;
+        general.sessionRetention.warningAcknowledged = true;
+        general.sessionRetention.maxAge = "120d";
+        ide.enabled = true;
+        ide.hasSeenNudge = true;
+        security.auth.selectedType = "oauth-personal";
+        security.enablePermanentToolApproval = true;
+        tools.autoAccept = true;
+        tools.shell.pager = lib.getExe pkgs.bat;
+        tools.shell.showColor = true;
+        ui.theme = "Atom One";
+        ui.footer.hideContextPercentage = false;
+        ui.footer.hideSandboxStatus = true;
+        ui.showStatusInTitle = true;
+        ui.useAlternateBuffer = true;
       }
-    );
+      (
+        lib.optionalAttrs (!isWork) {
+          general.enableAutoUpdate = false;
+          privacy.usageStatisticsEnabled = false;
+        }
+      );
   settingsFile = (pkgs.formats.json { }).generate "gemini-cli-settings.json" settings;
 in
 {
@@ -95,8 +96,13 @@ in
   config.programs.gemini-cli.defaultModel = "";
 
   config.anti-drift.files = {
-    ".gemini/settings.json" = { source = settingsFile; json = true; };
-    ".gemini/policies/nix.toml" = { source = policyFile; };
+    ".gemini/settings.json" = {
+      source = settingsFile;
+      json = true;
+    };
+    ".gemini/policies/nix.toml" = {
+      source = policyFile;
+    };
   };
 
 }
