@@ -7,6 +7,13 @@
   ...
 }:
 let
+  deniedTools =
+    [ ]
+    ++ (lib.optional isWork [
+      "glob"
+      "search_file_content"
+    ]);
+
   allowedShellCommands = {
     # Fully allow these commands
     cat = null;
@@ -60,9 +67,10 @@ let
     ) commandsWithSubCommands);
 
   policies = {
-    rules = (mkRunShellCommandRules "allow" 100 allowedShellCommands) ++ [
-      (mkRunShellCommandRule "allow" 100 "${config._jjCommitMsg}" null)
-    ];
+    rules =
+      (builtins.map (toolName: mkRule toolName "deny" 100) deniedTools)
+      ++ (mkRunShellCommandRules "allow" 100 allowedShellCommands)
+      ++ [ (mkRunShellCommandRule "allow" 100 "${config._jjCommitMsg}" null) ];
   };
 
   policyFile = (pkgs.formats.toml { }).generate "nix.toml" policies;
