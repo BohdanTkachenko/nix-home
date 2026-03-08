@@ -4,6 +4,7 @@
     act
     gh
     glab
+    opencode
   ];
 
   imports = [

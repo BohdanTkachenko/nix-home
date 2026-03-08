@@ -108,7 +108,12 @@
         nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = {
-            inherit inputs system pkgs-unstable nix-vscode-extensions;
+            inherit
+              inputs
+              system
+              pkgs-unstable
+              nix-vscode-extensions
+              ;
             browser-previews-pkgs = browser-previews.packages.${system};
             isWork = false;
             isWorkPC = false;
@@ -123,7 +128,12 @@
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 extraSpecialArgs = {
-                  inherit inputs system pkgs-unstable nix-vscode-extensions;
+                  inherit
+                    inputs
+                    system
+                    pkgs-unstable
+                    nix-vscode-extensions
+                    ;
                   browser-previews-pkgs = browser-previews.packages.${system};
                   nixgl = null;
                   isWork = false;
@@ -182,6 +192,8 @@
         packages = with pkgs; [
           asn
           gnumake
+          nodejs
+          python3
           just
           inetutils
           iperf
