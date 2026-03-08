@@ -17,7 +17,35 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [ mangohud ];
+  environment.systemPackages = with pkgs; [
+    edmarketconnector
+    mangohud
+  ];
+
+  home-manager.users.dan.anti-drift.files.".config/min-ed-launcher/settings.json" = {
+    source = (pkgs.formats.json { }).generate "min-ed-launcher-settings.json" {
+      apiUri = "https://api.zaonce.net";
+      watchForCrashes = false;
+      language = null;
+      autoUpdate = false;
+      checkForLauncherUpdates = false;
+      maxConcurrentDownloads = 4;
+      forceUpdate = "";
+      processes = [
+        {
+          fileName = "${pkgs.edmarketconnector}/bin/edmarketconnector";
+          keepOpen = true;
+        }
+      ];
+      shutdownProcesses = [ ];
+      filterOverrides = [
+        { sku = "FORC-FDEV-DO-1000"; filter = "edo"; }
+        { sku = "FORC-FDEV-DO-38-IN-40"; filter = "edh4"; }
+      ];
+      additionalProducts = [ ];
+    };
+    json = true;
+  };
 
   home-manager.users.dan.xdg.autostart.entries = [
     "${
