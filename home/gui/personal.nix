@@ -10,9 +10,11 @@
     brave
     dissent
     gnome-calculator
+    gimp
     gnome-extension-manager
     gnome-logs
     gnome-text-editor
+    inkscape
     jstest-gtk
     loupe
     mailspring
