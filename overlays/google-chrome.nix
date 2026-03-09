@@ -6,18 +6,88 @@
   ...
 }:
 let
-  baseFlags = [
-    "--disable-features=HardwareMediaKeyHandling"
-    "--enable-features=AcceleratedVideoEncoder,WebUIDarkMode,Glic,TabstripComboButton,GlicDevelopmentCookies,ContextualCueing,GlicKeyboardShortcutNewBadge,GlicRollout"
-    "--force-dark-mode"
-    "--ignore-gpu-blocklist"
-    "--disable-gpu-driver-bug-workaround"
-    "--enable-zero-copy"
-    "--enable-smooth-scrolling"
-    "--disable-vulkan"
+  # https://chromium.googlesource.com/chromium/src/+/lkgr/docs/gpu/vaapi.md#vaapi-on-linux
+  vaapiEnableFeatures = [
+    # An AcceleratedVideoEncoder (AVE) performs high-level, platform-independent
+    # encoding process tasks, such as managing codec state, reference frames,
+    # etc., but may require support from an external accelerator (typically a
+    # hardware accelerator) to offload some stages of the actual encoding
+    # process, using the parameters that AVE prepares beforehand.
+    "AcceleratedVideoEncoder"
+
+    # The following feature can improve performance when using EGL/Wayland.
+    # It is enabled by default, but keeping this just in case.
+    "AcceleratedVideoDecodeLinuxZeroCopyGL"
+
+    ## Vulkan
+
+    # Enable Vulkan graphics backend for compositing and rasterization.
+    "Vulkan"
+
+    # Use ANGLE's Vulkan backend.
+    "DefaultANGLEVulkan"
+
+    # Enable sharing Vulkan device queue with ANGLE's Vulkan backend.
+    "VulkanFromANGLE"
+
+    # Enable skipping the Vulkan blocklist.
+    #"SkipVulkanBlocklist"
+
+    # Ignore the non-intel driver blacklist for VaapiVideoDecoder
+    # implementations.
+    #"VaapiIgnoreDriverChecks"
   ];
-  customFlags = baseFlags;
-  flagsStr = builtins.concatStringsSep " " customFlags;
+  vaapiFlags = [
+    ## Vulkan
+    "--use-gl=angle"
+    "--use-angle=vulkan"
+
+    # Optional
+    # "--ignore-gpu-blocklist"
+    # "--disable-gpu-driver-bug-workaround"
+  ];
+
+  # Enable Gemini Live in Chrome.
+  geminiFeatures = [
+    "ContextualCueing"
+    "Glic"
+    "GlicDevelopmentCookies"
+    "GlicKeyboardShortcutNewBadge"
+    "GlicRollout"
+    "TabstripComboButton"
+  ];
+
+  disableFeatures = [
+    # Prevent Chrome from capturing hardware media keys (Playy/Pause/etc).
+    "HardwareMediaKeyHandling"
+  ];
+
+  enableFeatures =
+    vaapiEnableFeatures
+    ++ geminiFeatures
+    ++ [
+      # Use dark mode for Chrome internal views.
+      "WebUIDarkMode"
+
+      # Enable Gemini in Chrome.
+      "ContextualCueing"
+    ];
+
+  allFlags = vaapiFlags ++ [
+    # Ignore theme reported by OS and use dark mode.
+    # TIn certain cases there are issues with GNOME reporting theme correctly.
+    "--force-dark-mode"
+
+    # Prevent using RAM to draw web pages. Use graphics card memory instead.
+    "--enable-zero-copy"
+
+    # Make scrolling smooth.
+    "--enable-smooth-scrolling"
+
+    ("--disable-features=" + (builtins.concatStringsSep "," disableFeatures))
+    ("--enable-features=" + (builtins.concatStringsSep "," enableFeatures))
+  ];
+  flagsStr = builtins.concatStringsSep " " allFlags;
 
   autostartFixerScript = pkgs.stdenv.mkDerivation {
     pname = "fix-chrome-autostart-script";
@@ -36,7 +106,7 @@ let
   mkWrapper =
     pkg: systemBinaryName:
     if !isWork then
-      pkg.override { commandLineArgs = customFlags; }
+      pkg.override { commandLineArgs = allFlags; }
     else
       pkgs.stdenv.mkDerivation {
         pname = lib.getName pkg;
