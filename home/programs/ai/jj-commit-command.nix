@@ -57,6 +57,8 @@ let
       allowed-tools:
       ${toolsList}
       description: ${description}
+      context: fork
+      agent: general-purpose
       ---
     '';
 in
