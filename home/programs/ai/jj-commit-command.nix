@@ -22,18 +22,19 @@ let
   # Transforms to:
   #   Claude: !`command`
   #   Gemini: !{command}
-  toClaudeSyntax = str:
+  toClaudeSyntax =
+    str:
     builtins.replaceStrings [ "{{TMP_DIR}}" "%!\`" "\`!%" ] [ "/tmp/jj-commit-msg" "!\`" "\`" ] str;
 
-  toGeminiSyntax = str:
-    builtins.replaceStrings [ "{{TMP_DIR}}" "%!\`" "\`!%" ] [ "${config.home.homeDirectory}/.gemini/tmp/jj-commit-msg" "!{" "}" ] str;
+  toGeminiSyntax =
+    str:
+    builtins.replaceStrings
+      [ "{{TMP_DIR}}" "%!\`" "\`!%" ]
+      [ "${config.home.homeDirectory}/.gemini/tmp/jj-commit-msg" "!{" "}" ]
+      str;
 
   # Read markdown template and substitute jjCommitMsg path
-  markdown = builtins.replaceStrings
-    [ "{{JJ_COMMIT_MSG}}" ]
-    [ jjCommitMsg ]
-    (builtins.readFile ./jj-commit-command.md);
-
+  markdown = builtins.readFile ./jj-commit-command.md;
   claudeMarkdown = toClaudeSyntax markdown;
   geminiMarkdown = toGeminiSyntax markdown;
 
@@ -44,10 +45,10 @@ let
         "Bash(jj log:*)"
         "Bash(jj diff:*)"
         "Bash(jj show:*)"
-        "Bash(${jjCommitMsg} write *)"
-        "Bash(${jjCommitMsg} apply *)"
-        "Read(//tmp/jj-commit-msg/*)"
-        "Write(//tmp/jj-commit-msg/*)"
+        "Bash(jj describe-to-file *)"
+        "Bash(jj describe-from-file *)"
+        "Read(/tmp/jj-commit-msg/*)"
+        "Write(/tmp/jj-commit-msg/*)"
       ];
       toolsList = lib.concatMapStringsSep "\n" (t: "- ${t}") allowedTools;
     in
@@ -60,15 +61,11 @@ let
     '';
 in
 {
-  options._jjCommitMsg = lib.mkOption {
-    type = lib.types.str;
-    internal = true;
-    description = "Path to jj-commit-msg script for policy files";
-  };
+  imports = [
+    ./jj-describe-to-from-file.nix
+  ];
 
   config = {
-    _jjCommitMsg = jjCommitMsg;
-
     programs.claude-code.commands.commit = claudeFrontmatter + claudeMarkdown;
 
     programs.gemini-cli.commands.commit = {

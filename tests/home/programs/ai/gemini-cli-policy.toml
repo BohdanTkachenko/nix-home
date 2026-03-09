@@ -1,11 +1,11 @@
 [[rule]]
-commandPrefix = ["cat", "echo", "eza", "tee", "ls", "mktemp", "~~JJ_COMMIT_MSG~~"]
+commandPrefix = ["cat", "echo", "eza", "ls", "mktemp", "tee"]
 decision = "allow"
 priority = 100
 toolName = "run_shell_command"
 
 [[rule]]
-commandRegex = "jj (describe|diff|log|show|status)"
+commandRegex = "jj (describe|describe-to-file|describe-from-file|diff|log|show|status)"
 decision = "allow"
 priority = 100
 toolName = "run_shell_command"

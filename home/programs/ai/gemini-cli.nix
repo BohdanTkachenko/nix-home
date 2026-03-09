@@ -26,6 +26,8 @@ let
     # Only allow certain sub-commands for these commands
     jj = [
       "describe"
+      "describe-to-file"
+      "describe-from-file"
       "diff"
       "log"
       "show"
@@ -67,19 +69,20 @@ let
     ) commandsWithSubCommands);
 
   policies = {
-    rules =
+    rule =
       (builtins.map (toolName: mkRule toolName "deny" 100) deniedTools)
-      ++ (mkRunShellCommandRules "allow" 100 allowedShellCommands)
-      ++ [ (mkRunShellCommandRule "allow" 100 "${config._jjCommitMsg}" null) ];
+      ++ (mkRunShellCommandRules "allow" 100 allowedShellCommands);
   };
 
   policyFile = (pkgs.formats.toml { }).generate "nix.toml" policies;
+
+  jjCommitMsgTmpDir = "${config.home.homeDirectory}/.gemini/tmp/jj-commit-msg";
 
   # Schema: https://raw.githubusercontent.com/google-gemini/gemini-cli/refs/heads/main/packages/cli/src/config/settingsSchema.ts
   settings =
     lib.recursiveUpdate
       {
-        context.includeDirectories = [ "${config.home.homeDirectory}/.gemini/tmp/jj-commit-msg" ];
+        context.includeDirectories = [ jjCommitMsgTmpDir ];
         context.fileFiltering.enableRecursiveFileSearch = true;
         general.preferredEditor = "vim";
         general.previewFeatures = true;
@@ -125,6 +128,12 @@ in
   config._geminiPolicyFile = policyFile;
 
   config.programs.gemini-cli.enable = true;
+
+  config.home.activation = {
+    init = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      mkdir -p ${jjCommitMsgTmpDir}
+    '';
+  };
 
   # The flake sets a default GEMINI_MODEL env var which takes precedence over
   # the config file, making it impossible to change the model via settings.

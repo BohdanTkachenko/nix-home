@@ -3,7 +3,8 @@ set dotenv-load
 sops_files := "nixos/secrets/wireguard.yaml home/programs/ssh/private-ssh-config home/services/secrets/winapps.yaml"
 
 root_dir := justfile_directory()
-flake_arg := '--flake "path:' + root_dir + '"'
+flake_path := 'path:' + root_dir
+flake_arg := '--flake "' + flake_path + '"'
 
 is_nixos := `if [ -f /etc/NIXOS ]; then echo true; else echo false; fi`
 switch_cmd := if is_nixos == "true" { "sudo nixos-rebuild switch" } else { "home-manager switch" }
@@ -19,7 +20,7 @@ update flake_update_args="" *rebuild_args:
     just rebuild {{ rebuild_args }}
 
 test *args:
-    nix flake check {{ flake_arg }} {{ args }}
+    nix flake check {{ args }} {{ flake_path }}
 
 show-age-pubkey:
     @nix-shell -p ssh-to-age --run "ssh-to-age -i $HOME/.ssh/id_ed25519.pub"

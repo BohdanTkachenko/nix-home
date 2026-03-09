@@ -4,17 +4,17 @@ allowed-tools:
 - Bash(jj log:*)
 - Bash(jj diff:*)
 - Bash(jj show:*)
-- Bash(~~JJ_COMMIT_MSG~~ write *)
-- Bash(~~JJ_COMMIT_MSG~~ apply *)
-- Read(//tmp/jj-commit-msg/*)
-- Write(//tmp/jj-commit-msg/*)
+- Bash(jj describe-to-file *)
+- Bash(jj describe-from-file *)
+- Read(/tmp/jj-commit-msg/*)
+- Write(/tmp/jj-commit-msg/*)
 description: Generates a Jujutsu commit based on diff and an optional user input.
 ---
 # Task: Generate a Jujutsu commit based on diff and an optional user input.
 
 ## Context
 
-Current commit message was extracted to: !`~~JJ_COMMIT_MSG~~ write /tmp/jj-commit-msg`
+Current commit message was extracted to: !`jj describe-to-file /tmp/jj-commit-msg`
 
 ### Current commit description and changes in current revision:
 
@@ -43,7 +43,7 @@ This is intended as a low effort way for the user to commit so avoid asking user
 1. Generate the new commit message based on the diff, log and any additional user instructions.
 2. **Read the temp file first** (path shown above, required before writing).
 3. **Write the commit message** to the temp file (this overwrites the old message, allowing user to see the diff).
-4. Apply the message and cleanup: `~~JJ_COMMIT_MSG~~ apply <TEMP_FILE>`
-5. Create a new commit: `jj new`
+4. Apply the message and cleanup: `jj describe-from-file <TEMP_FILE>`
+5. After the commit message was set, create a new commit: `jj new`. Do not combine this command with the previous command.
 
 ## Optional context provided by the user
