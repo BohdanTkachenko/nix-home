@@ -35,7 +35,28 @@ let
 
     # Ignore the non-intel driver blacklist for VaapiVideoDecoder
     # implementations.
-    #"VaapiIgnoreDriverChecks"
+    "VaapiIgnoreDriverChecks"
+
+    # Enables the use of VA-API for hardware-accelerated video decoding.
+    "VaapiVideoDecoder"
+
+    # Enables the use of VA-API for hardware-accelerated video encoding.
+    "VaapiVideoEncoder"
+
+    # Enables hardware-accelerated decoding specifically for WebRTC (video calls).
+    "WebRtcHWDecoding"
+
+    # Enables hardware-accelerated encoding specifically for WebRTC.
+    "WebRtcHWEncoding"
+
+    # Enables hardware-accelerated VP8 encoding for WebRTC.
+    "WebRtcHWVP8Encoding"
+
+    # Enables hardware-accelerated VP9 encoding for WebRTC.
+    "WebRtcHWVP9Encoding"
+
+    # Generic flag to enable hardware-accelerated video decoding across the browser.
+    "AcceleratedVideoDecoder"
   ];
   vaapiFlags = [
     ## Vulkan
