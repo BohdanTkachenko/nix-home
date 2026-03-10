@@ -105,6 +105,9 @@ let
     # Make scrolling smooth.
     "--enable-smooth-scrolling"
 
+    # Enable GTK4.
+    "--gtk-version=4"
+
     ("--disable-features=" + (builtins.concatStringsSep "," disableFeatures))
     ("--enable-features=" + (builtins.concatStringsSep "," enableFeatures))
   ];
