@@ -104,6 +104,9 @@ let
         general.enableAutoUpdate = false;
         privacy.usageStatisticsEnabled = false;
         advanced.autoConfigureMemory = true;
+        experimental.plan = true;
+        general.defaultApprovalMode = "default";
+        tools.disableLLMCorrection = false;
       }
       (
         lib.optionalAttrs (isWork) {
