@@ -74,6 +74,7 @@
       { package = search-light; }
       { package = tiling-shell; }
       { package = bing-wallpaper-changer; }
+      { package = rounded-window-corners-reborn; }
     ];
   };
 
