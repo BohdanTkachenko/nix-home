@@ -8,7 +8,7 @@
     alpaca
     baobab
     brave
-    dissent
+    discord
     gnome-calculator
     gimp
     gnome-extension-manager
