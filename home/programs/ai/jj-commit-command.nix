@@ -47,8 +47,8 @@ let
         "Bash(jj show:*)"
         "Bash(jj describe-to-file *)"
         "Bash(jj describe-from-file *)"
-        "Read(/tmp/jj-commit-msg/*)"
-        "Write(/tmp/jj-commit-msg/*)"
+        "Read(//tmp/jj-commit-msg/*)"
+        "Write(//tmp/jj-commit-msg/*)"
       ];
       toolsList = lib.concatMapStringsSep "\n" (t: "- ${t}") allowedTools;
     in
