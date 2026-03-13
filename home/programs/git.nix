@@ -1,4 +1,4 @@
-{ isWork, pkgs, ... }:
+{ config, pkgs, ... }:
 {
   programs.git = {
     enable = true;
@@ -10,8 +10,8 @@
 
     settings = {
       user = {
-        name = "Bohdan Tkachenko";
-        user.email = if isWork then "bohdant@google.com" else "bohdan@tkachenko.dev";
+        name = config.my.identity.name;
+        email = config.my.identity.email;
       };
 
       gpg = {

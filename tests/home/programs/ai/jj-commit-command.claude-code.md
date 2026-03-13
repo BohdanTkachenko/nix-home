@@ -6,9 +6,11 @@ allowed-tools:
 - Bash(jj show:*)
 - Bash(jj describe-to-file *)
 - Bash(jj describe-from-file *)
-- Read(/tmp/jj-commit-msg/*)
-- Write(/tmp/jj-commit-msg/*)
+- Read(//tmp/jj-commit-msg/*)
+- Write(//tmp/jj-commit-msg/*)
 description: Generates a Jujutsu commit based on diff and an optional user input.
+context: fork
+agent: general-purpose
 ---
 # Task: Generate a Jujutsu commit based on diff and an optional user input.
 

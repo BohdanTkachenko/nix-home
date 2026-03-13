@@ -84,15 +84,12 @@
       };
 
       mkHome =
-        hostSpecificModule: isLaptop:
+        hostSpecificModule:
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = {
             inherit nixgl pkgs-unstable nix-vscode-extensions;
             browser-previews-pkgs = browser-previews.packages.${system};
-            isWork = true;
-            isWorkPC = !isLaptop;
-            isWorkLaptop = isLaptop;
           };
           modules = [
             chromium-pwa-wmclass-sync.homeManagerModules.default
@@ -115,9 +112,6 @@
               nix-vscode-extensions
               ;
             browser-previews-pkgs = browser-previews.packages.${system};
-            isWork = false;
-            isWorkPC = false;
-            isWorkLaptop = false;
           };
           modules = [
             sops-nix.nixosModules.sops
@@ -136,9 +130,6 @@
                     ;
                   browser-previews-pkgs = browser-previews.packages.${system};
                   nixgl = null;
-                  isWork = false;
-                  isWorkPC = false;
-                  isWorkLaptop = false;
                 };
                 sharedModules = [
                   chromium-pwa-wmclass-sync.homeManagerModules.default
@@ -180,8 +171,8 @@
       };
 
       homeConfigurations = {
-        "bohdant@dan.nyc.corp.google.com" = mkHome ./hosts/work-pc.nix false;
-        "bohdant@bohdant.roam.corp.google.com" = mkHome ./hosts/work-laptop.nix true;
+        "bohdant@dan.nyc.corp.google.com" = mkHome ./hosts/work-pc.nix;
+        "bohdant@bohdant.roam.corp.google.com" = mkHome ./hosts/work-laptop.nix;
       };
 
       packages.${system} = {

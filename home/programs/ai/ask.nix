@@ -1,5 +1,5 @@
 {
-  isWork,
+  config,
   lib,
   pkgs,
   pkgs-unstable,
@@ -71,8 +71,8 @@ let
 
   ask =
     let
-      targetPkg = if isWork then ask-gemini else ask-claude;
-      targetBin = if isWork then "ask-gemini" else "ask-claude";
+      targetPkg = if config.my.google.enable then ask-gemini else ask-claude;
+      targetBin = if config.my.google.enable then "ask-gemini" else "ask-claude";
     in
     pkgs.runCommand "ask" { } ''
       mkdir -p $out/bin
@@ -84,7 +84,7 @@ in
     ask
     ask-gemini
   ]
-  ++ lib.optionals (!isWork) [
+  ++ lib.optionals (!config.my.google.enable) [
     ask-claude
   ];
 }

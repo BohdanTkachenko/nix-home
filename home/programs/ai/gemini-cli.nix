@@ -1,7 +1,5 @@
 {
   config,
-  isWork,
-  isWorkPC,
   lib,
   pkgs,
   ...
@@ -9,7 +7,7 @@
 let
   deniedTools =
     [ ]
-    ++ (lib.optional isWork [
+    ++ (lib.optional config.my.google.enable [
       "glob"
       "search_file_content"
     ]);
@@ -109,7 +107,7 @@ let
         tools.disableLLMCorrection = false;
       }
       (
-        lib.optionalAttrs (isWork) {
+        lib.optionalAttrs config.my.google.enable {
           general.enableAutoUpdate = true;
           privacy.usageStatisticsEnabled = true;
           context.fileFiltering.enableRecursiveFileSearch = false;

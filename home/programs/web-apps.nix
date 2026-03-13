@@ -1,10 +1,10 @@
 {
+  config,
   pkgs,
-  isWork ? false,
   ...
 }:
 let
-  personalPkg = if isWork then pkgs.webApps.beta else pkgs.webApps.stable;
+  personalPkg = if config.my.google.enable then pkgs.webApps.beta else pkgs.webApps.stable;
 in
 {
   home.packages = [

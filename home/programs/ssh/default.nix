@@ -1,11 +1,12 @@
 {
   config,
-  isWork,
   lib,
   pkgs,
   ...
 }:
 let
+  cfg = config.my;
+
   # Work-specific gcert helpers
   minHours = 10;
   minSeconds = minHours * 60 * 60;
@@ -20,7 +21,6 @@ let
     ${ensureGcert}/bin/ensure-gcert
     exec /usr/bin/ssh "$@"
   '';
-  hasSopsKeys = !isWork && config.home.username == "dan";
 in
 {
   programs.ssh = {
@@ -28,7 +28,7 @@ in
     enableDefaultConfig = false;
 
     # Personal: include sops secret config
-    includes = lib.mkIf hasSopsKeys [
+    includes = lib.mkIf cfg.secrets.sops.enable [
       config.sops.secrets.ssh_private_config.path
     ];
 
@@ -41,7 +41,7 @@ in
         forwardAgent = true;
       };
     }
-    // lib.optionalAttrs isWork {
+    // lib.optionalAttrs cfg.google.enable {
       # Work: additional ssh config
       "*.corp.google.com" = {
         forwardAgent = true;
@@ -54,25 +54,25 @@ in
   };
 
   # Personal: sops secrets
-  sops.secrets.ssh_private_config = lib.mkIf hasSopsKeys {
+  sops.secrets.ssh_private_config = lib.mkIf cfg.secrets.sops.enable {
     sopsFile = ./private-ssh-config;
     format = "binary";
   };
 
   # Work: gcert wrappers
-  home.packages = lib.mkIf isWork [
+  home.packages = lib.mkIf cfg.google.enable [
     ensureGcert
     sshWrapper
   ];
 
-  xdg.desktopEntries.ssh-askpass = lib.mkIf isWork {
+  xdg.desktopEntries.ssh-askpass = lib.mkIf cfg.google.enable {
     name = "ssh-askpass";
     type = "Application";
     exec = "/usr/bin/ssh-askpass";
     terminal = false;
   };
 
-  programs.fish.interactiveShellInit = lib.mkIf isWork ''
+  programs.fish.interactiveShellInit = lib.mkIf cfg.google.enable ''
     set -l gcert_check_file "/tmp/gcert_check_$USER"
     if not test -e "$gcert_check_file"; or test -n "$(find "$gcert_check_file" -mmin +60 2>/dev/null)"
       ${ensureGcert}/bin/ensure-gcert

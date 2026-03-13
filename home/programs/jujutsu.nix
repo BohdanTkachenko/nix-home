@@ -1,10 +1,12 @@
 {
   config,
   lib,
-  isWork,
   pkgs,
   ...
 }:
+let
+  cfg = config.my;
+in
 {
   programs.jujutsu = {
     enable = true;
@@ -12,8 +14,8 @@
     settings = {
       ui.diff-formatter = ":git";
 
-      user.name = "Bohdan Tkachenko";
-      user.email = if isWork then "bohdant@google.com" else "bohdan@tkachenko.dev";
+      user.name = cfg.identity.name;
+      user.email = cfg.identity.email;
 
       signing.behavior = "own";
       signing.backend = "ssh";
@@ -69,7 +71,7 @@
         ];
       }
       // (
-        if isWork then
+        if cfg.google.enable then
           {
             mv = [
               "piper"

@@ -1,8 +1,8 @@
 {
+  config,
   lib,
   pkgs,
   browser-previews-pkgs,
-  isWork,
   ...
 }:
 let
@@ -129,7 +129,7 @@ let
 
   mkWrapper =
     pkg: systemBinaryName:
-    if !isWork then
+    if !config.my.google.enable then
       pkg.override { commandLineArgs = allFlags; }
     else
       pkgs.stdenv.mkDerivation {
@@ -206,5 +206,5 @@ in
     })
   ];
 
-  systemd.user = lib.mkIf isWork autostartFixers;
+  systemd.user = lib.mkIf config.my.google.enable autostartFixers;
 }

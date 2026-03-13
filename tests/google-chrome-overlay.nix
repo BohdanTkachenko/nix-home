@@ -8,7 +8,9 @@ let
     google-chrome-dev = pkgs.writeScriptBin "google-chrome-dev" "";
   };
 
-  # Evaluate the module with isWork = true
+  optionsModule = ../home/modules/options.nix;
+
+  # Evaluate the module with my.google.enable = true
   evaluatedWork = lib.evalModules {
     modules = [
       # Minimal home-manager compatible module interface
@@ -28,17 +30,18 @@ let
           };
         };
       })
+      optionsModule
+      ({ ... }: { my.google.enable = true; })
       # The module under test
       (import ../overlays/google-chrome.nix)
     ];
     specialArgs = {
       inherit pkgs lib;
       browser-previews-pkgs = mockBrowserPreviews;
-      isWork = true;
     };
   };
 
-  # Evaluate the module with isWork = false
+  # Evaluate the module with my.google.enable = false (default)
   evaluatedPersonal = lib.evalModules {
     modules = [
       ({ ... }: {
@@ -57,12 +60,12 @@ let
           };
         };
       })
+      optionsModule
       (import ../overlays/google-chrome.nix)
     ];
     specialArgs = {
       inherit pkgs lib;
       browser-previews-pkgs = mockBrowserPreviews;
-      isWork = false;
     };
   };
 

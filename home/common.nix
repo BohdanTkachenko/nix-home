@@ -2,6 +2,7 @@
 {
   imports = [
     ./modules/anti-drift.nix
+    ./modules/options.nix
     ./registry.nix
   ];
 

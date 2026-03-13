@@ -1,17 +1,10 @@
 {
+  config,
   pkgs-unstable,
-  isWorkPC,
-  isWorkLaptop,
   ...
 }:
 let
-  customFlags =
-    if isWorkPC then
-      [ "--gfg" ]
-    else if isWorkLaptop then
-      [ "--proxy=false" ]
-    else
-      [ ];
+  customFlags = config.my.ai.gemini.extraFlags;
 in
 {
   nixpkgs.overlays = [

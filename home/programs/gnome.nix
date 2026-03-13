@@ -1,5 +1,5 @@
 {
-  isWorkPC,
+  config,
   lib,
   pkgs,
   ...
@@ -30,7 +30,7 @@
       enable = true;
       entries =
         (
-          if !isWorkPC then
+          if !config.my.google.enable then
             [
               "${
                 pkgs.makeDesktopItem {

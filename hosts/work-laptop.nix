@@ -10,6 +10,11 @@
 
   home.homeDirectory = "/home/bohdant";
 
+  my.google.enable = true;
+  my.identity.email = "bohdant@google.com";
+  my.ai.gemini.extraFlags = [ "--proxy=false" ];
+  my.terminal.ptyxis.workstationProfile.enable = true;
+
   nixpkgs.config.allowUnfree = true;
   services.xremap.enable = false;
 }

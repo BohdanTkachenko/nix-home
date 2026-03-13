@@ -1,7 +1,5 @@
 {
   config,
-  isWork,
-  isWorkPC,
   lib,
   pkgs,
   pkgs-unstable,
@@ -52,7 +50,7 @@ in
       nil
       nixfmt
     ]
-    ++ lib.optionals (!isWork) [
+    ++ lib.optionals (!config.my.google.enable) [
       terraform-ls
       (pkgs.writeShellScriptBin "terraform" ''
         exec ${pkgs-unstable.opentofu}/bin/tofu "$@"
@@ -65,7 +63,7 @@ in
     # the bubblewrap sandbox used by the vscode-fhs package. The sandbox
     # hides the host's /usr, making the home directory inaccessible.
     # As a workaround, we use the non-FHS version of VS Code on this specific machine.
-    if isWorkPC then pkgs-unstable.vscode else (config.lib.nixGL.wrap pkgs-unstable.vscode.fhs);
+    if !config.my.vscode.useFHS then pkgs-unstable.vscode else (config.lib.nixGL.wrap pkgs-unstable.vscode.fhs);
   programs.vscode.mutableExtensionsDir = false;
   programs.vscode.profiles.default.extensions =
     with pkgs.nix-vscode-extensions.vscode-marketplace;
@@ -87,7 +85,7 @@ in
       visualjj.visualjj
       yzhang.markdown-all-in-one
     ]
-    ++ lib.optionals (!isWork) [
+    ++ lib.optionals (!config.my.google.enable) [
       anthropic.claude-code
       hashicorp.hcl
       hashicorp.terraform

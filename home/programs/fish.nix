@@ -1,5 +1,5 @@
 {
-  isWork,
+  config,
   lib,
   pkgs,
   ...
@@ -57,7 +57,7 @@
         end
       ''
 
-      (lib.mkIf isWork ''
+      (lib.mkIf config.my.google.enable ''
         source_google_fish_package autogcert
         source_google_fish_package buildfix
         source_google_fish_package citc_prompt
