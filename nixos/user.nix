@@ -75,6 +75,7 @@ in
         homeDirectory = lib.mkForce "/home/${name}";
         stateVersion = lib.mkForce "25.11";
       };
+      my.secrets.sops.enable = lib.mkForce (name == primaryUser);
       sops.age.sshKeyPaths = lib.mkForce [ "/home/${primaryUser}/.ssh/id_ed25519" ];
       targets.genericLinux.enable = lib.mkForce false;
     }
