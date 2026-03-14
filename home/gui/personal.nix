@@ -1,36 +1,41 @@
 {
-  pkgs,
   config,
+  pkgs,
+  pkgs-unstable,
   ...
 }:
 {
-  home.packages = with pkgs; [
-    alpaca
-    baobab
-    brave
-    discord
-    gnome-calculator
-    gimp
-    gnome-extension-manager
-    gnome-logs
-    gnome-text-editor
-    inkscape
-    jstest-gtk
-    loupe
-    mailspring
-    papers
-    protonvpn-gui
-    seabird
-    transmission_4-gtk
-    wireshark
-    xournalpp
+  home.packages =
+    (with pkgs; [
+      alpaca
+      baobab
+      brave
+      discord
+      gnome-calculator
+      gimp
+      gnome-extension-manager
+      gnome-logs
+      gnome-text-editor
+      inkscape
+      jstest-gtk
+      loupe
+      mailspring
+      papers
+      protonvpn-gui
+      seabird
+      transmission_4-gtk
+      wireshark
+      xournalpp
 
-    # 3D printing
-    bambu-studio
-    freecad
-    openscad-unstable
-    orca-slicer
-  ];
+      # 3D printing
+      bambu-studio
+      freecad
+      openscad-unstable
+      orca-slicer
+    ])
+    ++ (with pkgs-unstable; [
+      antigravity
+    ]);
 
   dconf.settings = {
     "org/gnome/shell" = {

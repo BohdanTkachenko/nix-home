@@ -13,7 +13,6 @@
     with pkgs;
     let
       guiApps = [
-        antigravity
         cameractrls-gtk4
         mission-center
         obsidian
