@@ -1,6 +1,14 @@
 { config, lib, ... }:
 {
   options.my = {
+    environment = lib.mkOption {
+      type = lib.types.enum [
+        "personal"
+        "work"
+      ];
+      description = "Environment type for this machine";
+    };
+
     google.enable = lib.mkEnableOption "Google corp environment";
 
     identity.email = lib.mkOption {

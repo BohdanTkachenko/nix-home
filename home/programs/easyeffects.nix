@@ -1,8 +1,6 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
-  lib = pkgs.lib;
-
   presetsRepo = pkgs.fetchFromGitHub {
     owner = "JackHack96";
     repo = "EasyEffects-Presets";
@@ -19,25 +17,27 @@ let
   };
 in
 {
-  services.easyeffects.enable = true;
+  config = lib.mkIf (config.my.environment == "personal") {
+    services.easyeffects.enable = true;
 
-  services.easyeffects.extraPresets =
-    let
-      allFilenames = lib.attrNames (builtins.readDir presetsPath);
-      jsonFilenames = lib.filter (filename: lib.strings.hasSuffix ".json" filename) allFilenames;
-    in
-    lib.listToAttrs (map loadPreset jsonFilenames);
+    services.easyeffects.extraPresets =
+      let
+        allFilenames = lib.attrNames (builtins.readDir presetsPath);
+        jsonFilenames = lib.filter (filename: lib.strings.hasSuffix ".json" filename) allFilenames;
+      in
+      lib.listToAttrs (map loadPreset jsonFilenames);
 
-  home.file =
-    let
-      irsFilenames = lib.attrNames (builtins.readDir irsPath);
-    in
-    lib.listToAttrs (
-      map (filename: {
-        name = ".config/easyeffects/irs/${filename}";
-        value = {
-          source = irsPath + "/${filename}";
-        };
-      }) irsFilenames
-    );
+    home.file =
+      let
+        irsFilenames = lib.attrNames (builtins.readDir irsPath);
+      in
+      lib.listToAttrs (
+        map (filename: {
+          name = ".config/easyeffects/irs/${filename}";
+          value = {
+            source = irsPath + "/${filename}";
+          };
+        }) irsFilenames
+      );
+  };
 }

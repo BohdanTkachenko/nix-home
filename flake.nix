@@ -96,6 +96,7 @@
             sops-nix.homeManagerModules.sops
             xremap.homeManagerModules.default
             ./overlays
+            ./home
             hostSpecificModule
           ];
         };
@@ -171,8 +172,19 @@
       };
 
       homeConfigurations = {
-        "bohdant@dan.nyc.corp.google.com" = mkHome ./hosts/work-pc.nix;
-        "bohdant@bohdant.roam.corp.google.com" = mkHome ./hosts/work-laptop.nix;
+        "bohdant@dan.nyc.corp.google.com" = mkHome {
+          my.environment = "work";
+          home.homeDirectory = "/usr/local/google/home/bohdant";
+          my.ai.gemini.extraFlags = [ "--gfg" ];
+          my.vscode.useFHS = false;
+        };
+        "bohdant@bohdant.roam.corp.google.com" = mkHome {
+          imports = [ ./home/hardware/lenovo-thinkpad-x1-carbon-gen12.nix ];
+          my.environment = "work";
+          home.homeDirectory = "/home/bohdant";
+          my.ai.gemini.extraFlags = [ "--proxy=false" ];
+          my.terminal.ptyxis.workstationProfile.enable = true;
+        };
       };
 
       packages.${system} = {
