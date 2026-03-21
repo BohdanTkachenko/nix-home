@@ -179,7 +179,10 @@
           my.vscode.useFHS = false;
         };
         "bohdant@bohdant.roam.corp.google.com" = mkHome {
-          imports = [ ./home/hardware/lenovo-thinkpad-x1-carbon-gen12.nix ];
+          my.hardware.lenovo.thinkpad = {
+            enable = true;
+            model = "x1-carbon-gen12";
+          };
           my.environment = "work";
           home.homeDirectory = "/home/bohdant";
           my.ai.gemini.extraFlags = [ "--proxy=false" ];

@@ -6,7 +6,6 @@
     ../nixos/hardware/common.nix
     ../nixos/hardware/cpu-amd.nix
     ../nixos/hardware/gpu-amd.nix
-    ../nixos/hardware/laptop-lenovo-z16-gen1.nix
     ../nixos/hardware/bluetooth.nix
     ../nixos/hardware/keychron.nix
     ../nixos/hardware/touchpad.nix
@@ -20,7 +19,10 @@
 
   networking.hostName = lib.mkDefault "dan-idea";
 
-  home-manager.sharedModules = [
-    ../home/hardware/lenovo-thinkpad-z16-gen1.nix
-  ];
+  home-manager.sharedModules = [{
+    my.hardware.lenovo.thinkpad = {
+      enable = true;
+      model = "z16-gen1";
+    };
+  }];
 }

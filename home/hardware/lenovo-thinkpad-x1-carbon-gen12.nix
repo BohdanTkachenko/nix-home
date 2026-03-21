@@ -1,5 +1,6 @@
-{ ... }:
-{
+{ config, lib, ... }:
+
+lib.mkIf (config.my.hardware.lenovo.thinkpad.model == "x1-carbon-gen12") {
   services.xremap.config.modmap = [
     {
       name = "Remap special function keys to media keys";
@@ -31,9 +32,5 @@
         "C-right" = "C-pagedown";
       };
     }
-  ];
-
-  imports = [
-    ./lenovo-thinkpad.nix
   ];
 }

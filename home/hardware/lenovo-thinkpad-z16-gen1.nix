@@ -1,5 +1,6 @@
-{ ... }:
-{
+{ config, lib, ... }:
+
+lib.mkIf (config.my.hardware.lenovo.thinkpad.model == "z16-gen1") {
   # Add ThinkPad Extra Buttons to xremap's device list while still matching
   # standard keyboards (built-in and external via substring match)
   services.xremap.deviceNames = [
@@ -17,9 +18,5 @@
         "KEY_BOOKMARKS" = "KEY_NEXTSONG";
       };
     }
-  ];
-
-  imports = [
-    ./lenovo-thinkpad.nix
   ];
 }

@@ -1,6 +1,19 @@
 { config, lib, ... }:
 {
   options.my = {
+    hardware.lenovo.thinkpad = {
+      enable = lib.mkEnableOption "Enable Lenovo Thinkpad tweaks";
+
+      model = lib.mkOption {
+        type = with lib.types; nullOr (enum [
+          "x1-carbon-gen12"
+          "z16-gen1"
+        ]);
+        default = null;
+        description = "Lenovo Thinkpad model";
+      };
+    };
+
     environment = lib.mkOption {
       type = lib.types.enum [
         "personal"

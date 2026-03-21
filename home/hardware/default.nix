@@ -1,4 +1,7 @@
 { ... }:
 {
-  imports = [ ./common.nix ];
+  imports = [
+    ./common.nix
+    ./lenovo-thinkpad.nix
+  ];
 }
