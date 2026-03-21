@@ -83,24 +83,6 @@
         config.allowUnfree = true;
       };
 
-      mkHome =
-        hostSpecificModule:
-        home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          extraSpecialArgs = {
-            inherit nixgl pkgs-unstable nix-vscode-extensions;
-            browser-previews-pkgs = browser-previews.packages.${system};
-          };
-          modules = [
-            chromium-pwa-wmclass-sync.homeManagerModules.default
-            sops-nix.homeManagerModules.sops
-            xremap.homeManagerModules.default
-            ./overlays
-            ./home
-            hostSpecificModule
-          ];
-        };
-
       mkNixos =
         machineModule:
         nixpkgs.lib.nixosSystem {
@@ -171,23 +153,19 @@
         nyancat-iso = mkNixosIso personalPc;
       };
 
-      homeConfigurations = {
-        "bohdant@dan.nyc.corp.google.com" = mkHome {
-          my.environment = "work";
-          home.homeDirectory = "/usr/local/google/home/bohdant";
-          my.ai.gemini.extraFlags = [ "--gfg" ];
-          my.vscode.useFHS = false;
+      homeManagerModules.default = { config, lib, ... }: {
+        _module.args = {
+          inherit nixgl pkgs-unstable nix-vscode-extensions;
+          browser-previews-pkgs = browser-previews.packages.${system};
         };
-        "bohdant@bohdant.roam.corp.google.com" = mkHome {
-          my.hardware.lenovo.thinkpad = {
-            enable = true;
-            model = "x1-carbon-gen12";
-          };
-          my.environment = "work";
-          home.homeDirectory = "/home/bohdant";
-          my.ai.gemini.extraFlags = [ "--proxy=false" ];
-          my.terminal.ptyxis.workstationProfile.enable = true;
-        };
+
+        imports = [
+          chromium-pwa-wmclass-sync.homeManagerModules.default
+          sops-nix.homeManagerModules.sops
+          xremap.homeManagerModules.default
+          ./overlays
+          ./home
+        ];
       };
 
       packages.${system} = {
