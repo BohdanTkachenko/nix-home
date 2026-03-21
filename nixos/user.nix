@@ -67,11 +67,7 @@ in
     name: _:
     { config, lib, ... }:
     {
-      imports =
-        sharedHomeImports
-        ++ lib.optionals (name == "dan") [
-          ../home/services/winapps.nix
-        ];
+      imports = sharedHomeImports;
       home = {
         username = lib.mkForce name;
         homeDirectory = lib.mkForce "/home/${name}";

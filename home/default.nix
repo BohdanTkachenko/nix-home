@@ -5,6 +5,7 @@
     ./hardware
     ./cli
     ./gui
+    ./services/winapps.nix
   ];
 
   config = lib.mkMerge [

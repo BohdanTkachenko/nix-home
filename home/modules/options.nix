@@ -46,6 +46,8 @@
 
     terminal.ptyxis.workstationProfile.enable = lib.mkEnableOption "Ptyxis SSH workstation profile";
 
+    winapps.enable = lib.mkEnableOption "WinApps Windows VM";
+
     secrets.sops.enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
