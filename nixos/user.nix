@@ -17,6 +17,7 @@ let
     "tss"
     "adbusers"
     "kvm"
+    "dialout"
   ];
   sharedHomeImports = [
     ../home
