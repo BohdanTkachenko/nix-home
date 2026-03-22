@@ -45,9 +45,6 @@
         )
         ++ [
           "${pkgs.spotify}/share/applications/spotify.desktop"
-
-          "${pkgs.webApps.googleMessages}/share/applications/google-messages-stable.desktop"
-          "${pkgs.webApps.whatsApp}/share/applications/whatsapp-stable.desktop"
         ];
     };
   };

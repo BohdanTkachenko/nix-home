@@ -11,10 +11,5 @@
     googleChat
     googleGemini
     googleMeet
-
-    # Personal only
-    googleGemini
-    googleMessages
-    whatsApp
   ];
 }
