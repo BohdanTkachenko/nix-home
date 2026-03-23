@@ -4,10 +4,7 @@
   ...
 }:
 {
-  programs.chromium-pwa-wmclass-sync = {
-    service.enable = true;
-    rename.enable = true;
-  };
+  programs.chromium-pwa-wmclass-sync.service.enable = true;
 
   home.packages =
     with pkgs;
