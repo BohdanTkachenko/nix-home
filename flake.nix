@@ -18,11 +18,6 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    nixgl = {
-      url = "github:nix-community/nixGL";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     home-manager = {
       url = "github:BohdanTkachenko/home-manager/systemd-path-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -66,7 +61,6 @@
       disko,
       lanzaboote,
       home-manager,
-      nixgl,
       nixpkgs,
       nixpkgs-unstable,
       browser-previews,
@@ -112,7 +106,6 @@
                     nix-vscode-extensions
                     ;
                   browser-previews-pkgs = browser-previews.packages.${system};
-                  nixgl = null;
                 };
                 sharedModules = [
                   chromium-pwa-wmclass-sync.homeManagerModules.default
@@ -153,20 +146,22 @@
         nyancat-iso = mkNixosIso personalPc;
       };
 
-      homeManagerModules.default = { config, lib, ... }: {
-        _module.args = {
-          inherit nixgl pkgs-unstable nix-vscode-extensions;
-          browser-previews-pkgs = browser-previews.packages.${system};
-        };
+      homeManagerModules.default =
+        { config, lib, ... }:
+        {
+          _module.args = {
+            inherit pkgs-unstable nix-vscode-extensions;
+            browser-previews-pkgs = browser-previews.packages.${system};
+          };
 
-        imports = [
-          chromium-pwa-wmclass-sync.homeManagerModules.default
-          sops-nix.homeManagerModules.sops
-          xremap.homeManagerModules.default
-          ./overlays
-          ./home
-        ];
-      };
+          imports = [
+            chromium-pwa-wmclass-sync.homeManagerModules.default
+            sops-nix.homeManagerModules.sops
+            xremap.homeManagerModules.default
+            ./overlays
+            ./home
+          ];
+        };
 
       packages.${system} = {
         init-secureboot = pkgs.callPackage ./scripts/init-secureboot.nix { };

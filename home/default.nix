@@ -5,7 +5,6 @@
     ./hardware
     ./cli
     ./gui
-    ./nixgl.nix
   ];
 
   config = lib.mkMerge [
