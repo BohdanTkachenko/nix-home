@@ -4,11 +4,18 @@
   lib,
   ...
 }:
+let
+  cfg = config.my.hardware.cpu.amd;
+in
 {
-  boot = {
-    kernelModules = [ "kvm-amd" ];
-    kernelParams = ["amd_pstate=active"];
+  options.my.hardware.cpu.amd.enable = lib.mkEnableOption "AMD CPU support";
+
+  config = lib.mkIf cfg.enable {
+    boot = {
+      kernelModules = [ "kvm-amd" ];
+      kernelParams = [ "amd_pstate=active" ];
+    };
+    hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+    services.thermald.enable = false;
   };
-  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-  services.thermald.enable = false;
 }

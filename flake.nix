@@ -115,6 +115,31 @@
             disko.nixosModules.disko
             lanzaboote.nixosModules.lanzaboote
 
+            ./nixos/common.nix
+            ./nixos/wireguard.nix
+            ./nixos/hardware/common.nix
+            ./nixos/hardware/cpu-amd.nix
+            ./nixos/hardware/cpu-intel.nix
+            ./nixos/hardware/gpu-amd.nix
+            ./nixos/hardware/bluetooth.nix
+            ./nixos/hardware/keychron.nix
+            ./nixos/hardware/moonlander.nix
+            ./nixos/hardware/touchpad.nix
+            ./nixos/hardware/hidpi.nix
+            ./nixos/hardware/ssd.nix
+            ./nixos/hydration-common.nix
+            ./nixos/disk-luks-btrfs.nix
+
+            {
+              my.hardware.gpu.amd.enable = true;
+              my.hardware.bluetooth.enable = true;
+              my.hardware.keychron.enable = true;
+              my.hardware.ssd.enable = true;
+              my.wireguard.enable = true;
+              my.hydration.enable = true;
+              my.disk.enable = true;
+            }
+
             machineModule
           ];
         };
@@ -133,8 +158,37 @@
           ];
         };
 
-      personalLaptop = mkNixos ./hosts/personal-laptop.nix;
-      personalPc = mkNixos ./hosts/personal-pc.nix;
+      personalLaptop = mkNixos {
+        networking.hostName = "dan-idea";
+
+        my.hardware.cpu.amd.enable = true;
+        my.hardware.touchpad.enable = true;
+        my.hardware.hidpi.enable = true;
+        my.disk.diskDevice = "/dev/disk/by-id/nvme-Samsung_SSD_980_PRO_2TB_S6B0NG0R703558Y";
+
+        home-manager.sharedModules = [{
+          my.hardware.lenovo.thinkpad = {
+            enable = true;
+            model = "z16-gen1";
+          };
+        }];
+      };
+
+      personalPc = mkNixos {
+        nixpkgs.config.permittedInsecurePackages = [
+          "mbedtls-2.28.10"
+        ];
+
+        networking.hostName = "nyancat";
+
+        my.hardware.cpu.intel.enable = true;
+        my.hardware.moonlander.enable = true;
+        my.disk.diskDevice = "/dev/disk/by-id/nvme-WD_BLACK_SN850X_4000GB_23402H800030";
+
+        home-manager.sharedModules = [{
+          my.hardware.pc.enable = true;
+        }];
+      };
     in
     {
       nixosConfigurations = {

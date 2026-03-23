@@ -7,6 +7,7 @@
 }:
 
 let
+  cfg = config.my.hydration;
   primaryUser = "dan";
   primaryHome = config.users.users.${primaryUser}.home;
 
@@ -57,16 +58,20 @@ let
     };
 in
 {
-  systemd.tmpfiles.rules = [
-    "L+ /etc/nixos - - - - ${primaryHome}/.config/nix"
-  ];
+  options.my.hydration.enable = lib.mkEnableOption "hydration services for first boot";
 
-  systemd.services = lib.listToAttrs [
-    (mkHydrationService {
-      name = "nixos-config";
-      description = "Clone NixOS Config";
-      repo = "https://github.com/BohdanTkachenko/nix-home.git";
-      path = "${primaryHome}/.config/nix";
-    })
-  ];
+  config = lib.mkIf cfg.enable {
+    systemd.tmpfiles.rules = [
+      "L+ /etc/nixos - - - - ${primaryHome}/.config/nix"
+    ];
+
+    systemd.services = lib.listToAttrs [
+      (mkHydrationService {
+        name = "nixos-config";
+        description = "Clone NixOS Config";
+        repo = "https://github.com/BohdanTkachenko/nix-home.git";
+        path = "${primaryHome}/.config/nix";
+      })
+    ];
+  };
 }
