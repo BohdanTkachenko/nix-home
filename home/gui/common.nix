@@ -39,11 +39,6 @@
 
     home.packages = map config.my.gui.wrapper config.my.gui.apps;
 
-    registry.debian.packages = [
-      "google-chrome-stable"
-      "google-chrome-beta"
-    ];
-
     xdg.autostart.entries = [
       "${pkgs.google-chrome}/share/applications/google-chrome.desktop"
     ];

@@ -3,7 +3,6 @@
   imports = [
     ./modules/anti-drift.nix
     ./modules/options.nix
-    ./registry.nix
   ];
 
   anti-drift.driftDir = "$HOME/.config/nix/drifts";

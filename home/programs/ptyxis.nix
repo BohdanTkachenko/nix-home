@@ -56,7 +56,6 @@ let
 in
 
 {
-  registry.debian.packages = [ "ptyxis" ];
   home.packages = lib.mkIf (!config.my.google.enable) (
     with pkgs;
     [
@@ -78,13 +77,26 @@ in
     };
 
     "org/gnome/Ptyxis" = {
-      default-profile-uuid = if config.my.terminal.ptyxis.workstationProfile.enable then workWorkstationUuid else defaultProfileUuid;
-      profile-uuids = [ defaultProfileUuid ] ++ (if config.my.terminal.ptyxis.workstationProfile.enable then [ workWorkstationUuid ] else [ ]);
+      default-profile-uuid =
+        if config.my.terminal.ptyxis.workstationProfile.enable then
+          workWorkstationUuid
+        else
+          defaultProfileUuid;
+      profile-uuids = [
+        defaultProfileUuid
+      ]
+      ++ (if config.my.terminal.ptyxis.workstationProfile.enable then [ workWorkstationUuid ] else [ ]);
       use-system-font = true;
     };
 
     "org/gnome/Ptyxis/Profiles/${defaultProfileUuid}" =
-      defaultProfile // (if config.my.terminal.ptyxis.workstationProfile.enable then defaultProfileWorkLaptopOverride else { });
+      defaultProfile
+      // (
+        if config.my.terminal.ptyxis.workstationProfile.enable then
+          defaultProfileWorkLaptopOverride
+        else
+          { }
+      );
   }
   // (
     if config.my.terminal.ptyxis.workstationProfile.enable then
