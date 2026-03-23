@@ -134,6 +134,7 @@
               my.hardware.gpu.amd.enable = true;
               my.hardware.bluetooth.enable = true;
               my.hardware.keychron.enable = true;
+              my.hardware.hidpi.enable = true;
               my.hardware.ssd.enable = true;
               my.wireguard.enable = true;
               my.hydration.enable = true;
@@ -163,7 +164,6 @@
 
         my.hardware.cpu.amd.enable = true;
         my.hardware.touchpad.enable = true;
-        my.hardware.hidpi.enable = true;
         my.disk.diskDevice = "/dev/disk/by-id/nvme-Samsung_SSD_980_PRO_2TB_S6B0NG0R703558Y";
 
         home-manager.sharedModules = [{
@@ -182,7 +182,6 @@
         networking.hostName = "nyancat";
 
         my.hardware.cpu.intel.enable = true;
-        my.hardware.moonlander.enable = true;
         my.disk.diskDevice = "/dev/disk/by-id/nvme-WD_BLACK_SN850X_4000GB_23402H800030";
 
         home-manager.sharedModules = [{
