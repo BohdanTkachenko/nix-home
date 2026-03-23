@@ -46,10 +46,10 @@
     loader = {
       systemd-boot = {
         enable = lib.mkForce false;
-        configurationLimit = 20;
+        configurationLimit = lib.mkDefault 20;
       };
       efi.canTouchEfiVariables = true;
-      timeout = 0;
+      timeout = lib.mkDefault 0;
     };
 
     lanzaboote = {

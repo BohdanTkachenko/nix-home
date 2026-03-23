@@ -83,6 +83,7 @@
           inherit system;
           specialArgs = {
             inherit
+              self
               inputs
               system
               pkgs-unstable
@@ -129,6 +130,7 @@
             ./nixos/hardware/ssd.nix
             ./nixos/hydration-common.nix
             ./nixos/disk-luks-btrfs.nix
+            ./nixos/installer-iso.nix
 
             {
               my.hardware.gpu.amd.enable = true;
@@ -142,20 +144,6 @@
             }
 
             machineModule
-          ];
-        };
-
-      mkNixosIso =
-        targetConfig:
-        nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = {
-            inherit self;
-            targetConfig = targetConfig;
-          };
-          modules = [
-            disko.nixosModules.disko
-            ./nixos/installer-iso.nix
           ];
         };
 
@@ -188,6 +176,39 @@
           my.hardware.pc.enable = true;
         }];
       };
+
+      mkNixosIso = targetConfig:
+        let
+          lib = nixpkgs.lib;
+          flakeOutPaths =
+            let
+              collector =
+                parent:
+                map (
+                  child:
+                  [ child.outPath ] ++ (if child ? inputs && child.inputs != { } then (collector child) else [ ])
+                ) (lib.attrValues parent.inputs);
+            in
+            lib.unique (lib.flatten (collector self));
+        in
+        mkNixos {
+          imports = [ "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix" ];
+          my.installer-iso = {
+            enable = true;
+            inherit targetConfig;
+          };
+          isoImage.squashfsCompression = "zstd -Xcompression-level 6";
+          isoImage.volumeID = lib.mkForce "NIXOS_CUSTOM";
+          isoImage.storeContents = [
+            targetConfig.config.system.build.toplevel
+            targetConfig.config.system.build.diskoScript
+            targetConfig.config.system.build.diskoScript.drvPath
+            targetConfig.pkgs.stdenv.drvPath
+            targetConfig.pkgs.perlPackages.ConfigIniFiles
+            targetConfig.pkgs.perlPackages.FileSlurp
+          ] ++ flakeOutPaths;
+          image.fileName = lib.mkForce "nixos-dan.iso";
+        };
     in
     {
       nixosConfigurations = {
