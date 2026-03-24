@@ -1,37 +1,44 @@
 # Test that the google-chrome overlay correctly configures systemd units for work profile.
 # Used by: nix flake check
-{ pkgs ? import <nixpkgs> { }, lib ? pkgs.lib, runCommand ? pkgs.runCommand, ... }:
+{
+  pkgs ? import <nixpkgs> { },
+  lib ? pkgs.lib,
+  runCommand ? pkgs.runCommand,
+  ...
+}:
 let
-  # Mock browser-previews packages
-  mockBrowserPreviews = {
-    google-chrome-beta = pkgs.writeScriptBin "google-chrome-beta" "";
-    google-chrome-dev = pkgs.writeScriptBin "google-chrome-dev" "";
-  };
-
   optionsModule = ../home/modules/options.nix;
 
   # Evaluate the module with my.google.enable = true
   evaluatedWork = lib.evalModules {
     modules = [
       # Minimal home-manager compatible module interface
-      ({ ... }: {
-        options = {
-          nixpkgs.overlays = lib.mkOption {
-            type = lib.types.listOf lib.types.unspecified;
-            default = [ ];
+      (
+        { ... }:
+        {
+          options = {
+            nixpkgs.overlays = lib.mkOption {
+              type = lib.types.listOf lib.types.unspecified;
+              default = [ ];
+            };
+            systemd.user.services = lib.mkOption {
+              type = lib.types.attrsOf lib.types.anything;
+              default = { };
+            };
+            systemd.user.paths = lib.mkOption {
+              type = lib.types.attrsOf lib.types.anything;
+              default = { };
+            };
           };
-          systemd.user.services = lib.mkOption {
-            type = lib.types.attrsOf lib.types.anything;
-            default = { };
-          };
-          systemd.user.paths = lib.mkOption {
-            type = lib.types.attrsOf lib.types.anything;
-            default = { };
-          };
-        };
-      })
+        }
+      )
       optionsModule
-      ({ ... }: { my.google.enable = true; })
+      (
+        { ... }:
+        {
+          my.google.enable = true;
+        }
+      )
       # The module under test
       (import ../overlays/google-chrome.nix)
     ];
@@ -44,22 +51,25 @@ let
   # Evaluate the module with my.google.enable = false (default)
   evaluatedPersonal = lib.evalModules {
     modules = [
-      ({ ... }: {
-        options = {
-          nixpkgs.overlays = lib.mkOption {
-            type = lib.types.listOf lib.types.unspecified;
-            default = [ ];
+      (
+        { ... }:
+        {
+          options = {
+            nixpkgs.overlays = lib.mkOption {
+              type = lib.types.listOf lib.types.unspecified;
+              default = [ ];
+            };
+            systemd.user.services = lib.mkOption {
+              type = lib.types.attrsOf lib.types.anything;
+              default = { };
+            };
+            systemd.user.paths = lib.mkOption {
+              type = lib.types.attrsOf lib.types.anything;
+              default = { };
+            };
           };
-          systemd.user.services = lib.mkOption {
-            type = lib.types.attrsOf lib.types.anything;
-            default = { };
-          };
-          systemd.user.paths = lib.mkOption {
-            type = lib.types.attrsOf lib.types.anything;
-            default = { };
-          };
-        };
-      })
+        }
+      )
       optionsModule
       (import ../overlays/google-chrome.nix)
     ];
@@ -79,48 +89,40 @@ let
       passed = workConfig.systemd.user.services ? "fix-google-chrome-stable-autostart";
     }
     {
-      name = "Work profile has google-chrome-beta service";
-      passed = workConfig.systemd.user.services ? "fix-google-chrome-beta-autostart";
-    }
-    {
-      name = "Work profile has google-chrome-unstable service";
-      passed = workConfig.systemd.user.services ? "fix-google-chrome-unstable-autostart";
-    }
-    {
       name = "Work profile has google-chrome-stable path";
       passed = workConfig.systemd.user.paths ? "fix-google-chrome-stable-autostart";
     }
     {
-      name = "Work profile has google-chrome-beta path";
-      passed = workConfig.systemd.user.paths ? "fix-google-chrome-beta-autostart";
-    }
-    {
-      name = "Work profile has google-chrome-unstable path";
-      passed = workConfig.systemd.user.paths ? "fix-google-chrome-unstable-autostart";
-    }
-    {
       name = "Path unit watches ~/.config/autostart/";
       passed =
-        let path = workConfig.systemd.user.paths."fix-google-chrome-stable-autostart";
-        in (path.Path.PathChanged or null) == "%h/.config/autostart/";
+        let
+          path = workConfig.systemd.user.paths."fix-google-chrome-stable-autostart";
+        in
+        (path.Path.PathChanged or null) == "%h/.config/autostart/";
     }
     {
       name = "Path unit is wanted by paths.target";
       passed =
-        let path = workConfig.systemd.user.paths."fix-google-chrome-stable-autostart";
-        in builtins.elem "paths.target" (path.Install.WantedBy or [ ]);
+        let
+          path = workConfig.systemd.user.paths."fix-google-chrome-stable-autostart";
+        in
+        builtins.elem "paths.target" (path.Install.WantedBy or [ ]);
     }
     {
       name = "Service is oneshot type";
       passed =
-        let service = workConfig.systemd.user.services."fix-google-chrome-stable-autostart";
-        in (service.Service.Type or null) == "oneshot";
+        let
+          service = workConfig.systemd.user.services."fix-google-chrome-stable-autostart";
+        in
+        (service.Service.Type or null) == "oneshot";
     }
     {
       name = "Service ExecStart contains fix-chrome-autostart";
       passed =
-        let service = workConfig.systemd.user.services."fix-google-chrome-stable-autostart";
-        in lib.hasInfix "fix-chrome-autostart" (service.Service.ExecStart or "");
+        let
+          service = workConfig.systemd.user.services."fix-google-chrome-stable-autostart";
+        in
+        lib.hasInfix "fix-chrome-autostart" (service.Service.ExecStart or "");
     }
     {
       name = "Personal profile has no Chrome autostart services";
@@ -144,8 +146,8 @@ let
   allPassed = failedTests == [ ];
 
   # Generate test report
-  testReport = lib.concatMapStringsSep "\n" (t:
-    if t.passed then "PASS: ${t.name}" else "FAIL: ${t.name}"
+  testReport = lib.concatMapStringsSep "\n" (
+    t: if t.passed then "PASS: ${t.name}" else "FAIL: ${t.name}"
   ) tests;
 
   failedReport = lib.concatMapStringsSep "\n" (t: "FAIL: ${t.name}") failedTests;
@@ -157,16 +159,23 @@ runCommand "test-google-chrome-overlay" { } ''
   ${testReport}
   EOF
   echo ""
-  echo "Tests: ${toString (builtins.length tests)} total, ${toString (builtins.length tests - builtins.length failedTests)} passed, ${toString (builtins.length failedTests)} failed"
-  ${if allPassed then ''
-    echo "All tests passed!"
-    touch $out
-  '' else ''
-    echo ""
-    echo "Failed tests:"
-    cat <<'EOF'
-    ${failedReport}
-    EOF
-    exit 1
-  ''}
+  echo "Tests: ${toString (builtins.length tests)} total, ${
+    toString (builtins.length tests - builtins.length failedTests)
+  } passed, ${toString (builtins.length failedTests)} failed"
+  ${
+    if allPassed then
+      ''
+        echo "All tests passed!"
+        touch $out
+      ''
+    else
+      ''
+        echo ""
+        echo "Failed tests:"
+        cat <<'EOF'
+        ${failedReport}
+        EOF
+        exit 1
+      ''
+  }
 ''

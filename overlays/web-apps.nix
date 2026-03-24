@@ -156,20 +156,6 @@ in
               suffix = "";
               profile = "Default";
             };
-            beta = {
-              package = final.google-chrome-beta;
-              bin = "google-chrome-beta";
-              channel = "beta";
-              suffix = " (Beta)";
-              profile = "Profile_1";
-            };
-            dev = {
-              package = final.google-chrome-dev;
-              bin = "google-chrome-unstable";
-              channel = "unstable";
-              suffix = " (Unstable)";
-              profile = "Profile_2";
-            };
           };
 
           # Generate Chrome app WM class from URL
@@ -240,11 +226,7 @@ in
 
           mkAppsForBrowser = browser: lib.mapAttrs (_: mkWebApp browser) appDefinitions;
         in
-        {
-          stable = mkAppsForBrowser browsers.stable;
-          beta = mkAppsForBrowser browsers.beta;
-          dev = mkAppsForBrowser browsers.dev;
-        };
+        lib.mapAttrs (_: mkWebApp browsers.stable) appDefinitions;
     })
   ];
 }

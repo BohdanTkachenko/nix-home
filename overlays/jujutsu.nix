@@ -1,4 +1,4 @@
-{ config, pkgs-unstable, ... }:
+{ config, pkgs, ... }:
 {
   nixpkgs.overlays = [
     (final: prev: {
@@ -9,7 +9,7 @@
             exec /usr/bin/jj "$@"
           ''
         else
-          pkgs-unstable.jujutsu;
+          pkgs.jujutsu;
     })
   ];
 }

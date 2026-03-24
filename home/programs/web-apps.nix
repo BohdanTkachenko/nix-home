@@ -3,21 +3,18 @@
   pkgs,
   ...
 }:
-let
-  personalPkg = if config.my.google.enable then pkgs.webApps.beta else pkgs.webApps.stable;
-in
 {
-  home.packages = [
+  home.packages = with pkgs.webApps; [
     # Work and personal
-    pkgs.webApps.stable.gmail
-    pkgs.webApps.stable.googleCalendar
-    pkgs.webApps.stable.googleChat
-    pkgs.webApps.stable.googleGemini
-    pkgs.webApps.stable.googleMeet
+    gmail
+    googleCalendar
+    googleChat
+    googleGemini
+    googleMeet
 
     # Personal only
-    personalPkg.googleGemini
-    personalPkg.googleMessages
-    personalPkg.whatsApp
+    googleGemini
+    googleMessages
+    whatsApp
   ];
 }

@@ -147,34 +147,6 @@ def test_handles_missing_autostart_dir():
         print("PASS: test_handles_missing_autostart_dir")
 
 
-def test_handles_chrome_beta():
-    """Test that the script works with Chrome Beta paths."""
-    with tempfile.TemporaryDirectory() as tmpdir:
-        autostart = Path(tmpdir) / ".config" / "autostart"
-        autostart.mkdir(parents=True)
-
-        desktop_file = autostart / "chrome-beta-app.desktop"
-        original_exec = "/opt/google/chrome-beta/google-chrome-beta --profile-directory=Default --app-id=xyz"
-        create_desktop_file(desktop_file, original_exec)
-
-        import os
-        old_home = os.environ.get("HOME")
-        os.environ["HOME"] = tmpdir
-        try:
-            result = run_script("/opt/google/chrome-beta/google-chrome-beta", "google-chrome-beta")
-        finally:
-            if old_home:
-                os.environ["HOME"] = old_home
-            else:
-                del os.environ["HOME"]
-
-        assert result.returncode == 0, f"Script failed: {result.stderr}"
-        new_exec = read_exec_line(desktop_file)
-        expected = "google-chrome-beta --profile-directory=Default --app-id=xyz"
-        assert new_exec == expected, f"Unexpected Exec: {new_exec}"
-        print("PASS: test_handles_chrome_beta")
-
-
 if __name__ == "__main__":
     test_replaces_matching_exec()
     test_skips_non_matching_exec()

@@ -64,13 +64,12 @@
     (lib.mkIf (config.my.environment == "work") {
       home.packages = with pkgs; [
         google-chrome
-        google-chrome-beta
       ];
 
-      xdg.autostart.entries = [
-        "${pkgs.webApps.stable.googleCalendar}/share/applications/google-calendar-stable.desktop"
-        "${pkgs.webApps.stable.gmail}/share/applications/gmail-stable.desktop"
-        "${pkgs.webApps.stable.googleChat}/share/applications/google-chat-stable.desktop"
+      xdg.autostart.entries = with pkgs.webApps; [
+        "${googleCalendar}/share/applications/google-calendar-stable.desktop"
+        "${gmail}/share/applications/gmail-stable.desktop"
+        "${googleChat}/share/applications/google-chat-stable.desktop"
       ];
 
       dconf.settings = {

@@ -183,16 +183,6 @@ let
       bin = "google-chrome-stable";
       search = "/opt/google/chrome/google-chrome";
     }
-    {
-      pkg = browser-previews-pkgs.google-chrome-beta;
-      bin = "google-chrome-beta";
-      search = "/opt/google/chrome-beta/google-chrome-beta";
-    }
-    {
-      pkg = browser-previews-pkgs.google-chrome-dev;
-      bin = "google-chrome-unstable";
-      search = "/opt/google/chrome-unstable/google-chrome";
-    }
   ];
 
   autostartFixers = lib.mkMerge (map (c: mkAutostartFixer c.bin c.search) chromeConfigs);
@@ -201,8 +191,6 @@ in
   nixpkgs.overlays = [
     (final: prev: {
       google-chrome = mkWrapper prev.google-chrome "google-chrome-stable";
-      google-chrome-beta = mkWrapper browser-previews-pkgs.google-chrome-beta "google-chrome-beta";
-      google-chrome-dev = mkWrapper browser-previews-pkgs.google-chrome-dev "google-chrome-unstable";
     })
   ];
 
