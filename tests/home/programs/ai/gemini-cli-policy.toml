@@ -1,11 +1,65 @@
 [[rule]]
-commandPrefix = ["cat", "echo", "eza", "ls", "mktemp", "tee"]
+commandPrefix = ["awk", "basename", "cat", "curl", "cut", "date", "diff", "dig", "dirname", "du", "echo", "env", "eza", "fd", "file", "find", "grep", "head", "host", "journalctl", "jq", "ls", "man", "md5sum", "mktemp", "nixos-option", "npx", "nslookup", "printenv", "rg", "sed", "sha256sum", "sort", "stat", "tail", "tee", "tokei", "tr", "tree", "uname", "uniq", "wc", "wget", "which", "yq"]
+decision = "allow"
+priority = 100
+toolName = "run_shell_command"
+
+[[rule]]
+commandRegex = "cargo (bench|build|check|clippy|doc|metadata|read-manifest|search|test|tree|verify-project)"
+decision = "allow"
+priority = 100
+toolName = "run_shell_command"
+
+[[rule]]
+commandRegex = "gh (api|issue list|issue status|issue view|pr checks|pr diff|pr list|pr status|pr view|repo list|repo view|run list|run view|search|status)"
+decision = "allow"
+priority = 100
+toolName = "run_shell_command"
+
+[[rule]]
+commandRegex = "git (blame|diff|log|show|status)"
+decision = "allow"
+priority = 100
+toolName = "run_shell_command"
+
+[[rule]]
+commandRegex = "go (build|doc|env|list|mod graph|mod verify|test|version|vet)"
 decision = "allow"
 priority = 100
 toolName = "run_shell_command"
 
 [[rule]]
 commandRegex = "jj (describe|describe-to-file|describe-from-file|diff|log|show|status)"
+decision = "allow"
+priority = 100
+toolName = "run_shell_command"
+
+[[rule]]
+commandRegex = "nix (build|derivation show|eval|flake|hash|path-info|search|store|why-depends)"
+decision = "allow"
+priority = 100
+toolName = "run_shell_command"
+
+[[rule]]
+commandRegex = "nix-instantiate (--eval)"
+decision = "allow"
+priority = 100
+toolName = "run_shell_command"
+
+[[rule]]
+commandRegex = "nix-store (--query|-q)"
+decision = "allow"
+priority = 100
+toolName = "run_shell_command"
+
+[[rule]]
+commandRegex = "npm (audit|explain|list|outdated|run|search|test|view)"
+decision = "allow"
+priority = 100
+toolName = "run_shell_command"
+
+[[rule]]
+commandRegex = "systemctl (cat|is-active|is-enabled|list-dependencies|list-timers|list-unit-files|list-units|show|status)"
 decision = "allow"
 priority = 100
 toolName = "run_shell_command"

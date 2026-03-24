@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  browser-previews-pkgs,
   ...
 }:
 let

@@ -88,7 +88,6 @@
               pkgs-unstable
               nix-vscode-extensions
               ;
-            browser-previews-pkgs = browser-previews.packages.${system};
           };
           modules = [
             sops-nix.nixosModules.sops
@@ -105,7 +104,6 @@
                     pkgs-unstable
                     nix-vscode-extensions
                     ;
-                  browser-previews-pkgs = browser-previews.packages.${system};
                 };
                 sharedModules = [
                   chromium-pwa-wmclass-sync.homeManagerModules.default
@@ -151,7 +149,6 @@
         {
           _module.args = {
             inherit pkgs-unstable nix-vscode-extensions;
-            browser-previews-pkgs = browser-previews.packages.${system};
           };
 
           imports = [
@@ -201,8 +198,27 @@
         # Verify the actual home-manager config generates correct systemd units
         home-manager-chrome-units =
           let
-            hm = self.homeConfigurations."bohdant@dan.nyc.corp.google.com";
-            unitDir = "${hm.activationPackage}/home-files/.config/systemd/user";
+            workHm = home-manager.lib.homeManagerConfiguration {
+              inherit pkgs;
+              modules = [
+                self.homeManagerModules.default
+                {
+                  my.google.enable = true;
+                  my.environment = "work";
+                  home.homeDirectory = "/home/bohdant";
+                  home.stateVersion = "25.11";
+                }
+              ];
+              extraSpecialArgs = {
+                inherit
+                  inputs
+                  system
+                  pkgs-unstable
+                  nix-vscode-extensions
+                  ;
+              };
+            };
+            unitDir = "${workHm.activationPackage}/home-files/.config/systemd/user";
           in
           pkgs.runCommand "test-hm-chrome-units" { } ''
             echo "Checking home-manager generates Chrome autostart fixer unit..."

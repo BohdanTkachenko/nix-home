@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, ... }:
 {
   nixpkgs.overlays = [
     (final: prev: {
@@ -9,7 +9,7 @@
             exec /usr/bin/jj "$@"
           ''
         else
-          pkgs.jujutsu;
+          prev.jujutsu;
     })
   ];
 }

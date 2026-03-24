@@ -152,5 +152,4 @@ if __name__ == "__main__":
     test_skips_non_matching_exec()
     test_dry_run_does_not_modify()
     test_handles_missing_autostart_dir()
-    test_handles_chrome_beta()
     print("\nAll tests passed!")

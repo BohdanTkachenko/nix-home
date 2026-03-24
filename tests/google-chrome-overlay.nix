@@ -44,7 +44,6 @@ let
     ];
     specialArgs = {
       inherit pkgs lib;
-      browser-previews-pkgs = mockBrowserPreviews;
     };
   };
 
@@ -75,7 +74,6 @@ let
     ];
     specialArgs = {
       inherit pkgs lib;
-      browser-previews-pkgs = mockBrowserPreviews;
     };
   };
 
