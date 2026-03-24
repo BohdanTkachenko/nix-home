@@ -7,7 +7,6 @@
   imports = [
     ../home/modules/options.nix
     ./bambu-studio.nix
-    ./gemini-cli.nix
     ./google-chrome.nix
     ./jujutsu.nix
     ./riff-overlay.nix

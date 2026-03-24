@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  pkgs-unstable,
   ...
 }:
 let
@@ -129,7 +130,10 @@ let
       "why-depends"
     ];
     nix-instantiate = [ "--eval" ];
-    nix-store = [ "--query" "-q" ];
+    nix-store = [
+      "--query"
+      "-q"
+    ];
     nixos-option = null;
     systemctl = [
       "cat"
@@ -250,6 +254,7 @@ in
   config._geminiPolicyFile = policyFile;
 
   config.programs.gemini-cli.enable = true;
+  config.programs.gemini-cli.package = pkgs-unstable.gemini-cli;
 
   config.home.activation = {
     init = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

@@ -5,10 +5,12 @@
       enable = lib.mkEnableOption "Enable Lenovo Thinkpad tweaks";
 
       model = lib.mkOption {
-        type = with lib.types; nullOr (enum [
-          "x1-carbon-gen12"
-          "z16-gen1"
-        ]);
+        type =
+          with lib.types;
+          nullOr (enum [
+            "x1-carbon-gen12"
+            "z16-gen1"
+          ]);
         default = null;
         description = "Lenovo Thinkpad model";
       };
@@ -34,12 +36,6 @@
       type = lib.types.str;
       default = "Bohdan Tkachenko";
       description = "Full name for git/jj config";
-    };
-
-    ai.gemini.extraFlags = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [];
-      description = "Extra flags to pass to the gemini CLI wrapper";
     };
 
     vscode.useFHS = lib.mkOption {
