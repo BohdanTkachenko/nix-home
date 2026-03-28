@@ -44,6 +44,7 @@
         ])
         ++ (with pkgs-unstable; [
           antigravity
+          mcpelauncher-ui-qt
         ]);
 
       dconf.settings = {
