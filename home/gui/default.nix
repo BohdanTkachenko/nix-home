@@ -19,6 +19,7 @@
           baobab
           brave
           discord
+          teamspeak6-client
           gnome-calculator
           gimp
           gnome-extension-manager
