@@ -32,6 +32,9 @@ in
       source = (pkgs.formats.json { }).generate "claude-code-settings.json" {
         "$schema" = "https://json.schemastore.org/claude-code-settings.json";
         effortLevel = "high";
+        enabledPlugins = {
+          "gopls-lsp@claude-plugins-official" = true;
+        };
         permissions = {
           allow = [
             "Search"
