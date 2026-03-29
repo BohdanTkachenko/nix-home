@@ -21,7 +21,10 @@ let
   ];
   sharedHomeImports = [
     ../home
-    { my.environment = "personal"; }
+    {
+      my.environment = "personal";
+      my.claude-code.enable = true;
+    }
   ];
   primaryUser = builtins.head (builtins.attrNames config.my.users);
 in
