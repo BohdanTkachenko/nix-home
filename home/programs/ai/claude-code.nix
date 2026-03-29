@@ -167,6 +167,19 @@ let
       ];
     };
   };
+
+  managedMcp = {
+    mcpServers = {
+      home-assistant = {
+        type = "http";
+        url = config.sops.placeholder.claude-ha-mcp-url;
+        oauth = {
+          clientId = "http://localhost:48721";
+          callbackPort = 48721;
+        };
+      };
+    };
+  };
 in
 {
   imports = [
@@ -181,7 +194,17 @@ in
       package = claude-code-wrapped;
     };
 
-    home.file.".claude/managed.json".text = builtins.toJSON managedSettings;
+    home.file.".claude/managed-settings.json".text = builtins.toJSON managedSettings;
+
+    sops.secrets.claude-ha-mcp-url = lib.mkIf config.my.secrets.sops.enable {
+      sopsFile = ./secrets/claude-code.yaml;
+      key = "ha_mcp_url";
+    };
+
+    sops.templates."claude-managed-mcp" = lib.mkIf config.my.secrets.sops.enable {
+      content = builtins.toJSON managedMcp;
+      path = "${config.home.homeDirectory}/.claude/managed-mcp.json";
+    };
 
     xdg.desktopEntries.ssh-askpass = {
       name = "ssh-askpass";
