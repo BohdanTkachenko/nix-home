@@ -17,6 +17,19 @@ let
     '';
   };
 
+  github-mcp-server = pkgs.buildGoModule {
+    pname = "github-mcp-server";
+    version = "0.2.0-unstable";
+    src = pkgs.fetchFromGitHub {
+      owner = "github";
+      repo = "github-mcp-server";
+      rev = "b01f7f5b6aa4c251136f9adbc51d489f241a07a4";
+      hash = "sha256-hcIE6aAF/B3UAsZ1ESN7Rqi4F7eVEUaLSIEZRdwVduE=";
+    };
+    vendorHash = "sha256-q21hnMnWOzfg7BGDl4KM1I3v0wwS5sSxzLA++L6jO4s=";
+    subPackages = [ "cmd/github-mcp-server" ];
+  };
+
   managedSettings = {
     "$schema" = "https://json.schemastore.org/claude-code-settings.json";
     effortLevel = "high";
@@ -178,6 +191,13 @@ let
           callbackPort = 48721;
         };
       };
+      github = {
+        command = "${github-mcp-server}/bin/github-mcp-server";
+        args = [ "stdio" ];
+        env = {
+          GITHUB_PERSONAL_ACCESS_TOKEN = config.sops.placeholder.github-pat;
+        };
+      };
     };
   };
 in
@@ -199,6 +219,11 @@ in
     sops.secrets.claude-ha-mcp-url = lib.mkIf config.my.secrets.sops.enable {
       sopsFile = ./secrets/claude-code.yaml;
       key = "ha_mcp_url";
+    };
+
+    sops.secrets.github-pat = lib.mkIf config.my.secrets.sops.enable {
+      sopsFile = ./secrets/claude-code.yaml;
+      key = "github_pat";
     };
 
     sops.templates."claude-managed-mcp" = lib.mkIf config.my.secrets.sops.enable {

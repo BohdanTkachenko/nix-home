@@ -11,6 +11,7 @@
 let
   primaryUser = builtins.head (builtins.attrNames config.my.users);
   hmCfg = config.home-manager.users.${primaryUser}.my.claude-code;
+  hmFiles = config.home-manager.users.${primaryUser}.home.file;
   homeDir = "/home/${primaryUser}";
 in
 {
@@ -20,6 +21,9 @@ in
       after = [ "home-manager-${primaryUser}.service" ];
       wants = [ "home-manager-${primaryUser}.service" ];
       wantedBy = [ "multi-user.target" ];
+      restartTriggers = [
+        hmFiles.".claude/managed-settings.json".text
+      ];
       serviceConfig = {
         Type = "oneshot";
         ExecStart = lib.getExe (pkgs.writeShellScriptBin "copy-claude-managed" ''
