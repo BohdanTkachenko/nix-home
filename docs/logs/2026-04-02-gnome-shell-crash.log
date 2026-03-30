@@ -1,0 +1,239 @@
+Apr 02 23:15:45 nyancat dbus-daemon[15975]: [session uid=1000 pid=15973] Reloaded configuration
+Apr 02 23:15:45 nyancat dbus-daemon[2270]: [session uid=1000 pid=2270] Reloaded configuration
+Apr 02 23:15:45 nyancat chromium-pwa-wmclass-sync[156823]: [INFO ] OK: "chrome-hnpfjngllnobngcgfapefoaidbinmjnm-Default.desktop": Already managed, companion "WhatsApp Web.desktop" exists.
+Apr 02 23:15:45 nyancat chromium-pwa-wmclass-sync[156823]: [INFO ] OK: "chrome-agimnkijcaahngcdmfeangaknmldooml-Default.desktop": Already managed, companion "YouTube.desktop" exists.
+Apr 02 23:15:45 nyancat chromium-pwa-wmclass-sync[156823]: [INFO ] OK: "chrome-gdfaincndogidkdcdkhapmbffkckdkhn-Default.desktop": Already managed, companion "Google Gemini.desktop" exists.
+Apr 02 23:15:45 nyancat chromium-pwa-wmclass-sync[156823]: [INFO ] OK: "chrome-hpfldicfbfomlpcikngkocigghgafkph-Default.desktop": Already managed, companion "Messages.desktop" exists.
+Apr 02 23:15:45 nyancat chromium-pwa-wmclass-sync[156823]: [INFO ] OK: "chrome-dpgidalaleloihkdmmljkibphlmkpaif-Default.desktop": Already managed, companion "JetKVM.desktop" exists.
+Apr 02 23:15:45 nyancat chromium-pwa-wmclass-sync[156823]: [INFO ] OK: "chrome-gnkhddglklecgbkgnoagdlaflmlnblgn-Default.desktop": Already managed, companion "Gateway.desktop" exists.
+Apr 02 23:15:45 nyancat chromium-pwa-wmclass-sync[156823]: [INFO ] OK: "chrome-kippjfofjhjlffjecoapiogbkgbpmgej-Default.desktop": Already managed, companion "Facebook.desktop" exists.
+Apr 02 23:16:37 nyancat dbus-daemon[15975]: [session uid=1000 pid=15973] Reloaded configuration
+Apr 02 23:16:37 nyancat dbus-daemon[2270]: [session uid=1000 pid=2270] Reloaded configuration
+Apr 02 23:16:37 nyancat chromium-pwa-wmclass-sync[157016]: [INFO ] OK: "chrome-hnpfjngllnobngcgfapefoaidbinmjnm-Default.desktop": Already managed, companion "WhatsApp Web.desktop" exists.
+Apr 02 23:16:37 nyancat chromium-pwa-wmclass-sync[157016]: [INFO ] OK: "chrome-agimnkijcaahngcdmfeangaknmldooml-Default.desktop": Already managed, companion "YouTube.desktop" exists.
+Apr 02 23:16:37 nyancat chromium-pwa-wmclass-sync[157016]: [INFO ] OK: "chrome-gdfaincndogidkdcdkhapmbffkckdkhn-Default.desktop": Already managed, companion "Google Gemini.desktop" exists.
+Apr 02 23:16:37 nyancat chromium-pwa-wmclass-sync[157016]: [INFO ] OK: "chrome-hpfldicfbfomlpcikngkocigghgafkph-Default.desktop": Already managed, companion "Messages.desktop" exists.
+Apr 02 23:16:37 nyancat chromium-pwa-wmclass-sync[157016]: [INFO ] OK: "chrome-dpgidalaleloihkdmmljkibphlmkpaif-Default.desktop": Already managed, companion "JetKVM.desktop" exists.
+Apr 02 23:16:37 nyancat chromium-pwa-wmclass-sync[157016]: [INFO ] OK: "chrome-gnkhddglklecgbkgnoagdlaflmlnblgn-Default.desktop": Already managed, companion "Gateway.desktop" exists.
+Apr 02 23:16:37 nyancat chromium-pwa-wmclass-sync[157016]: [INFO ] OK: "chrome-kippjfofjhjlffjecoapiogbkgbpmgej-Default.desktop": Already managed, companion "Facebook.desktop" exists.
+Apr 02 23:16:42 nyancat gnome-shell[3165]: **
+Apr 02 23:16:42 nyancat gnome-shell[3165]: ERROR:../src/shell-app.c:1746:shell_app_dispose: assertion failed: (app->state == SHELL_APP_STATE_STOPPED)
+Apr 02 23:16:42 nyancat gnome-shell[3165]: Bail out! ERROR:../src/shell-app.c:1746:shell_app_dispose: assertion failed: (app->state == SHELL_APP_STATE_STOPPED)
+Apr 02 23:16:42 nyancat gnome-shell[3165]: == Stack trace for context 0x55a00009ac50 ==
+Apr 02 23:16:42 nyancat gnome-shell[3165]: #0   55a000164c78 i   resource:///org/gnome/shell/ui/init.js:21 (553e3f8f8d0 @ 48)
+Apr 02 23:16:42 nyancat systemd-coredump[157214]: Process 3165 (.gnome-shell-wr) of user 1000 terminated abnormally with signal 6/ABRT, processing...
+Apr 02 23:16:44 nyancat systemd-coredump[157218]: Process 3165 (.gnome-shell-wr) of user 1000 dumped core.
+                                                  #2  0x0000559fee05b0e6 dump_gjs_stack_on_signal_handler (/nix/store/m24xyvj7ibcgcpqyhhdf4i5skmq0nqdd-gnome-shell-49.2/bin/.gnome-shell-wrapped + 0x40e6)
+                                                  #40 0x0000559fee05a9ce main (/nix/store/m24xyvj7ibcgcpqyhhdf4i5skmq0nqdd-gnome-shell-49.2/bin/.gnome-shell-wrapped + 0x39ce)
+                                                  #43 0x0000559fee05ace5 _start (/nix/store/m24xyvj7ibcgcpqyhhdf4i5skmq0nqdd-gnome-shell-49.2/bin/.gnome-shell-wrapped + 0x3ce5)
+Apr 02 23:16:44 nyancat systemd[1]: systemd-coredump@1-4097-157214_157215-0.service: Deactivated successfully.
+Apr 02 23:16:44 nyancat systemd[1]: systemd-coredump@1-4097-157214_157215-0.service: Consumed 1.271s CPU time, 694M memory peak, 2.2M read from disk, 68.9M written to disk.
+Apr 02 23:16:44 nyancat gnome-shell[3833]: (EE) failed to write to Xwayland fd: Broken pipe
+Apr 02 23:16:44 nyancat systemd[1282]: Disable GNOME Shell extensions after failure was skipped because of an unmet condition check (ConditionPathExists=/run/user/1000/gnome-shell-disable-extensions).
+Apr 02 23:16:45 nyancat gdm-password][2992]: pam_unix(gdm-password:session): session closed for user dan
+Apr 02 23:16:45 nyancat systemd-logind[1118]: New session 'c2' of user 'gdm-greeter' with class 'greeter' and type 'wayland'.
+Apr 02 23:16:45 nyancat (systemd)[157593]: pam_unix(systemd-user:session): session opened for user gdm-greeter(uid=60578) by (uid=0)
+Apr 02 23:16:45 nyancat systemd-logind[1118]: New session '5' of user 'gdm-greeter' with class 'manager-early' and type 'unspecified'.
+Apr 02 23:16:46 nyancat systemd[1]: Started Session c2 of User gdm-greeter.
+Apr 02 23:16:46 nyancat gnome-shell[157644]: Running GNOME Shell (using mutter 49.2) as a Wayland display server
+Apr 02 23:16:46 nyancat gnome-shell[157644]: Thread 'KMS thread' will be using high priority scheduling
+Apr 02 23:16:46 nyancat gnome-shell[157644]: Device '/dev/dri/card1' prefers shadow buffer
+Apr 02 23:16:46 nyancat gnome-shell[157644]: Added device '/dev/dri/card1' (amdgpu) using atomic mode setting.
+Apr 02 23:16:46 nyancat gnome-shell[157644]: Created gbm renderer for '/dev/dri/card1'
+Apr 02 23:16:46 nyancat gnome-shell[157644]: Boot VGA GPU /dev/dri/card1 selected as primary
+Apr 02 23:16:46 nyancat gnome-shell[157644]: Obtained a high priority EGL context
+Apr 02 23:16:46 nyancat gnome-shell[157644]: Using public X11 display :1024, (using :1025 for managed services)
+Apr 02 23:16:46 nyancat gnome-shell[157644]: Using Wayland display name 'wayland-0'
+Apr 02 23:16:47 nyancat .gnome-shell-wr[157644]: Unset XDG_SESSION_ID, getCurrentSessionProxy() called outside a user session. Asking logind directly.
+Apr 02 23:16:47 nyancat .gnome-shell-wr[157644]: Registering session with GDM
+Apr 02 23:16:47 nyancat .gnome-shell-wr[157644]: Will monitor session c2
+Apr 02 23:16:47 nyancat .gnome-shell-wr[157644]: Error looking up permission: GDBus.Error:org.freedesktop.portal.Error.NotFound: No entry for geolocation
+Apr 02 23:16:47 nyancat polkitd[1265]: Registered Authentication Agent for unix-session:c2 (system bus name :1.176 [/nix/store/m24xyvj7ibcgcpqyhhdf4i5skmq0nqdd-gnome-shell-49.2/bin/gnome-shell], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Apr 02 23:16:47 nyancat .gnome-shell-wr[157644]: Missing required core component Settings, expect trouble…
+Apr 02 23:16:47 nyancat gnome-shell[157644]: Type GITypeInfo of property NM.Object::client does not match return type GITypeInfo of getter get_client. Falling back to slow path
+Apr 02 23:16:47 nyancat gnome-shell[157956]: The XKEYBOARD keymap compiler (xkbcomp) reports:
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86OK
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86GoTo
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86VendorLogo
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86MediaSelectProgramGuide
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86MediaSelectProgramGuide
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86MediaSelectHome
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86MediaLanguageMenu
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86MediaTitleMenu
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86AudioChannelMode
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86MediaSelectPC
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86MediaSelectTV
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86MediaSelectCable
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86MediaSelectVCR
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86MediaSelectVCRPlus
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86MediaSelectSatellite
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86MediaSelectCD
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86MediaSelectTape
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86MediaSelectRadio
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86MediaSelectTuner
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86MediaPlayer
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86MediaSelectTeletext
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86MediaSelectAuxiliary
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86MediaPlaySlow
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86NumberEntryMode
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86RefreshRateToggle
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86Accessibility
+Apr 02 23:16:47 nyancat gnome-shell[157956]: > Warning:          Could not resolve keysym XF86DoNotDisturb
+Apr 02 23:16:47 nyancat gnome-shell[157956]: Errors from xkbcomp are not fatal to the X server
+Apr 02 23:16:47 nyancat gnome-shell[157959]: The XKEYBOARD keymap compiler (xkbcomp) reports:
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Unsupported maximum keycode 708, clipping.
+Apr 02 23:16:47 nyancat gnome-shell[157959]: >                   X11 cannot support keycodes above 255.
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Virtual modifier Hyper multiply defined
+Apr 02 23:16:47 nyancat gnome-shell[157959]: >                   Using 0, ignoring 0
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Virtual modifier ScrollLock multiply defined
+Apr 02 23:16:47 nyancat gnome-shell[157959]: >                   Using 0, ignoring 0
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86OK
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86GoTo
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86VendorLogo
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86MediaSelectProgramGuide
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86MediaSelectProgramGuide
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86MediaSelectHome
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86MediaLanguageMenu
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86MediaTitleMenu
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86AudioChannelMode
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86MediaSelectPC
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86MediaSelectTV
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86MediaSelectCable
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86MediaSelectVCR
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86MediaSelectVCRPlus
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86MediaSelectSatellite
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86MediaSelectTape
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86MediaSelectRadio
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86MediaSelectTuner
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86MediaPlayer
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86MediaSelectTeletext
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86MediaSelectAuxiliary
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86MediaPlaySlow
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86NumberEntryMode
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86RefreshRateToggle
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86Accessibility
+Apr 02 23:16:47 nyancat gnome-shell[157959]: > Warning:          Could not resolve keysym XF86DoNotDisturb
+Apr 02 23:16:47 nyancat gnome-shell[157959]: Errors from xkbcomp are not fatal to the X server
+Apr 02 23:16:49 nyancat systemd-coredump[158056]: Process 158046 (.easyeffects-wr) of user 1000 terminated abnormally with signal 6/ABRT, processing...
+Apr 02 23:16:49 nyancat systemd-coredump[158063]: Process 158046 (.easyeffects-wr) of user 1000 dumped core.
+Apr 02 23:16:49 nyancat systemd[1]: systemd-coredump@2-8193-158056_158057-0.service: Deactivated successfully.
+Apr 02 23:16:49 nyancat systemd[1]: systemd-coredump@2-8193-158056_158057-0.service: Consumed 90ms CPU time, 33.1M memory peak, 3.4M written to disk.
+Apr 02 23:16:51 nyancat gdm-password][158047]: gkr-pam: unable to locate daemon control file
+Apr 02 23:16:51 nyancat gdm-password][158047]: gkr-pam: stashed password to try later in open session
+Apr 02 23:16:51 nyancat gdm-password][158047]: pam_unix(gdm-password:session): session opened for user dan(uid=1000) by (uid=0)
+Apr 02 23:16:51 nyancat gdm-password][158047]: gkr-pam: gnome-keyring-daemon started properly and unlocked keyring
+Apr 02 23:16:52 nyancat systemd-coredump[158235]: Process 158222 (.easyeffects-wr) of user 1000 terminated abnormally with signal 6/ABRT, processing...
+Apr 02 23:16:52 nyancat gnome-shell[158233]: Running GNOME Shell (using mutter 49.2) as a Wayland display server
+Apr 02 23:16:52 nyancat gnome-shell[158233]: Enabling experimental feature 'scale-monitor-framebuffer'
+Apr 02 23:16:52 nyancat gnome-shell[158233]: Enabling experimental feature 'variable-refresh-rate'
+Apr 02 23:16:52 nyancat gnome-shell[158233]: Enabling experimental feature 'xwayland-native-scaling'
+Apr 02 23:16:52 nyancat systemd-coredump[158238]: Process 158222 (.easyeffects-wr) of user 1000 dumped core.
+Apr 02 23:16:52 nyancat systemd[1]: systemd-coredump@3-4098-158235_158236-0.service: Deactivated successfully.
+Apr 02 23:16:52 nyancat systemd[1]: systemd-coredump@3-4098-158235_158236-0.service: Consumed 95ms CPU time, 33.4M memory peak, 3.3M written to disk.
+Apr 02 23:16:52 nyancat gnome-shell[158233]: Thread 'KMS thread' will be using high priority scheduling
+Apr 02 23:16:52 nyancat gnome-shell[158233]: Device '/dev/dri/card1' prefers shadow buffer
+Apr 02 23:16:52 nyancat gnome-shell[158233]: Added device '/dev/dri/card1' (amdgpu) using atomic mode setting.
+Apr 02 23:16:52 nyancat gnome-shell[158233]: Created gbm renderer for '/dev/dri/card1'
+Apr 02 23:16:52 nyancat gnome-shell[158233]: Boot VGA GPU /dev/dri/card1 selected as primary
+Apr 02 23:16:52 nyancat gnome-shell[158233]: Obtained a high priority EGL context
+Apr 02 23:16:52 nyancat gnome-shell[158233]: Using public X11 display :0, (using :1 for managed services)
+Apr 02 23:16:52 nyancat gnome-shell[158233]: Using Wayland display name 'wayland-0'
+Apr 02 23:16:53 nyancat .gnome-shell-wr[158233]: Unset XDG_SESSION_ID, getCurrentSessionProxy() called outside a user session. Asking logind directly.
+Apr 02 23:16:53 nyancat .gnome-shell-wr[158233]: Registering session with GDM
+Apr 02 23:16:53 nyancat .gnome-shell-wr[158233]: Will monitor session 6
+Apr 02 23:16:53 nyancat .gnome-shell-wr[158233]: Error looking up permission: GDBus.Error:org.freedesktop.portal.Error.NotFound: No entry for geolocation
+Apr 02 23:16:53 nyancat gnome-shell[157644]: Shutting down GNOME Shell
+Apr 02 23:16:53 nyancat gnome-shell[157644]: Connection to xwayland lost
+Apr 02 23:16:53 nyancat gnome-shell[157644]: Using public X11 display :1024, (using :1025 for managed services)
+Apr 02 23:16:53 nyancat polkitd[1265]: Registered Authentication Agent for unix-session:6 (system bus name :1.207 [/nix/store/m24xyvj7ibcgcpqyhhdf4i5skmq0nqdd-gnome-shell-49.2/bin/gnome-shell], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Apr 02 23:16:53 nyancat gnome-shell[158233]: Type GITypeInfo of property NM.Object::client does not match return type GITypeInfo of getter get_client. Falling back to slow path
+Apr 02 23:16:53 nyancat gnome-shell[158233]: StImageContent initialized with invalid preferred size: -1x-1
+Apr 02 23:16:53 nyancat gnome-shell[158233]: StImageContent initialized with invalid preferred size: -1x-1
+Apr 02 23:16:54 nyancat gnome-shell[158233]: Gio.DesktopAppInfo has been moved to a separate platform-specific library. Please update your code to use GioUnix.DesktopAppInfo instead.
+                                             1 <TOP LEVEL> ["file:///etc/profiles/per-user/dan/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/locations.js":113:4]
+Apr 02 23:16:54 nyancat .gnome-shell-wr[158233]: Failed to import DBusMenu, quicklists are not available: Error: Requiring Dbusmenu, version none: Typelib file for namespace 'Dbusmenu' (any version) not found
+Apr 02 23:16:54 nyancat .gnome-shell-wr[158233]: Failed to import DBusMenu, quicklists are not available: Error: Requiring Dbusmenu, version none: Typelib file for namespace 'Dbusmenu' (any version) not found
+Apr 02 23:16:54 nyancat .gnome-shell-wr[158233]: Failed to import DBusMenu, quicklists are not available: Error: Requiring Dbusmenu, version none: Typelib file for namespace 'Dbusmenu' (any version) not found
+Apr 02 23:16:54 nyancat gnome-shell[158233]: value "nan" of type 'gdouble' is invalid or out of range for property 'clip' of type 'gdouble'
+Apr 02 23:16:54 nyancat .gnome-shell-wr[158233]: Grabbed <Control>space
+Apr 02 23:16:54 nyancat .gnome-shell-wr[158233]: Grabbed <Control><Super>Space
+Apr 02 23:16:54 nyancat gnome-shell[158233]: Gio.DesktopAppInfo has been moved to a separate platform-specific library. Please update your code to use GioUnix.DesktopAppInfo instead.
+                                             1 enable() ["file:///etc/profiles/per-user/dan/share/gnome-shell/extensions/search-light@icedman.github.com/extension.js":202:19]
+Apr 02 23:16:54 nyancat gnome-shell[158233]: JS WARNING: file:///etc/profiles/per-user/dan/share/gnome-shell/extensions/tilingshell@ferrarodomenico.com/extension.js:7259:7: unreachable code after return statement
+Apr 02 23:16:54 nyancat .gnome-shell-wr[158233]: [tilingshell] [extension] extension is enabled
+Apr 02 23:16:54 nyancat .gnome-shell-wr[158233]: [tilingshell] [GlobalState] added workspace 1
+Apr 02 23:16:54 nyancat gnome-shell[159146]: The XKEYBOARD keymap compiler (xkbcomp) reports:
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86OK
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86GoTo
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86VendorLogo
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86MediaSelectProgramGuide
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86MediaSelectProgramGuide
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86MediaSelectHome
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86MediaLanguageMenu
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86MediaTitleMenu
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86AudioChannelMode
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86MediaSelectPC
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86MediaSelectTV
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86MediaSelectCable
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86MediaSelectVCR
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86MediaSelectVCRPlus
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86MediaSelectSatellite
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86MediaSelectCD
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86MediaSelectTape
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86MediaSelectRadio
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86MediaSelectTuner
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86MediaPlayer
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86MediaSelectTeletext
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86MediaSelectAuxiliary
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86MediaPlaySlow
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86NumberEntryMode
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86RefreshRateToggle
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86Accessibility
+Apr 02 23:16:54 nyancat gnome-shell[159146]: > Warning:          Could not resolve keysym XF86DoNotDisturb
+Apr 02 23:16:54 nyancat gnome-shell[159146]: Errors from xkbcomp are not fatal to the X server
+Apr 02 23:16:54 nyancat gnome-shell[159177]: The XKEYBOARD keymap compiler (xkbcomp) reports:
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Unsupported maximum keycode 708, clipping.
+Apr 02 23:16:54 nyancat gnome-shell[159177]: >                   X11 cannot support keycodes above 255.
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Virtual modifier Hyper multiply defined
+Apr 02 23:16:54 nyancat gnome-shell[159177]: >                   Using 0, ignoring 0
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Virtual modifier ScrollLock multiply defined
+Apr 02 23:16:54 nyancat gnome-shell[159177]: >                   Using 0, ignoring 0
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86OK
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86GoTo
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86VendorLogo
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86MediaSelectProgramGuide
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86MediaSelectProgramGuide
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86MediaSelectHome
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86MediaLanguageMenu
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86MediaTitleMenu
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86AudioChannelMode
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86MediaSelectPC
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86MediaSelectTV
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86MediaSelectCable
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86MediaSelectVCR
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86MediaSelectVCRPlus
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86MediaSelectSatellite
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86MediaSelectTape
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86MediaSelectRadio
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86MediaSelectTuner
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86MediaPlayer
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86MediaSelectTeletext
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86MediaSelectAuxiliary
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86MediaPlaySlow
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86NumberEntryMode
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86RefreshRateToggle
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86Accessibility
+Apr 02 23:16:54 nyancat gnome-shell[159177]: > Warning:          Could not resolve keysym XF86DoNotDisturb
+Apr 02 23:16:54 nyancat gnome-shell[159177]: Errors from xkbcomp are not fatal to the X server
+Apr 02 23:16:54 nyancat .gnome-shell-wr[158233]: GNOME Shell started at Thu Apr 02 2026 23:16:53 GMT-0400 (Eastern Daylight Time)
+Apr 02 23:16:54 nyancat .gnome-shell-wr[158233]: [tilingshell] [extension] building a tiling manager for each monitor
+Apr 02 23:16:54 nyancat .gnome-shell-wr[158233]: [tilingshell] [TilingManager 0] Work area for monitor 0: 0 0 2560x1080
+Apr 02 23:16:54 nyancat gdm[2353]: Gdm: Child process -157620 was already dead.
+Apr 02 23:16:54 nyancat .gnome-shell-wr[158233]: [tilingshell] [TilingManager 0] new work area for monitor 0: 0 35 2560x961
+Apr 02 23:17:04 nyancat (sd-pam)[157598]: pam_unix(systemd-user:session): session closed for user gdm-greeter
+Apr 02 23:17:16 nyancat systemd[1282]: Started Application launched by gnome-shell.
+Apr 02 23:17:18 nyancat .gnome-shell-wr[158233]: Error connecting to the screencast service
+Apr 02 23:17:22 nyancat gnome-shell[158233]: Attempting to call back into JSAPI during the sweeping phase of GC. This is most likely caused by not destroying a Clutter actor or Gtk+ widget with ::destroy signals connected, but can also be caused by using the destroy(), dispose(), or remove() vfuncs. Because it would crash the application, it has been blocked and the JS callback not invoked.
+Apr 02 23:17:26 nyancat systemd[1282]: Started Application launched by gnome-shell.
+Apr 02 23:17:28 nyancat systemd[1282]: Started Application launched by gnome-shell.
+Apr 02 23:17:29 nyancat systemd[1282]: Started Application launched by gnome-shell.
