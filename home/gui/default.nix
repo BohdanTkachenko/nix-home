@@ -20,6 +20,7 @@
           brave
           discord
           teamspeak6-client
+          ticktick
           gnome-calculator
           gimp
           gnome-extension-manager
