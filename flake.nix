@@ -128,7 +128,6 @@
             ./nixos/hardware/touchpad.nix
             ./nixos/hardware/hidpi.nix
             ./nixos/hardware/ssd.nix
-            ./nixos/claude-code.nix
             ./nixos/hydration-common.nix
             ./nixos/disk-luks-btrfs.nix
             ./nixos/installer-iso.nix

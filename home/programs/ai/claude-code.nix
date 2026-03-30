@@ -30,8 +30,38 @@ let
     subPackages = [ "cmd/github-mcp-server" ];
   };
 
+  ticktick-mcp-server = pkgs.buildNpmPackage {
+    pname = "ticktick-mcp-server";
+    version = "1.0.0-unstable";
+    src = pkgs.fetchFromGitHub {
+      owner = "liadgez";
+      repo = "ticktick-mcp-server";
+      rev = "bb4e76f78542c6a64c929e2624952889d859e78e";
+      hash = "sha256-26VReX/Qw0lAsq08kah+9IAZr77bhw+g5t4TCosCgM4=";
+    };
+    npmDepsHash = "sha256-+T6k5JhaqQI0Fqu8I7ftYfG1+4QFeqBzfuPSs3PIop8=";
+    dontBuild = true;
+    meta.mainProgram = "ticktick-mcp-server";
+    postInstall = ''
+      mkdir -p $out/bin
+      cat > $out/bin/ticktick-mcp-server <<'SCRIPT'
+      #!/usr/bin/env node
+      import("$out/lib/node_modules/ticktick-mcp-docker/src/index.js");
+      SCRIPT
+      chmod +x $out/bin/ticktick-mcp-server
+    '';
+  };
+
   managedSettings = {
     "$schema" = "https://json.schemastore.org/claude-code-settings.json";
+
+    enableAllProjectMcpServers = true;
+    allowManagedHooksOnly = false;
+    allowManagedMcpServersOnly = false;
+    allowManagedPermissionRulesOnly = false;
+    sandbox.filesystem.allowManagedReadPathsOnly = false;
+    sandbox.network.allowManagedDomainsOnly = false;
+
     effortLevel = "high";
     enabledPlugins = {
       "gopls-lsp@claude-plugins-official" = true;
