@@ -4,6 +4,17 @@
 {
   security.polkit.enable = true;
 
+  # YubiKey U2F authentication (touch to sudo, with password fallback)
+  security.pam.u2f = {
+    enable = true;
+    control = "sufficient";
+    settings.cue = true;
+  };
+
+  programs.yubikey-touch-detector = {
+    enable = true;
+  };
+
   security.sudo = {
     wheelNeedsPassword = true;
     extraConfig = ''
