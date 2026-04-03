@@ -6,6 +6,7 @@
     ./cli
     ./gui
     ./services/winapps.nix
+    ./services/yubikey-touch-notifier.nix
   ];
 
   config = lib.mkMerge [

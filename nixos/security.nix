@@ -13,7 +13,12 @@
 
   programs.yubikey-touch-detector = {
     enable = true;
+    libnotify = false;
   };
+
+  systemd.user.services.yubikey-touch-detector.serviceConfig.Environment = [
+    "YUBIKEY_TOUCH_DETECTOR_LIBNOTIFY=false"
+  ];
 
   security.sudo = {
     wheelNeedsPassword = true;
