@@ -8,6 +8,10 @@
       url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     };
 
+    nixpkgs-master = {
+      url = "github:NixOS/nixpkgs";
+    };
+
     browser-previews = {
       url = "github:nix-community/browser-previews";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -63,6 +67,7 @@
       home-manager,
       nixpkgs,
       nixpkgs-unstable,
+      nixpkgs-master,
       browser-previews,
       nix-vscode-extensions,
       sops-nix,
@@ -73,6 +78,10 @@
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
       pkgs-unstable = import nixpkgs-unstable {
+        inherit system;
+        config.allowUnfree = true;
+      };
+      pkgs-master = import nixpkgs-master {
         inherit system;
         config.allowUnfree = true;
       };
@@ -87,6 +96,7 @@
               inputs
               system
               pkgs-unstable
+              pkgs-master
               nix-vscode-extensions
               ;
           };
@@ -103,6 +113,7 @@
                     inputs
                     system
                     pkgs-unstable
+                    pkgs-master
                     nix-vscode-extensions
                     ;
                 };
@@ -154,12 +165,14 @@
         my.hardware.touchpad.enable = true;
         my.disk.diskDevice = "/dev/disk/by-id/nvme-Samsung_SSD_980_PRO_2TB_S6B0NG0R703558Y";
 
-        home-manager.sharedModules = [{
-          my.hardware.lenovo.thinkpad = {
-            enable = true;
-            model = "z16-gen1";
-          };
-        }];
+        home-manager.sharedModules = [
+          {
+            my.hardware.lenovo.thinkpad = {
+              enable = true;
+              model = "z16-gen1";
+            };
+          }
+        ];
       };
 
       personalPc = mkNixos {
@@ -175,12 +188,15 @@
         my.ollama.enable = true;
         my.comfyui.enable = true;
 
-        home-manager.sharedModules = [{
-          my.hardware.pc.enable = true;
-        }];
+        home-manager.sharedModules = [
+          {
+            my.hardware.pc.enable = true;
+          }
+        ];
       };
 
-      mkNixosIso = targetConfig:
+      mkNixosIso =
+        targetConfig:
         let
           lib = nixpkgs.lib;
           flakeOutPaths =
@@ -209,7 +225,8 @@
             targetConfig.pkgs.stdenv.drvPath
             targetConfig.pkgs.perlPackages.ConfigIniFiles
             targetConfig.pkgs.perlPackages.FileSlurp
-          ] ++ flakeOutPaths;
+          ]
+          ++ flakeOutPaths;
           image.fileName = lib.mkForce "nixos-dan.iso";
         };
     in
@@ -225,7 +242,7 @@
         { config, lib, ... }:
         {
           _module.args = {
-            inherit pkgs-unstable nix-vscode-extensions;
+            inherit pkgs-unstable pkgs-master nix-vscode-extensions;
           };
 
           imports = [
@@ -291,6 +308,7 @@
                   inputs
                   system
                   pkgs-unstable
+                  pkgs-master
                   nix-vscode-extensions
                   ;
               };

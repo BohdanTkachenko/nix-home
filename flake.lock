@@ -312,6 +312,21 @@
         "type": "github"
       }
     },
+    "nixpkgs-master": {
+      "locked": {
+        "lastModified": 1775346187,
+        "narHash": "sha256-eWhsoF0C2bdq/7qtnn6DOrl2QLcZAhBlCM/NarDEgBw=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "5d4cbbce0661077cb493639dace83a266b0b47af",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-unstable": {
       "locked": {
         "lastModified": 1775126147,
@@ -360,6 +375,7 @@
         "lanzaboote": "lanzaboote",
         "nix-vscode-extensions": "nix-vscode-extensions",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "sops-nix": "sops-nix",
         "winapps": "winapps",

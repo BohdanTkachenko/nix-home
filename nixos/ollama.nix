@@ -2,7 +2,7 @@
 {
   config,
   lib,
-  pkgs,
+  pkgs-master,
   ...
 }:
 let
@@ -25,6 +25,7 @@ in
   config = lib.mkIf cfg.enable {
     services.ollama = {
       enable = true;
+      package = pkgs-master.ollama-rocm;
       host = "0.0.0.0";
       port = 11434;
       acceleration = "rocm";
@@ -37,7 +38,8 @@ in
         "qwen2.5-coder:7b"
         "nomic-embed-text"
         "qwen2.5:32b-instruct-q4_K_M"
-      ] ++ cfg.extraLoadModels;
+      ]
+      ++ cfg.extraLoadModels;
     };
 
     # LAN-only access to Ollama's HTTP API. The nixos-fw chain is rebuilt
