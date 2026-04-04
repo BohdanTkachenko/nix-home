@@ -127,24 +127,76 @@ let
                     continue
             return results
 
-        def show_notification(self):
-            pending = self.find_pending_sudos()
-            self.sudo_pids = [pid for pid, _, _ in pending]
+        def find_ssh_sessions(self):
+            """Find ssh client processes with parseable destinations."""
+            sessions = set()
+            for pid_dir in glob.glob("/proc/[0-9]*"):
+                try:
+                    pid = os.path.basename(pid_dir)
+                    with open(f"/proc/{pid}/comm") as f:
+                        if f.read().strip() != "ssh":
+                            continue
+                    # Parse destination from cmdline
+                    with open(f"/proc/{pid}/cmdline", "rb") as f:
+                        args = [a for a in f.read().decode("utf-8", errors="replace").split("\0") if a]
+                    if len(args) < 2:
+                        continue
+                    dest = None
+                    skip_next = False
+                    # SSH options that take an argument
+                    opts_with_arg = set("bcDEeFIiJLlmOopQRSWw")
+                    for arg in args[1:]:
+                        if skip_next:
+                            skip_next = False
+                            continue
+                        if arg.startswith("-") and len(arg) >= 2 and arg[1] in opts_with_arg:
+                            if len(arg) == 2:
+                                skip_next = True
+                            continue
+                        if not arg.startswith("-"):
+                            dest = arg
+                            break
+                    if dest:
+                        # Strip user@ prefix if present
+                        if "@" in dest:
+                            dest = dest.split("@", 1)[1]
+                        sessions.add(dest)
+                except (OSError, IOError, PermissionError):
+                    continue
+            return sorted(sessions)
 
-            if len(pending) == 0:
-                body = "Authentication requested"
-            elif len(pending) == 1:
-                _, cmd, origin = pending[0]
-                body = f"{origin} → sudo {cmd}"
-            else:
-                body = "\n".join(f"• {origin} → sudo {cmd}" for _, cmd, origin in pending)
-
+        def show_notification(self, source="U2F"):
             notification = Gio.Notification.new("Touch your YubiKey")
+            self.sudo_pids = []
+
+            if source == "GPG":
+                body = "GPG signing"
+            else:
+                # U2F or SSH — look for both local sudos and SSH sessions
+                lines = []
+                pending = self.find_pending_sudos()
+                self.sudo_pids = [pid for pid, _, _ in pending]
+                for _, cmd, origin in pending:
+                    lines.append(f"{origin} → sudo {cmd}")
+
+                ssh_sessions = self.find_ssh_sessions()
+                for host in ssh_sessions:
+                    lines.append(f"SSH: {host}")
+
+                if not lines:
+                    body = "Authentication requested"
+                elif len(lines) == 1:
+                    body = lines[0]
+                else:
+                    body = "\n".join(f"• {line}" for line in lines)
+
+                if self.sudo_pids:
+                    notification.set_default_action("app.cancel")
+                    notification.add_button("Cancel", "app.cancel")
+
             notification.set_body(body)
             notification.set_icon(Gio.ThemedIcon.new("dialog-password"))
             notification.set_priority(Gio.NotificationPriority.URGENT)
-            notification.set_default_action("app.cancel")
-            notification.add_button("Cancel", "app.cancel")
             GLib.idle_add(self.send_notification, "yubikey-touch", notification)
             self.active_notification = True
 
@@ -168,7 +220,8 @@ let
                             break
                         msg = data.decode("utf-8", errors="replace").strip()
                         if msg.endswith("_1"):
-                            self.show_notification()
+                            source = msg.split("_")[0]
+                            self.show_notification(source)
                         elif msg.endswith("_0"):
                             self.dismiss_notification()
                 except (ConnectionRefusedError, FileNotFoundError):
