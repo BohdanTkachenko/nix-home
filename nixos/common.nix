@@ -9,6 +9,7 @@
 {
   imports = [
     ../overlays
+    ./comfyui.nix
     ./desktop.nix
     ./minecraft.nix
     ./ollama.nix
