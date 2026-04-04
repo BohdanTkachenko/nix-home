@@ -54,6 +54,7 @@ let
     in
     ''
       ---
+      name: commit
       allowed-tools:
       ${toolsList}
       description: ${description}
@@ -68,7 +69,7 @@ in
   ];
 
   config = {
-    programs.claude-code.commands.commit = claudeFrontmatter + claudeMarkdown;
+    home.file.".claude/skills/commit/SKILL.md".text = claudeFrontmatter + claudeMarkdown;
 
     programs.gemini-cli.commands.commit = {
       inherit description;
