@@ -48,6 +48,8 @@
 
     winapps.enable = lib.mkEnableOption "WinApps Windows VM";
 
+    screenshotPathClipboard.enable = lib.mkEnableOption "Replace GNOME screenshot image-on-clipboard with its file path (so Claude Code in a terminal can read it on paste)";
+
     secrets.sops.enable = lib.mkOption {
       type = lib.types.bool;
       default = false;

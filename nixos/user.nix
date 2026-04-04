@@ -24,6 +24,7 @@ let
     {
       my.environment = "personal";
       my.claude-code.enable = true;
+      my.screenshotPathClipboard.enable = true;
     }
   ];
   primaryUser = builtins.head (builtins.attrNames config.my.users);

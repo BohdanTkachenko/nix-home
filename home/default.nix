@@ -5,6 +5,7 @@
     ./hardware
     ./cli
     ./gui
+    ./services/screenshot-path-clipboard.nix
     ./services/winapps.nix
     ./services/yubikey-touch-notifier.nix
   ];
