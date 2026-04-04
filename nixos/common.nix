@@ -11,6 +11,7 @@
     ../overlays
     ./desktop.nix
     ./minecraft.nix
+    ./ollama.nix
     ./podman.nix
     ./security.nix
     ./steam.nix

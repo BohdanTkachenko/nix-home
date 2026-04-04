@@ -172,6 +172,8 @@
         my.hardware.cpu.intel.enable = true;
         my.disk.diskDevice = "/dev/disk/by-id/nvme-WD_BLACK_SN850X_4000GB_23402H800030";
 
+        my.ollama.enable = true;
+
         home-manager.sharedModules = [{
           my.hardware.pc.enable = true;
         }];
