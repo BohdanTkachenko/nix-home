@@ -8,6 +8,8 @@ let
   cfg = config.my;
 in
 {
+  home.packages = [ pkgs.jjui ];
+
   programs.jujutsu = {
     enable = true;
     package = pkgs.jujutsu;

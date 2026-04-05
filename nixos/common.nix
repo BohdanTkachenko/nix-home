@@ -116,6 +116,7 @@
     fish
     git
     htop
+    nvtopPackages.amd
     jj
     sbctl
     tmux
