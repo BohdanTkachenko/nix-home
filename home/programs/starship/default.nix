@@ -106,7 +106,8 @@ in
       username.format = "[$user]($style)";
 
       directory = {
-        truncation_length = 0;
+        truncation_length = 2;
+        truncate_to_repo = false;
         substitutions = {
           "/google/src/cloud/${config.home.username}/" = " ";
           "/google3/" = " //";
