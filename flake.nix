@@ -56,12 +56,18 @@
       url = "github:winapps-org/winapps";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    direnv-instant = {
+      url = "github:Mic92/direnv-instant";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
     inputs@{
       self,
       chromium-pwa-wmclass-sync,
+      direnv-instant,
       disko,
       lanzaboote,
       home-manager,
@@ -119,6 +125,7 @@
                 };
                 sharedModules = [
                   chromium-pwa-wmclass-sync.homeManagerModules.default
+                  direnv-instant.homeModules.direnv-instant
                   sops-nix.homeManagerModules.sops
                   xremap.homeManagerModules.default
                 ];
@@ -171,6 +178,7 @@
               enable = true;
               model = "z16-gen1";
             };
+            my.direnv-instant.enable = true;
           }
         ];
       };
@@ -191,6 +199,7 @@
         home-manager.sharedModules = [
           {
             my.hardware.pc.enable = true;
+            my.direnv-instant.enable = true;
           }
         ];
       };
@@ -247,6 +256,7 @@
 
           imports = [
             chromium-pwa-wmclass-sync.homeManagerModules.default
+            direnv-instant.homeModules.direnv-instant
             sops-nix.homeManagerModules.sops
             xremap.homeManagerModules.default
             ./overlays
