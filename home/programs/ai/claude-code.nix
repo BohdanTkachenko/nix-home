@@ -60,10 +60,13 @@ let
     def dir [cwd: string] {
       if $cwd == "" { return "" }
       let display = $cwd | str replace $env.HOME "~"
-      let parts = $display | split row "/"
-      if ($parts | length) <= 2 { $display } else {
-        $parts | last 2 | str join "/"
+      let label = if ($display | split row "/" | length) <= 2 { $display } else {
+        $display | split row "/" | last 2 | str join "/"
       }
+      let esc = char -u "1b"
+      let dir_link = $"($esc)]8;;file://($cwd)($esc)\\($label)($esc)]8;;($esc)\\"
+      let code_link = $"($esc)]8;;vscode://file($cwd)?windowId=_blank($esc)\\($esc)]8;;($esc)\\"
+      $"($dir_link) ($code_link)"
     }
 
     def jj-info [cwd: string] {
@@ -81,6 +84,7 @@ let
               if(hidden, ""),
               if(immutable, ""),
             ) ++ raw_escape_sequence("\x1b[0m"),
+            if(description, "(" ++ description.first_line().substr(0, 40) ++ ")"),
           )
         '
       } | complete
@@ -89,7 +93,19 @@ let
     }
 
     def fmt-pct [label: string, val: any] {
-      if $val == null { "" } else { $" ($label):($val | math round)%" }
+      if $val == null { return "" }
+      let pct = $val | math round
+      let esc = char -u "1b"
+      let color = if $pct <= 50 { "32" } else if $pct <= 75 { "33" } else { "31" }
+      $" ($esc)[($color)m($label):($pct)%($esc)[0m"
+    }
+
+    def ctx-colored [val: any] {
+      if $val == null { return "" }
+      let pct = $val | math round
+      let esc = char -u "1b"
+      let color = if $pct >= 50 { "32" } else if $pct >= 25 { "33" } else { "31" }
+      $" ($esc)[($color)mctx:($pct)%($esc)[0m"
     }
 
     def main [] {
@@ -97,7 +113,7 @@ let
       let cwd = $input | get -o cwd | default ""
       let model = $input | get -o model.display_name | default ""
       let model_part = if $model != "" { $"  ($model)" } else { "" }
-      let ctx = fmt-pct "ctx" ($input | get -o context_window.remaining_percentage)
+      let ctx = ctx-colored ($input | get -o context_window.remaining_percentage)
       let five = fmt-pct "5h" ($input | get -o rate_limits.five_hour.used_percentage)
       let week = fmt-pct "7d" ($input | get -o rate_limits.seven_day.used_percentage)
 

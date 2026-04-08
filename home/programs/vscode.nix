@@ -39,6 +39,7 @@ let
     "http.systemCertificatesNode" = true; # Needed for Gemini Code Assist
     "nushellLanguageServer.nushellExecutablePath" = "${pkgs-unstable.nushell}/bin/nu";
     "visualjj.showSourceControlColocated" = true;
+    "security.promptForLocalFileProtocolHandling" = false;
     "rust-analyzer.runnables.command" = "${pkgs-unstable.cargo}/bin/cargo";
   };
 in
