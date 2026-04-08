@@ -52,6 +52,59 @@ let
     '';
   };
 
+  jj = "${pkgs.jujutsu}/bin/jj";
+
+  statusline-script = pkgs.writeScriptBin "claude-statusline" ''
+    #!/usr/bin/env -S ${pkgs.nushell}/bin/nu --stdin
+
+    def dir [cwd: string] {
+      if $cwd == "" { return "" }
+      let display = $cwd | str replace $env.HOME "~"
+      let parts = $display | split row "/"
+      if ($parts | length) <= 2 { $display } else {
+        $parts | last 2 | str join "/"
+      }
+    }
+
+    def jj-info [cwd: string] {
+      if $cwd == "" { return "" }
+      let root = do { ${jj} --ignore-working-copy --no-pager root --quiet -R $cwd } | complete
+      if $root.exit_code != 0 { return "" }
+      let out = do {
+        ${jj} log --ignore-working-copy --no-pager -r @ --no-graph --color always --limit 1 -R $cwd --template '
+          separate(" ",
+            change_id.shortest(4),
+            bookmarks,
+            concat(
+              if(conflict, "󰞇"),
+              if(divergent, "󰃻"),
+              if(hidden, ""),
+              if(immutable, ""),
+            ) ++ raw_escape_sequence("\x1b[0m"),
+          )
+        '
+      } | complete
+      let trimmed = $out.stdout | str trim
+      if $out.exit_code == 0 and $trimmed != "" { $" ($trimmed)" } else { "" }
+    }
+
+    def fmt-pct [label: string, val: any] {
+      if $val == null { "" } else { $" ($label):($val | math round)%" }
+    }
+
+    def main [] {
+      let input = $in | from json
+      let cwd = $input | get -o cwd | default ""
+      let model = $input | get -o model.display_name | default ""
+      let model_part = if $model != "" { $"  ($model)" } else { "" }
+      let ctx = fmt-pct "ctx" ($input | get -o context_window.remaining_percentage)
+      let five = fmt-pct "5h" ($input | get -o rate_limits.five_hour.used_percentage)
+      let week = fmt-pct "7d" ($input | get -o rate_limits.seven_day.used_percentage)
+
+      print -n ([(dir $cwd) (jj-info $cwd) $model_part $ctx $five $week] | str join "" | str trim)
+    }
+  '';
+
   managedSettings = {
     "$schema" = "https://json.schemastore.org/claude-code-settings.json";
 
@@ -100,6 +153,7 @@ let
         "Bash(md5sum:*)"
         "Bash(nslookup:*)"
         "Bash(printenv:*)"
+        "Bash(readlink:*)"
         "Bash(rg:*)"
         "Bash(sed:*)"
         "Bash(sha256sum:*)"
@@ -180,6 +234,8 @@ let
         "Bash(jj log:*)"
         "Bash(jj show:*)"
         "Bash(jj status:*)"
+        "Bash(jj workspace list:*)"
+        "Bash(jj workspace root:*)"
 
         # systemctl (read-only)
         "Bash(systemctl cat:*)"
@@ -245,6 +301,22 @@ in
     };
 
     home.file.".claude/managed-settings.json".text = builtins.toJSON managedSettings;
+
+    home.activation.claudeStatusLine = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      ${pkgs.nushell}/bin/nu -c '
+        let settings = $"($env.HOME)/.claude/settings.json"
+        let expected = "${statusline-script}/bin/claude-statusline"
+        let data = if ($settings | path exists) {
+          open $settings
+        } else {
+          mkdir ($settings | path dirname)
+          {}
+        }
+        if ($data | get -o statusLine.command) != $expected {
+          $data | upsert statusLine {type: command, command: $expected} | save -f $settings
+        }
+      '
+    '';
 
     sops.secrets.claude-ha-mcp-url = lib.mkIf config.my.secrets.sops.enable {
       sopsFile = ./secrets/claude-code.yaml;
