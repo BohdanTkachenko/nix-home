@@ -8,6 +8,7 @@
     nushell
     procs
     ripgrep
+    sox
     trash-cli
     ugrep
     xh
