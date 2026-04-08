@@ -179,6 +179,7 @@
               model = "z16-gen1";
             };
             my.direnv-instant.enable = true;
+            services.easyeffects.enable = true;
           }
         ];
       };
@@ -200,6 +201,7 @@
           {
             my.hardware.pc.enable = true;
             my.direnv-instant.enable = true;
+            services.easyeffects.enable = false;
           }
         ];
       };

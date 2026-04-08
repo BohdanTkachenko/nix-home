@@ -17,9 +17,7 @@ let
   };
 in
 {
-  config = lib.mkIf (config.my.environment == "personal") {
-    services.easyeffects.enable = true;
-
+  config = lib.mkIf config.services.easyeffects.enable {
     services.easyeffects.extraPresets =
       let
         allFilenames = lib.attrNames (builtins.readDir presetsPath);

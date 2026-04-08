@@ -125,6 +125,21 @@
     androidenv.androidPkgs.platform-tools
   ];
 
+  # Restart WirePlumber when USB audio devices are plugged in,
+  # otherwise they may not get sink/source nodes created
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="sound", ATTR{id}!="", TAG+="systemd", ENV{SYSTEMD_USER_WANTS}="restart-wireplumber.service"
+  '';
+
+  systemd.user.services.restart-wireplumber = {
+    description = "Restart WirePlumber after USB audio hotplug";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStartPre = "${pkgs.coreutils}/bin/sleep 2";
+      ExecStart = "${pkgs.systemd}/bin/systemctl --user restart wireplumber";
+    };
+  };
+
   services.fwupd.enable = true;
 
   # Android Debug Bridge
