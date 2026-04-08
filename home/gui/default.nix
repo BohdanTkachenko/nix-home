@@ -19,6 +19,7 @@
           baobab
           brave
           discord
+          fractal
           teamspeak6-client
           ticktick
           gnome-calculator
