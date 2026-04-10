@@ -13,6 +13,7 @@
     ./desktop.nix
     ./minecraft.nix
     ./ollama.nix
+    ./performance.nix
     ./podman.nix
     ./security.nix
     ./steam.nix

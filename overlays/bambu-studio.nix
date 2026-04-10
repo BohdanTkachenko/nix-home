@@ -3,12 +3,11 @@
     (self: super:
       let
         pname = "bambu-studio";
-        version = "02.05.00.67";
-        ubuntu_version = "24.04_PR-9540";
+        version = "02.00.03.54";
 
         src = super.fetchurl {
-          url = "https://github.com/bambulab/BambuStudio/releases/download/v${version}/Bambu_Studio_ubuntu-${ubuntu_version}.AppImage";
-          sha256 = "sha256-3ubZblrsOJzz1p34QiiwiagKaB7nI8xDeadFWHBkWfg=";
+          url = "https://github.com/bambulab/BambuStudio/releases/download/V${version}/Bambu_Studio_linux_fedora-v${version}.AppImage";
+          sha256 = "sha256-Fy/ZYQ4kosXvoLADtI3+wmlueytvLUgJiaUwtR2u9pE=";
         };
 
         extracted = super.appimageTools.extract { inherit pname version src; };
