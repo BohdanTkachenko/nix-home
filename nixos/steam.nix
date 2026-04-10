@@ -1,6 +1,16 @@
 { pkgs, ... }:
 {
 
+  programs.gamemode.enable = true;
+
+  # Auto-nice processes by name (cargo, rustc, cc, etc. get low priority;
+  # games get high priority) — works regardless of how the process is launched
+  services.ananicy = {
+    enable = true;
+    package = pkgs.ananicy-cpp;
+    rulesProvider = pkgs.ananicy-rules-cachyos;
+  };
+
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
