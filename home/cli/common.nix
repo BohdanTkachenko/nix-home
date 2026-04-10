@@ -25,6 +25,7 @@
     ../programs/audio-fix.nix
     ../programs/git.nix
     ../programs/jujutsu.nix
+    ../programs/jj-workspace.nix
     ../programs/micro.nix
     ../programs/ssh
     ../programs/starship
