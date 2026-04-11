@@ -7,13 +7,68 @@
 }:
 
 let
+  # MCP servers are declared with `${VAR}` placeholders for secrets. Claude
+  # Code natively expands these from the process env at load time (see the
+  # `Sy6` function in cli.js), the same way VS Code's mcp.json supports
+  # `${env:FOO}` and Gemini CLI supports `$VAR`/`${VAR}`. The config file
+  # itself contains no secrets and is rendered to ~/.claude/mcp.json via
+  # anti-drift; the wrapper below exports the env vars from sops-rendered
+  # secret files just before exec, then passes --mcp-config to claude.
+  mcpFile = (pkgs.formats.json { }).generate "claude-mcp.json" {
+    mcpServers = {
+      home-assistant = {
+        type = "http";
+        url = "\${CLAUDE_HA_MCP_URL}";
+        oauth = {
+          clientId = "http://localhost:48721";
+          callbackPort = 48721;
+        };
+      };
+      github = {
+        command = "${github-mcp-server}/bin/github-mcp-server";
+        args = [ "stdio" ];
+        env = {
+          GITHUB_PERSONAL_ACCESS_TOKEN = "\${GITHUB_PERSONAL_ACCESS_TOKEN}";
+        };
+      };
+      plane = {
+        command = "${pkgs.uv}/bin/uvx";
+        args = [
+          "--with"
+          "pydocket>=0.19"
+          "plane-mcp-server"
+          "stdio"
+        ];
+        env = {
+          PLANE_API_KEY = "\${PLANE_API_KEY}";
+          PLANE_WORKSPACE_SLUG = "ws";
+          PLANE_BASE_URL = "\${PLANE_BASE_URL}";
+        };
+      };
+    };
+  };
+
+  # Helper: produce a `--run` snippet that exports VAR from a sops-rendered
+  # secret file. Uses `2>/dev/null || true` so a missing secret doesn't abort
+  # the wrapper script (makeWrapper sets `bash -e`).
+  exportSecret =
+    file: var:
+    ''export ${var}="$(cat "$HOME/.config/sops-nix/secrets/${file}" 2>/dev/null || true)"'';
+
   claude-code-wrapped = pkgs.symlinkJoin {
     name = "claude-code-wrapped";
     paths = [ pkgs-unstable.claude-code ];
     nativeBuildInputs = [ pkgs.makeWrapper ];
+    # The --mcp-config path is single-quoted so nothing expands at build time;
+    # bash expands $HOME at exec time when the wrapper script runs.
     postBuild = ''
       wrapProgram $out/bin/claude \
-        --set SUDO_ASKPASS "${pkgs.seahorse}/libexec/seahorse/ssh-askpass"
+        --set SUDO_ASKPASS "${pkgs.seahorse}/libexec/seahorse/ssh-askpass" \
+        --add-flags '--mcp-config "''$HOME/.claude/mcp.json"' \
+        --run '${exportSecret "github-pat" "GITHUB_PERSONAL_ACCESS_TOKEN"}' \
+        --run '${exportSecret "plane-api-key" "PLANE_API_KEY"}' \
+        --run '${exportSecret "plane-base-url" "PLANE_BASE_URL"}' \
+        --run '${exportSecret "claude-ha-mcp-url" "CLAUDE_HA_MCP_URL"}'
     '';
   };
 
@@ -121,20 +176,24 @@ let
     }
   '';
 
-  managedSettings = {
+  # User-facing Claude Code settings, rendered to ~/.claude/settings.json via
+  # anti-drift (matching the pattern used for vscode/gemini-cli). The
+  # statusLine command is a PATH-relative name (not an absolute store path)
+  # so it stays drift-stable across rebuilds — claude-statusline lands on
+  # PATH via home.packages below.
+  userSettings = {
     "$schema" = "https://json.schemastore.org/claude-code-settings.json";
-
-    enableAllProjectMcpServers = true;
-    allowManagedHooksOnly = false;
-    allowManagedMcpServersOnly = false;
-    allowManagedPermissionRulesOnly = false;
-    sandbox.filesystem.allowManagedReadPathsOnly = false;
-    sandbox.network.allowManagedDomainsOnly = false;
 
     effortLevel = "high";
     enabledPlugins = {
       "gopls-lsp@claude-plugins-official" = true;
+      "rust-analyzer-lsp@claude-plugins-official" = true;
     };
+    statusLine = {
+      type = "command";
+      command = "claude-statusline";
+    };
+    voiceEnabled = true;
     permissions = {
       allow = [
         "Search"
@@ -283,25 +342,7 @@ let
     };
   };
 
-  managedMcp = {
-    mcpServers = {
-      home-assistant = {
-        type = "http";
-        url = config.sops.placeholder.claude-ha-mcp-url;
-        oauth = {
-          clientId = "http://localhost:48721";
-          callbackPort = 48721;
-        };
-      };
-      github = {
-        command = "${github-mcp-server}/bin/github-mcp-server";
-        args = [ "stdio" ];
-        env = {
-          GITHUB_PERSONAL_ACCESS_TOKEN = config.sops.placeholder.github-pat;
-        };
-      };
-    };
-  };
+  settingsFile = (pkgs.formats.json { }).generate "claude-code-settings.json" userSettings;
 in
 {
   imports = [
@@ -316,23 +357,20 @@ in
       package = claude-code-wrapped;
     };
 
-    home.file.".claude/managed-settings.json".text = builtins.toJSON managedSettings;
+    # Make `claude-statusline` resolvable on PATH so settings.json can
+    # reference it by bare name (drift-stable across rebuilds).
+    home.packages = [ statusline-script ];
 
-    home.activation.claudeStatusLine = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      ${pkgs.nushell}/bin/nu -c '
-        let settings = $"($env.HOME)/.claude/settings.json"
-        let expected = "${statusline-script}/bin/claude-statusline"
-        let data = if ($settings | path exists) {
-          open $settings
-        } else {
-          mkdir ($settings | path dirname)
-          {}
-        }
-        if ($data | get -o statusLine.command) != $expected {
-          $data | upsert statusLine {type: command, command: $expected} | save -f $settings
-        }
-      '
-    '';
+    anti-drift.files = {
+      ".claude/settings.json" = {
+        source = settingsFile;
+        json = true;
+      };
+      ".claude/mcp.json" = {
+        source = mcpFile;
+        json = true;
+      };
+    };
 
     sops.secrets.claude-ha-mcp-url = lib.mkIf config.my.secrets.sops.enable {
       sopsFile = ./secrets/claude-code.yaml;
@@ -344,9 +382,14 @@ in
       key = "github_pat";
     };
 
-    sops.templates."claude-managed-mcp" = lib.mkIf config.my.secrets.sops.enable {
-      content = builtins.toJSON managedMcp;
-      path = "${config.home.homeDirectory}/.claude/managed-mcp.json";
+    sops.secrets.plane-api-key = lib.mkIf config.my.secrets.sops.enable {
+      sopsFile = ./secrets/claude-code.yaml;
+      key = "plane_api_key";
+    };
+
+    sops.secrets.plane-base-url = lib.mkIf config.my.secrets.sops.enable {
+      sopsFile = ./secrets/claude-code.yaml;
+      key = "plane_base_url";
     };
 
     xdg.desktopEntries.ssh-askpass = {

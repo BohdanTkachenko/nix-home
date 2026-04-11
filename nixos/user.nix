@@ -23,7 +23,6 @@ let
     ../home
     {
       my.environment = "personal";
-      my.claude-code.enable = true;
       my.screenshotPathClipboard.enable = true;
     }
   ];
@@ -78,6 +77,7 @@ in
         homeDirectory = lib.mkForce "/home/${name}";
         stateVersion = lib.mkForce "25.11";
       };
+      my.claude-code.enable = name == primaryUser;
       my.secrets.sops.enable = lib.mkForce (name == primaryUser);
       sops.age.sshKeyPaths = lib.mkForce [ "/home/${primaryUser}/.ssh/id_ed25519" ];
       targets.genericLinux.enable = lib.mkForce false;

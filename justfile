@@ -1,6 +1,6 @@
 set dotenv-load
 
-sops_files := "nixos/secrets/wireguard.yaml home/programs/ssh/private-ssh-config home/services/secrets/winapps.yaml"
+sops_files := "nixos/secrets/wireguard.yaml home/programs/ssh/private-ssh-config home/services/secrets/winapps.yaml home/programs/ai/secrets/claude-code.yaml"
 
 root_dir := justfile_directory()
 flake_path := 'path:' + root_dir

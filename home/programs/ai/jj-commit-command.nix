@@ -70,7 +70,9 @@ in
   ];
 
   config = {
-    home.file.".claude/skills/commit/SKILL.md".text = claudeFrontmatter + claudeMarkdown;
+    home.file.".claude/skills/commit/SKILL.md" = lib.mkIf config.my.claude-code.enable {
+      text = claudeFrontmatter + claudeMarkdown;
+    };
 
     programs.gemini-cli.commands.commit = {
       inherit description;
