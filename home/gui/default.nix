@@ -39,7 +39,6 @@
           xournalpp
 
           # 3D printing
-          bambu-studio
           freecad
           openscad-unstable
           orca-slicer
