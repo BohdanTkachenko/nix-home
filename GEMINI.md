@@ -1,5 +1,15 @@
 # Nix Configuration
 
+## Hardware
+
+| Component | Details |
+|-----------|---------|
+| **CPU** | Intel Core i9-10900K @ 3.70 GHz (10c/20t, boost to 5.3 GHz) |
+| **GPU** | AMD Radeon RX 7900 XT/XTX (Navi 31), 24 GB VRAM |
+| **RAM** | 64 GB DDR4 @ 2666 MT/s |
+| **Motherboard** | Gigabyte Z490 AORUS PRO AX |
+| **Storage** | WD_BLACK SN850X 4TB NVMe (main) + Samsung 970 EVO Plus 2TB NVMe |
+
 ## Repo
 
 This repo is managed with Jujutsu (jj) and jj should always be used here.
