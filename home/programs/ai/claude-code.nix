@@ -32,17 +32,11 @@ let
         };
       };
       plane = {
-        command = "${pkgs.uv}/bin/uvx";
-        args = [
-          "--with"
-          "pydocket>=0.19"
-          "plane-mcp-server"
-          "stdio"
-        ];
-        env = {
-          PLANE_API_KEY = "\${PLANE_API_KEY}";
-          PLANE_WORKSPACE_SLUG = "ws";
-          PLANE_BASE_URL = "\${PLANE_BASE_URL}";
+        type = "http";
+        url = "https://mcp.plane.so/http/api-key/mcp";
+        headers = {
+          Authorization = "Bearer \${PLANE_API_KEY}";
+          X-Workspace-slug = "ideasmash";
         };
       };
     };
@@ -69,7 +63,6 @@ let
         --add-flags '--mcp-config "''$HOME/.claude/mcp.json"' \
         --run '${exportSecret "github-pat" "GITHUB_PERSONAL_ACCESS_TOKEN"}' \
         --run '${exportSecret "plane-api-key" "PLANE_API_KEY"}' \
-        --run '${exportSecret "plane-base-url" "PLANE_BASE_URL"}' \
         --run '${exportSecret "claude-ha-mcp-url" "CLAUDE_HA_MCP_URL"}'
     '';
   };
@@ -436,11 +429,6 @@ in
     sops.secrets.plane-api-key = lib.mkIf config.my.secrets.sops.enable {
       sopsFile = ./secrets/claude-code.yaml;
       key = "plane_api_key";
-    };
-
-    sops.secrets.plane-base-url = lib.mkIf config.my.secrets.sops.enable {
-      sopsFile = ./secrets/claude-code.yaml;
-      key = "plane_base_url";
     };
 
     xdg.desktopEntries.ssh-askpass = {
