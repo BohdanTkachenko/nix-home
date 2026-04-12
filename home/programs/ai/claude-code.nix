@@ -381,6 +381,8 @@ let
         "Bash(nix-instantiate --eval:*)"
         "Bash(nix-store --query:*)"
         "Bash(nix-store -q:*)"
+        "Bash(nix-prefetch-url:*)"
+        "Bash(nix-hash:*)"
         "Bash(nixos-option:*)"
       ];
     };
