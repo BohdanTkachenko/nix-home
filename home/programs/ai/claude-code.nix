@@ -64,6 +64,8 @@ let
     postBuild = ''
       wrapProgram $out/bin/claude \
         --set SUDO_ASKPASS "${pkgs.seahorse}/libexec/seahorse/ssh-askpass" \
+        --set UV_PYTHON_PREFERENCE only-system \
+        --prefix PATH : "${pkgs.python3}/bin" \
         --add-flags '--mcp-config "''$HOME/.claude/mcp.json"' \
         --run '${exportSecret "github-pat" "GITHUB_PERSONAL_ACCESS_TOKEN"}' \
         --run '${exportSecret "plane-api-key" "PLANE_API_KEY"}' \
@@ -323,6 +325,55 @@ let
         "Bash(systemctl show:*)"
         "Bash(systemctl status:*)"
         "Bash(journalctl:*)"
+
+        # Plane (read-only)
+        "mcp__plane__get_me"
+        "mcp__plane__get_project_features"
+        "mcp__plane__get_project_members"
+        "mcp__plane__get_project_worklog_summary"
+        "mcp__plane__get_workspace_features"
+        "mcp__plane__get_workspace_members"
+        "mcp__plane__list_archived_cycles"
+        "mcp__plane__list_archived_modules"
+        "mcp__plane__list_cycle_work_items"
+        "mcp__plane__list_cycles"
+        "mcp__plane__list_epics"
+        "mcp__plane__list_initiatives"
+        "mcp__plane__list_intake_work_items"
+        "mcp__plane__list_labels"
+        "mcp__plane__list_milestone_work_items"
+        "mcp__plane__list_milestones"
+        "mcp__plane__list_module_work_items"
+        "mcp__plane__list_modules"
+        "mcp__plane__list_projects"
+        "mcp__plane__list_states"
+        "mcp__plane__list_work_item_activities"
+        "mcp__plane__list_work_item_comments"
+        "mcp__plane__list_work_item_links"
+        "mcp__plane__list_work_item_properties"
+        "mcp__plane__list_work_item_relations"
+        "mcp__plane__list_work_item_types"
+        "mcp__plane__list_work_items"
+        "mcp__plane__list_work_logs"
+        "mcp__plane__retrieve_cycle"
+        "mcp__plane__retrieve_epic"
+        "mcp__plane__retrieve_initiative"
+        "mcp__plane__retrieve_intake_work_item"
+        "mcp__plane__retrieve_label"
+        "mcp__plane__retrieve_milestone"
+        "mcp__plane__retrieve_module"
+        "mcp__plane__retrieve_project"
+        "mcp__plane__retrieve_project_page"
+        "mcp__plane__retrieve_state"
+        "mcp__plane__retrieve_work_item"
+        "mcp__plane__retrieve_work_item_activity"
+        "mcp__plane__retrieve_work_item_by_identifier"
+        "mcp__plane__retrieve_work_item_comment"
+        "mcp__plane__retrieve_work_item_link"
+        "mcp__plane__retrieve_work_item_property"
+        "mcp__plane__retrieve_work_item_type"
+        "mcp__plane__retrieve_workspace_page"
+        "mcp__plane__search_work_items"
 
         # Nix (read-only)
         "Bash(nix build:*)"
