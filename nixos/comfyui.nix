@@ -67,13 +67,9 @@ in
       ];
     };
 
-    # LAN-only access to ComfyUI. Concatenated onto any other extraCommands
-    # strings (e.g. from ollama.nix) via NixOS module merging.
-    networking.firewall.extraCommands = ''
-      iptables -A nixos-fw -p tcp -s ${lanCidr} --dport ${toString comfyPort} -j nixos-fw-accept
-    '';
-    networking.firewall.extraStopCommands = ''
-      iptables -D nixos-fw -p tcp -s ${lanCidr} --dport ${toString comfyPort} -j nixos-fw-accept 2>/dev/null || true
+    # LAN-only access to ComfyUI
+    networking.firewall.extraInputRules = ''
+      ip saddr ${lanCidr} tcp dport ${toString comfyPort} accept
     '';
   };
 }

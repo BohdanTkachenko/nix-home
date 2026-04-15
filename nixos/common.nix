@@ -18,6 +18,7 @@
     ./security.nix
     ./steam.nix
     ./user.nix
+    ./waydroid.nix
   ];
 
   # NixOS release version
@@ -86,6 +87,7 @@
 
   networking = {
     networkmanager.enable = true;
+    nftables.enable = true;
     firewall.enable = true;
     useDHCP = lib.mkDefault true;
   };

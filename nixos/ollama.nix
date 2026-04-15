@@ -42,14 +42,9 @@ in
       ++ cfg.extraLoadModels;
     };
 
-    # LAN-only access to Ollama's HTTP API. The nixos-fw chain is rebuilt
-    # from scratch on every firewall reload, so appending here is safe and
-    # lands before the terminal -j nixos-fw-log-refuse.
-    networking.firewall.extraCommands = ''
-      iptables -A nixos-fw -p tcp -s ${lanCidr} --dport 11434 -j nixos-fw-accept
-    '';
-    networking.firewall.extraStopCommands = ''
-      iptables -D nixos-fw -p tcp -s ${lanCidr} --dport 11434 -j nixos-fw-accept 2>/dev/null || true
+    # LAN-only access to Ollama's HTTP API
+    networking.firewall.extraInputRules = ''
+      ip saddr ${lanCidr} tcp dport 11434 accept
     '';
   };
 }
