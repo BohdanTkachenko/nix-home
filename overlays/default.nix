@@ -8,7 +8,6 @@
     ../home/modules/options.nix
     ./bambu-studio.nix
     ./google-chrome.nix
-    ./jujutsu.nix
     ./riff-overlay.nix
     ./web-apps.nix
   ];
