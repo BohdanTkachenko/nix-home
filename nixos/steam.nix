@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-unstable, ... }:
 {
 
   programs.steam = {
@@ -19,6 +19,7 @@
 
   environment.systemPackages = with pkgs; [
     edmarketconnector
+    pkgs-unstable.lutris
     mangohud
   ];
 
