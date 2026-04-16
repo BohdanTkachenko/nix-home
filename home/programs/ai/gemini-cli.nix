@@ -227,9 +227,10 @@ let
         general.enableAutoUpdate = false;
         privacy.usageStatisticsEnabled = false;
         advanced.autoConfigureMemory = true;
+        experimental = { };
         general.plan.enabled = true;
         general.enableNotifications = true;
-        agents.overrides = {};
+        agents.overrides = { };
         general.defaultApprovalMode = "default";
         tools.disableLLMCorrection = false;
       }
