@@ -110,88 +110,11 @@ let
     ("--disable-features=" + (builtins.concatStringsSep "," disableFeatures))
     ("--enable-features=" + (builtins.concatStringsSep "," enableFeatures))
   ];
-  flagsStr = builtins.concatStringsSep " " allFlags;
-
-  autostartFixerScript = pkgs.stdenv.mkDerivation {
-    pname = "fix-chrome-autostart-script";
-    version = "0.1.0";
-    nativeBuildInputs = [ pkgs.python3 ];
-    src = ./fix-chrome-autostart.py;
-    dontUnpack = true;
-    installPhase = ''
-      mkdir -p $out/bin
-      cp $src $out/bin/fix-chrome-autostart
-      chmod +x $out/bin/fix-chrome-autostart
-      patchShebangs $out/bin/fix-chrome-autostart
-    '';
-  };
-
-  mkWrapper =
-    pkg: systemBinaryName:
-    if !config.my.google.enable then
-      pkg.override { commandLineArgs = allFlags; }
-    else
-      pkgs.stdenv.mkDerivation {
-        pname = lib.getName pkg;
-        version = pkg.version;
-        dontUnpack = true;
-
-        installPhase = ''
-          runHook preInstall
-
-          # Create Wrapper Script
-          mkdir -p $out/bin
-          cat > $out/bin/${systemBinaryName} << 'WRAPPER'
-          #!${pkgs.stdenv.shell}
-          exec "/usr/bin/${systemBinaryName}" ${flagsStr} "$@"
-          WRAPPER
-          chmod +x $out/bin/${systemBinaryName}
-
-          # Create Desktop Item
-          mkdir -p $out/share/applications
-          for sourceDesktop in $(find "${pkg}/share/applications" -iname "*.desktop"); do
-            outDesktopFile="$out/share/applications/$(basename "$sourceDesktop")"
-            cp "$sourceDesktop" "$outDesktopFile"
-            sed -i "s|\(${lib.getExe pkg}\)\(.*\)|/usr/bin/${systemBinaryName} ${flagsStr}\2|g" "$outDesktopFile"
-          done
-
-          runHook postInstall
-        '';
-      };
-
-  mkAutostartFixer = systemBinaryName: searchFor: {
-    services."fix-${systemBinaryName}-autostart" = {
-      Unit.Description = "Fix ${systemBinaryName} autostart files";
-      Service = {
-        Type = "oneshot";
-        ExecStart = "${autostartFixerScript}/bin/fix-chrome-autostart ${lib.escapeShellArg searchFor} ${lib.escapeShellArg systemBinaryName}";
-        IOSchedulingClass = "idle";
-        IOSchedulingPriority = 7;
-      };
-    };
-    paths."fix-${systemBinaryName}-autostart" = {
-      Unit.Description = "Watch for changes in ${systemBinaryName} autostart files";
-      Path.PathChanged = "%h/.config/autostart/";
-      Install.WantedBy = [ "paths.target" ];
-    };
-  };
-
-  chromeConfigs = [
-    {
-      pkg = pkgs.google-chrome;
-      bin = "google-chrome-stable";
-      search = "/opt/google/chrome/google-chrome";
-    }
-  ];
-
-  autostartFixers = lib.mkMerge (map (c: mkAutostartFixer c.bin c.search) chromeConfigs);
 in
 {
   nixpkgs.overlays = [
     (final: prev: {
-      google-chrome = mkWrapper prev.google-chrome "google-chrome-stable";
+      google-chrome = config.my.google-chrome.mkWrapper prev.google-chrome allFlags;
     })
   ];
-
-  systemd.user = lib.mkIf config.my.google.enable autostartFixers;
 }

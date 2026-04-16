@@ -26,6 +26,12 @@
 
     google.enable = lib.mkEnableOption "Google corp environment";
 
+    google-chrome.mkWrapper = lib.mkOption {
+      type = lib.types.anything;
+      default = pkg: flags: pkg.override { commandLineArgs = flags; };
+      description = "Function to wrap the Google Chrome package with custom flags.";
+    };
+
     identity.email = lib.mkOption {
       type = lib.types.str;
       default = "bohdan@tkachenko.dev";
