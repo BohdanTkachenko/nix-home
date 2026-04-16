@@ -9,6 +9,5 @@
     ./bambu-studio.nix
     ./google-chrome.nix
     ./riff-overlay.nix
-    ./web-apps.nix
   ];
 }
