@@ -12,6 +12,11 @@
       url = "github:NixOS/nixpkgs";
     };
 
+    # claude-code 2.1.112 — NixOS/nixpkgs#510736
+    nixpkgs-claude-code = {
+      url = "github:NixOS/nixpkgs/99b135bc06e4e6df5f182c5bb9d4edc639b64846";
+    };
+
     browser-previews = {
       url = "github:nix-community/browser-previews";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -74,6 +79,7 @@
       nixpkgs,
       nixpkgs-unstable,
       nixpkgs-master,
+      nixpkgs-claude-code,
       browser-previews,
       nix-vscode-extensions,
       sops-nix,
@@ -83,6 +89,10 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+      pkgs-claude-code = import nixpkgs-claude-code {
+        inherit system;
+        config.allowUnfree = true;
+      };
       pkgs-unstable = import nixpkgs-unstable {
         inherit system;
         config.allowUnfree = true;
@@ -103,6 +113,7 @@
               system
               pkgs-unstable
               pkgs-master
+              pkgs-claude-code
               nix-vscode-extensions
               ;
           };
@@ -120,6 +131,7 @@
                     system
                     pkgs-unstable
                     pkgs-master
+                    pkgs-claude-code
                     nix-vscode-extensions
                     ;
                 };
@@ -253,7 +265,7 @@
         { config, lib, ... }:
         {
           _module.args = {
-            inherit pkgs-unstable pkgs-master nix-vscode-extensions;
+            inherit pkgs-unstable pkgs-master pkgs-claude-code nix-vscode-extensions;
           };
 
           imports = [
@@ -321,6 +333,7 @@
                   system
                   pkgs-unstable
                   pkgs-master
+                  pkgs-claude-code
                   nix-vscode-extensions
                   ;
               };

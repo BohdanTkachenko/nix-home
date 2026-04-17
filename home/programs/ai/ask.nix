@@ -3,6 +3,7 @@
   lib,
   pkgs,
   pkgs-unstable,
+  pkgs-claude-code,
   ...
 }:
 
@@ -59,7 +60,7 @@ let
 
   ask-claude = mkAskAiScript {
     name = "ask-claude";
-    exe = "${pkgs-unstable.claude-code}/bin/claude";
+    exe = "${pkgs-claude-code.claude-code}/bin/claude";
     args = [
       "--no-session-persistence"
       "--model"

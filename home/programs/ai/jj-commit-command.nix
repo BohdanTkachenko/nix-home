@@ -42,6 +42,7 @@ let
   claudeFrontmatter =
     let
       allowedTools = [
+        "Bash(jj new:*)"
         "Bash(jj status:*)"
         "Bash(jj log:*)"
         "Bash(jj diff:*)"

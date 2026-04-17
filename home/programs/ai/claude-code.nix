@@ -2,7 +2,7 @@
   config,
   lib,
   pkgs,
-  pkgs-unstable,
+  pkgs-claude-code,
   ...
 }:
 
@@ -51,7 +51,7 @@ let
 
   claude-code-wrapped = pkgs.symlinkJoin {
     name = "claude-code-wrapped";
-    paths = [ pkgs-unstable.claude-code ];
+    paths = [ pkgs-claude-code.claude-code ];
     nativeBuildInputs = [ pkgs.makeWrapper ];
     # The --mcp-config path is single-quoted so nothing expands at build time;
     # bash expands $HOME at exec time when the wrapper script runs.
