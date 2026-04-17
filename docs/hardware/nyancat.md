@@ -2,63 +2,47 @@
 
 ## Case
 
-- **Model:** NZXT H510 Elite (White)
-- **Form Factor:** ATX Mid Tower
-- **Dimensions:** 210 x 460 x 428 mm
-- **Front Panel:** Tempered glass
-- **Front I/O:** USB 3.1 Gen 1 Type-A, USB 3.1 Gen 2 Type-C, headset jack
-- **Includes:** NZXT Smart Device 2 (RGB + fan control)
+- **Model:** Fractal Design North XL (Chalk White)
+- **Form Factor:** ATX / mATX Mid Tower
+- **Front Panel:** Oak wood slats
+- **Side Panel:** Clear tempered glass
 
 ## CPU
 
-- **Model:** Intel Core i9-10900K
-- **Architecture:** Comet Lake (14nm)
-- **Cores/Threads:** 10 / 20
-- **Base Clock:** 3.70 GHz
-- **Boost Clock:** Up to 5.30 GHz (Thermal Velocity Boost)
-- **Cache:** 20 MB Intel Smart Cache
-- **TDP:** 125W
-- **Socket:** LGA 1200
-- **iGPU:** Intel UHD Graphics 630
+- **Model:** AMD Ryzen 9 9950X3D
+- **Architecture:** Zen 5 (Granite Ridge)
+- **Cores/Threads:** 16 / 32
+- **Base Clock:** 4.3 GHz
+- **TDP:** 170W
+- **Socket:** AM5
+- **iGPU:** AMD Radeon Graphics (integrated RDNA 2)
 
 ## CPU Cooler
 
-- **Model:** NZXT Kraken X63
-- **Type:** 280mm AIO liquid cooler
-- **Radiator:** 143 x 315 x 30 mm (aluminum)
-- **Pump:** Asetek 7th gen, 800-2800 RPM
-- **Display:** 2.72" IPS LCD, 640x640, 60 Hz
-- **Fans:** 2x Aer P140 (included with AIO)
+- **Model:** Noctua NH-D15 G2 chromax.Black
+- **Type:** Dual-tower air cooler
+- **Socket Support:** AM5, AM4, LGA1851, LGA1700, LGA1200
+- **Thermal Paste:** Thermalright TFX (14.3 W/mK)
 
 ## Case Fans
 
-- 2x NZXT Aer RGB 2 120mm
+- 3x Noctua NF-A14 PWM chromax.Black.swap (140mm, 4-pin)
 
 ## Motherboard
 
-- **Model:** Gigabyte Z490 AORUS PRO AX
-- **Chipset:** Intel Z490
-- **Socket:** LGA 1200
+- **Model:** ASUS ProArt X870E-CREATOR WIFI
+- **Chipset:** AMD X870E
+- **Socket:** AM5
 - **Form Factor:** ATX
-- **VRM:** Direct 12+1 phase digital
-- **Memory Slots:** 4x DDR4 (up to 128 GB, up to 5000 MHz OC)
-- **M.2 Slots:** 2x PCIe 3.0 x4
-- **SATA:** 6x SATA 6Gb/s
-- **PCIe:** 3x PCIe 3.0 x16, 2x PCIe 3.0 x1
-- **LAN:** Intel 2.5 GbE
-- **WiFi:** Intel WiFi 6 + Bluetooth 5
-- **Audio:** Realtek ALC1220-VB (7.1-channel)
-- **Rear USB:** 2x USB 3.2 Gen 2 Type-A, 1x USB 3.2 Gen 2 Type-C, 3x USB 3.2 Gen 1 Type-A, 4x USB 2.0
+- **PCIe:** PCIe 5.0 x16
 
 ## Memory
 
-- **Model:** G.SKILL Trident Z Royal RGB
-- **Capacity:** 64 GB (4x16 GB)
-- **Type:** DDR4
-- **Speed:** 3600 MHz (PC4-28800)
-- **Timings:** CL18-22-22-42
-- **Voltage:** 1.35V
-- **Features:** XMP 2.0, 8 RGB zones per module, 10-layer PCB
+- **Model:** G.SKILL Trident Z5 Neo RGB
+- **Capacity:** 64 GB (2x32 GB)
+- **Type:** DDR5
+- **Speed:** 6000 MT/s (PC5-48000)
+- **Features:** AMD EXPO (Neo = AMD-optimized)
 
 ## Storage
 

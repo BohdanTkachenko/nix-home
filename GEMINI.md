@@ -4,10 +4,11 @@
 
 | Component | Details |
 |-----------|---------|
-| **CPU** | Intel Core i9-10900K @ 3.70 GHz (10c/20t, boost to 5.3 GHz) |
-| **GPU** | AMD Radeon RX 7900 XT/XTX (Navi 31), 24 GB VRAM |
-| **RAM** | 64 GB DDR4 @ 2666 MT/s |
-| **Motherboard** | Gigabyte Z490 AORUS PRO AX |
+| **CPU** | AMD Ryzen 9 9950X3D @ 4.3 GHz (16c/32t, Zen 5, AM5, 170W) |
+| **GPU** | AMD Radeon RX 7900 XTX (Navi 31), 24 GB VRAM |
+| **RAM** | 64 GB DDR5 @ 6000 MT/s (G.SKILL Trident Z5 Neo RGB, 2x32GB) |
+| **Motherboard** | ASUS ProArt X870E-CREATOR WIFI (AMD X870E, AM5) |
+| **Case** | Fractal Design North XL (Chalk White, Oak front) |
 | **Storage** | WD_BLACK SN850X 4TB NVMe (main) + Samsung 970 EVO Plus 2TB NVMe |
 
 ## Repo

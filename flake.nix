@@ -150,7 +150,6 @@
             ./nixos/wireguard.nix
             ./nixos/hardware/common.nix
             ./nixos/hardware/cpu-amd.nix
-            ./nixos/hardware/cpu-intel.nix
             ./nixos/hardware/gpu-amd.nix
             ./nixos/hardware/bluetooth.nix
             ./nixos/hardware/keychron.nix
@@ -203,7 +202,7 @@
 
         networking.hostName = "nyancat";
 
-        my.hardware.cpu.intel.enable = true;
+        my.hardware.cpu.amd.enable = true;
         my.disk.diskDevice = "/dev/disk/by-id/nvme-WD_BLACK_SN850X_4000GB_23402H800030";
 
         my.ollama.enable = true;
