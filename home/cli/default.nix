@@ -8,6 +8,7 @@
   config = lib.mkIf (config.my.environment == "personal") {
     home.packages = with pkgs-unstable; [
       act
+      codex
       gh
       glab
       opencode

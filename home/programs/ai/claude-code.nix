@@ -60,7 +60,7 @@ let
         --set SUDO_ASKPASS "${pkgs.seahorse}/libexec/seahorse/ssh-askpass" \
         --set UV_PYTHON_PREFERENCE only-system \
         --prefix PATH : "${pkgs.python3}/bin" \
-        --add-flags '--mcp-config "''$HOME/.claude/mcp.json"' \
+        --add-flags '--mcp-config="''$HOME/.claude/mcp.json"' \
         --run '${exportSecret "github-pat" "GITHUB_PERSONAL_ACCESS_TOKEN"}' \
         --run '${exportSecret "plane-api-key" "PLANE_API_KEY"}' \
         --run '${exportSecret "claude-ha-mcp-url" "CLAUDE_HA_MCP_URL"}'
@@ -189,7 +189,9 @@ let
       command = "claude-statusline";
     };
     voiceEnabled = true;
+    skipAutoPermissionPrompt = true;
     permissions = {
+      defaultMode = "auto";
       allow = [
         "Search"
         "WebSearch"

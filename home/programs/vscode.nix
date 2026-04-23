@@ -78,8 +78,10 @@ in
       google.geminicodeassist
       jnoortheen.nix-ide
       mkhl.direnv
+      ms-dotnettools.csharp
       ms-python.black-formatter
       ms-python.python
+      ms-vscode.cpptools-extension-pack
       ms-vscode.makefile-tools
       puppet.puppet-vscode
       tauri-apps.tauri-vscode

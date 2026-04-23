@@ -46,6 +46,7 @@
         ++ (with pkgs-unstable; [
           antigravity
           mcpelauncher-ui-qt
+          warp-terminal
         ]);
 
       dconf.settings = {
