@@ -18,6 +18,8 @@
         remap = {
           "C-left" = "C-pageup";
           "C-right" = "C-pagedown";
+          "C-up" = "C-pageup";
+          "C-down" = "C-pagedown";
         };
       }
       {
