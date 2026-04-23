@@ -12,12 +12,7 @@ in
   options.my.hardware.gpu.amd.enable = lib.mkEnableOption "AMD GPU support";
 
   config = lib.mkIf cfg.enable {
-    boot = {
-      initrd.kernelModules = [ "amdgpu" ];
-      kernelParams = [
-        "amdgpu.ppfeaturemask=0xffffffff"
-      ];
-    };
+    boot.initrd.kernelModules = [ "amdgpu" ];
 
     hardware.graphics = {
       enable32Bit = true;

@@ -18,6 +18,10 @@ let
     "adbusers"
     "kvm"
     "dialout"
+    # GameMode's polkit rule grants its CPU governor / GPU clock / split-lock
+    # mitigation helpers without password only to members of this group.
+    # Without it, every game silently fails to apply gamemode tunables.
+    "gamemode"
   ];
   sharedHomeImports = [
     ../home

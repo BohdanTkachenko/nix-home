@@ -9,6 +9,32 @@
   # boosting the foreground game.
   programs.gamemode.enable = true;
 
+  # power-profiles-daemon: runtime power/perf knob exposed via GNOME's power
+  # menu and `powerprofilesctl`. On amd-pstate-epp it maps performance/balanced/
+  # power-saver to EPP performance/balance_performance/power. Doesn't conflict
+  # with scx_lavd — different layer (EPP vs scheduler).
+  services.power-profiles-daemon.enable = true;
+
+  # CCD pinning wrappers for the 9950X3D's asymmetric topology:
+  #   CCD0 (cores 0-7, threads 0-7,16-23): V-cache, 96MB L3 — best for games
+  #   CCD1 (cores 8-15, threads 8-15,24-31): standard, 32MB L3, slightly higher
+  #     boost — best for parallel compute (cargo/rustc/cc/nix-build)
+  #
+  # ananicy-cpp deprioritizes builds but the scheduler still lets them steal
+  # time on idle V-cache cores. taskset enforces hard physical isolation.
+  #
+  # Usage:
+  #   Steam launch options: gamemoderun game-run %command%
+  #   Background builds:    build-run cargo build  /  build-run nix build
+  environment.systemPackages = [
+    (pkgs.writeShellScriptBin "game-run" ''
+      exec ${pkgs.util-linux}/bin/taskset -c 0-7,16-23 "$@"
+    '')
+    (pkgs.writeShellScriptBin "build-run" ''
+      exec ${pkgs.util-linux}/bin/taskset -c 8-15,24-31 "$@"
+    '')
+  ];
+
   # ananicy-cpp: auto-nice daemon that assigns CPU/IO priorities by process name.
   # Deprioritizes known heavy background processes (cargo, rustc, cc, ld, etc.)
   # and boosts interactive/game processes — system-wide, regardless of how they're
@@ -77,7 +103,14 @@
   # NVMe drives have their own sophisticated internal queue management with
   # multiple hardware queues. Adding a software I/O scheduler on top just
   # adds latency. "none" passes requests straight through to the device.
+  #
+  # AMD 3D V-Cache Performance Optimizer (X3D CPUs only): set mode to "cache"
+  # so the kernel prefers the V-cache CCD (CCD0, 96MB L3) for latency-sensitive
+  # single-thread loads instead of the higher-boost CCD1. Games benefit far
+  # more from L3 hits than from the extra ~200 MHz on CCD1. The driver only
+  # binds on X3D parts (AMDI0101), so this rule is a no-op on other hardware.
   services.udev.extraRules = ''
     ACTION=="add|change", KERNEL=="nvme[0-9]*", ATTR{queue/scheduler}="none"
+    ACTION=="add|change", SUBSYSTEM=="platform", DRIVER=="amd_x3d_vcache", ATTR{amd_x3d_mode}="cache"
   '';
 }

@@ -183,6 +183,11 @@
         my.hardware.touchpad.enable = true;
         my.disk.diskDevice = "/dev/disk/by-id/nvme-Samsung_SSD_980_PRO_2TB_S6B0NG0R703558Y";
 
+        # Unlock all PowerPlay features (incl. overdrive). Helpful on the iGPU
+        # for manual tuning via CoreCtrl; on Navi 31 desktop cards it's been
+        # tied to random GPU hangs, so it stays laptop-only.
+        boot.kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
+
         home-manager.sharedModules = [
           {
             my.hardware.lenovo.thinkpad = {
@@ -204,6 +209,19 @@
 
         my.hardware.cpu.amd.enable = true;
         my.disk.diskDevice = "/dev/disk/by-id/nvme-WD_BLACK_SN850X_4000GB_23402H800030";
+
+        boot.kernelParams = [
+          # Disable Multi-Plane Overlay on the RX 7900 XTX (Navi 31). MPO is a
+          # known source of black-screen freezes and stutters on multi-monitor
+          # / mixed-refresh setups under amdgpu's DC display engine.
+          "amdgpu.dcdebugmask=0x10"
+
+          # Force PCIe link to L0 (no L1/L1.x substates). Navi 31 has a
+          # long-standing bug where the GPU fails to wake from L1, surfacing
+          # as `amdgpu: device lost from bus!` followed by SMU bus errors —
+          # the card vanishes from PCIe and only a hard reset recovers it.
+          "pcie_aspm.policy=performance"
+        ];
 
         my.ollama.enable = true;
         my.comfyui.enable = true;
