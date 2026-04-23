@@ -8,6 +8,101 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    extraConfig.pipewire."99-headphones-mic-rnnoise" = {
+      "context.modules" = [
+        {
+          name = "libpipewire-module-filter-chain";
+          args = {
+            "node.description" = "Headphones Mic (RNNoise)";
+            "media.name" = "Headphones Mic (RNNoise)";
+            "filter.graph" = {
+              nodes = [
+                {
+                  type = "builtin";
+                  name = "preamp";
+                  label = "mixer";
+                  control = { "Gain 1" = 2.0; };
+                }
+                {
+                  type = "ladspa";
+                  name = "rnnoise";
+                  plugin = "${pkgs.rnnoise-plugin}/lib/ladspa/librnnoise_ladspa.so";
+                  label = "noise_suppressor_mono";
+                }
+              ];
+              links = [
+                {
+                  output = "preamp:Out";
+                  input = "rnnoise:Input";
+                }
+              ];
+              inputs = [ "preamp:In 1" ];
+              outputs = [ "rnnoise:Output" ];
+            };
+            "audio.channels" = 1;
+            "audio.position" = [ "MONO" ];
+            "capture.props" = {
+              "node.name" = "headphones_mic_raw";
+              "node.target" = "alsa_input.usb-GeneralPlus_USB_Audio_Device-00.mono-fallback";
+              "node.passive" = true;
+            };
+            "playback.props" = {
+              "node.name" = "headphones_mic_clean";
+              "media.class" = "Audio/Source";
+            };
+          };
+        }
+      ];
+    };
+    wireplumber.extraConfig."50-disable-cards" = {
+      "monitor.alsa.rules" = [
+        {
+          matches = [
+            { "device.name" = "alsa_card.pci-0000_03_00.1"; } # Navi 31 HDMI/DP Audio
+            { "device.name" = "alsa_card.pci-0000_7c_00.1"; } # Radeon iGPU HD Audio
+            { "device.name" = "alsa_card.pci-0000_7c_00.6"; } # Ryzen HD Audio Controller
+          ];
+          actions.update-props."device.disabled" = true;
+        }
+        {
+          matches = [
+            { "device.name" = "alsa_card.usb-GeneralPlus_USB_Audio_Device-00"; }
+          ];
+          actions.update-props = {
+            "device.description" = "Headphones";
+            "device.nick" = "Headphones";
+            "api.acp.hidden-profiles" = ''[ "output:iec958-stereo", "output:iec958-stereo+input:mono-fallback", "pro-audio" ]'';
+            "api.acp.hidden-ports" = ''[ "iec958-stereo-output" ]'';
+          };
+        }
+        {
+          matches = [
+            { "device.name" = "alsa_card.usb-C-Media_Electronics_Inc._USB_Audio_Device-00"; }
+          ];
+          actions.update-props = {
+            "device.description" = "Soundbar";
+            "device.nick" = "Soundbar";
+            "api.acp.hidden-profiles" = ''[ "output:iec958-stereo", "output:iec958-stereo+input:mono-fallback", "output:analog-stereo+input:mono-fallback", "input:mono-fallback", "pro-audio" ]'';
+            "api.acp.hidden-ports" = ''[ "iec958-stereo-output", "analog-input-mic" ]'';
+          };
+        }
+        {
+          matches = [
+            { "device.name" = "alsa_card.usb-046d_Logitech_BRIO_827A05B4-03"; }
+          ];
+          actions.update-props = {
+            "api.acp.hidden-profiles" = ''[ "input:iec958-stereo", "pro-audio" ]'';
+            "api.acp.hidden-ports" = ''[ "iec958-stereo-input" ]'';
+          };
+        }
+        {
+          matches = [
+            { "node.name" = "~alsa_(input|output)\\..*\\.pro-(input|output)-.*"; }
+          ];
+          actions.update-props."node.disabled" = true;
+        }
+      ];
+    };
   };
 
   services.xserver.enable = true;
@@ -36,5 +131,6 @@
   environment.systemPackages = with pkgs; [
     google-chrome
     protontricks
+    rnnoise-plugin
   ];
 }
