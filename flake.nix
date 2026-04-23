@@ -153,6 +153,7 @@
             ./nixos/hardware/gpu-amd.nix
             ./nixos/hardware/bluetooth.nix
             ./nixos/hardware/keychron.nix
+            ./nixos/hardware/epos.nix
             ./nixos/hardware/moonlander.nix
             ./nixos/hardware/touchpad.nix
             ./nixos/hardware/hidpi.nix
@@ -165,6 +166,7 @@
               my.hardware.gpu.amd.enable = true;
               my.hardware.bluetooth.enable = true;
               my.hardware.keychron.enable = true;
+              my.hardware.epos.enable = true;
               my.hardware.hidpi.enable = true;
               my.hardware.ssd.enable = true;
               my.wireguard.enable = true;
