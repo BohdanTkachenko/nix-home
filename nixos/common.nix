@@ -130,6 +130,11 @@
 
   services.fwupd.enable = true;
 
+  # Expose binaries at /bin/* and /usr/bin/* so scripts with non-Nix shebangs
+  # (e.g. `#!/bin/bash`) work without patching. Backed by FUSE, resolves to
+  # whatever is on PATH.
+  services.envfs.enable = true;
+
   # Android Debug Bridge
   programs.adb.enable = true;
 
