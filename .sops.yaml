@@ -1,9 +1,26 @@
 keys:
+  # User keys (derived from each machine's ~/.ssh/id_ed25519 via ssh-to-age).
   - &dan-nyancat age1r9qtc606j72exkafnq0f7spp0xdwty5n0ks389mxtlryqr0qsyjqe2hakl
   - &dan-idea age1n969uhtu3mum8falnm746knzlnx8zexwjfttvq490f8u3yr79d3qeh6s2f
   - &dan-work-pc age1cvfvcpt63vhngg3q2yr0kr73fa4at2naqcjzvrf9evwjm4nmr3gqpgfs4g
   - &dan-work-laptop age1dvtqendfzuwnhrqgvuc4zu28efs8z2ymqm6zavu0p37r704qaf9snnltp0
+  # Host keys (derived from /etc/ssh/ssh_host_ed25519_key.pub). Required for
+  # system-level secrets that must decrypt during early boot activation,
+  # before /home (and thus the user key) is mounted.
+  - &host-nyancat age1vd29n0vj7p92xnrqhjj988jkp7sfus7tgwrstpt3qgs4wju8gyaqrf7sp4
 creation_rules:
+  # System secrets under nixos/secrets/ — also encrypted to host keys so the
+  # boot-time setupSecrets activation script can decrypt before /home mounts.
+  - path_regex: nixos/secrets/.*\.yaml$
+    key_groups:
+      - age:
+          - *dan-nyancat
+          - *dan-idea
+          - *dan-work-pc
+          - *dan-work-laptop
+          - *host-nyancat
+  # User-level secrets (home-manager) — only need user keys; decryption runs
+  # post-login, after /home is available.
   - key_groups:
       - age:
           - *dan-nyancat
