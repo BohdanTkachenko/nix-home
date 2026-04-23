@@ -225,6 +225,15 @@
 
         my.ollama.enable = true;
         my.comfyui.enable = true;
+        my.comfyui.authSops = true;
+        my.comfyui.dataDir = "/home/dan/ComfyUI";
+        my.comfyui.uid = 1000; # dan
+        my.comfyui.gid = 100; # users
+        my.comfyui.extraPipPackages = [
+          "onnxruntime"
+          "onnxruntime-gpu"
+          "insightface"
+        ];
 
         home-manager.sharedModules = [
           {
