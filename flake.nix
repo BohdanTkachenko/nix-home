@@ -96,6 +96,15 @@
       pkgs-unstable = import nixpkgs-unstable {
         inherit system;
         config.allowUnfree = true;
+        overlays = [
+          # openldap's syncreplication test (test017) is flaky upstream and
+          # blocks rebuilds whenever pkgs-unstable rolls past a cache miss.
+          # The test isn't load-bearing for our use of openldap as a
+          # transitive dep — skip it.
+          (_: prev: {
+            openldap = prev.openldap.overrideAttrs (_: { doCheck = false; });
+          })
+        ];
       };
       pkgs-master = import nixpkgs-master {
         inherit system;
