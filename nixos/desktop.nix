@@ -8,52 +8,6 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    extraConfig.pipewire."99-headphones-mic-rnnoise" = {
-      "context.modules" = [
-        {
-          name = "libpipewire-module-filter-chain";
-          args = {
-            "node.description" = "Headphones Mic (RNNoise)";
-            "media.name" = "Headphones Mic (RNNoise)";
-            "filter.graph" = {
-              nodes = [
-                {
-                  type = "builtin";
-                  name = "preamp";
-                  label = "mixer";
-                  control = { "Gain 1" = 2.0; };
-                }
-                {
-                  type = "ladspa";
-                  name = "rnnoise";
-                  plugin = "${pkgs.rnnoise-plugin}/lib/ladspa/librnnoise_ladspa.so";
-                  label = "noise_suppressor_mono";
-                }
-              ];
-              links = [
-                {
-                  output = "preamp:Out";
-                  input = "rnnoise:Input";
-                }
-              ];
-              inputs = [ "preamp:In 1" ];
-              outputs = [ "rnnoise:Output" ];
-            };
-            "audio.channels" = 1;
-            "audio.position" = [ "MONO" ];
-            "capture.props" = {
-              "node.name" = "headphones_mic_raw";
-              "node.target" = "alsa_input.usb-GeneralPlus_USB_Audio_Device-00.mono-fallback";
-              "node.passive" = true;
-            };
-            "playback.props" = {
-              "node.name" = "headphones_mic_clean";
-              "media.class" = "Audio/Source";
-            };
-          };
-        }
-      ];
-    };
     wireplumber.extraConfig."50-disable-cards" = {
       "monitor.alsa.rules" = [
         {
@@ -131,6 +85,5 @@
   environment.systemPackages = with pkgs; [
     google-chrome
     protontricks
-    rnnoise-plugin
   ];
 }

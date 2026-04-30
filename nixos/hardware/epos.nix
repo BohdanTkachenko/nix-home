@@ -13,7 +13,7 @@ let
     PACTL="${pkgs.pulseaudio}/bin/pactl"
 
     HP_SINK="alsa_output.usb-GeneralPlus_USB_Audio_Device-00.analog-stereo"
-    HP_SOURCE="headphones_mic_clean"
+    HP_SOURCE="alsa_input.usb-GeneralPlus_USB_Audio_Device-00.mono-fallback"
     SB_SINK="alsa_output.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.analog-stereo"
     SB_SOURCE="alsa_input.usb-046d_Logitech_BRIO_827A05B4-03.analog-stereo"
 
