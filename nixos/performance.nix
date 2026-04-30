@@ -49,10 +49,17 @@
   # sched-ext: BPF-based userspace CPU scheduler (requires kernel >= 6.12).
   # scx_lavd uses "Latency and Virtual Deadline" scheduling — optimized for
   # interactive/gaming workloads by prioritizing latency-sensitive tasks.
-  # This is CachyOS's flagship feature and the biggest single improvement
-  # for desktop responsiveness under load.
+  #
+  # Disabled 2026-04-30: on this 9950X3D + heavy multi-app desktop workload
+  # (OW2 + Spotify + Chrome + comfyui + AI tooling), scx_lavd over-pinned
+  # everything to a single V-cache core (primary CPU [7], 3.16% capacity
+  # bound) and caused system-wide micro-stutters — Spotify hangs, OW2 frame
+  # drops. EEVDF + ananicy-cpp + amd_x3d_mode=cache + explicit CCD pinning
+  # via game-run/build-run wrappers gives smoother results without the
+  # scheduler bias. Re-enable to test if scx_lavd improves on a specific
+  # workload, but expect to retune everything else around it.
   services.scx = {
-    enable = true;
+    enable = false;
     scheduler = "scx_lavd";
   };
 

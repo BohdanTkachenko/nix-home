@@ -6,6 +6,7 @@
   ...
 }:
 let
+  pinToCCD1 = import ../../lib/pin-to-ccd1.nix { inherit pkgs; };
   settingsFile = (pkgs.formats.json { }).generate "vscode-settings.json" {
     # Fonts
     "editor.fontFamily" = "'MesloLGL Nerd Font Mono', 'Droid Sans Mono', 'monospace', monospace";
@@ -65,7 +66,9 @@ in
     # the bubblewrap sandbox used by the vscode-fhs package. The sandbox
     # hides the host's /usr, making the home directory inaccessible.
     # As a workaround, we use the non-FHS version of VS Code on this specific machine.
-    if !config.my.vscode.useFHS then pkgs-unstable.vscode else (config.lib.nixGL.wrap pkgs-unstable.vscode.fhs);
+    pinToCCD1 (
+      if !config.my.vscode.useFHS then pkgs-unstable.vscode else (config.lib.nixGL.wrap pkgs-unstable.vscode.fhs)
+    );
   programs.vscode.mutableExtensionsDir = false;
   programs.vscode.profiles.default.extensions =
     with pkgs.nix-vscode-extensions.vscode-marketplace;

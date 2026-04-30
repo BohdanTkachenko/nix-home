@@ -1,4 +1,7 @@
-{ config, lib, pkgs-unstable, ... }:
+{ config, lib, pkgs, pkgs-unstable, ... }:
+let
+  pinToCCD1 = import ../../lib/pin-to-ccd1.nix { inherit pkgs; };
+in
 {
   imports = [
     ./common.nix
@@ -8,10 +11,10 @@
   config = lib.mkIf (config.my.environment == "personal") {
     home.packages = with pkgs-unstable; [
       act
-      codex
+      (pinToCCD1 codex)
       gh
       glab
-      opencode
+      (pinToCCD1 opencode)
     ];
   };
 }

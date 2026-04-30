@@ -6,6 +6,7 @@
   ...
 }:
 let
+  pinToCCD1 = import ../../../lib/pin-to-ccd1.nix { inherit pkgs; };
   deniedTools =
     [ ]
     ++ (lib.optional config.my.google.enable [
@@ -257,7 +258,7 @@ in
   config._geminiPolicyFile = policyFile;
 
   config.programs.gemini-cli.enable = true;
-  config.programs.gemini-cli.package = pkgs-unstable.gemini-cli;
+  config.programs.gemini-cli.package = pinToCCD1 pkgs-unstable.gemini-cli;
 
   config.home.activation = {
     init = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

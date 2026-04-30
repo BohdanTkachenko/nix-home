@@ -7,6 +7,8 @@
 }:
 
 let
+  pinToCCD1 = import ../../../lib/pin-to-ccd1.nix { inherit pkgs; };
+
   # MCP servers are declared with `${VAR}` placeholders for secrets. Claude
   # Code natively expands these from the process env at load time (see the
   # `Sy6` function in cli.js), the same way VS Code's mcp.json supports
@@ -405,7 +407,7 @@ in
   config = lib.mkIf config.my.claude-code.enable {
     programs.claude-code = {
       enable = true;
-      package = claude-code-wrapped;
+      package = pinToCCD1 claude-code-wrapped;
     };
 
     # Make `claude-statusline` resolvable on PATH so settings.json can

@@ -5,6 +5,9 @@
   pkgs-unstable,
   ...
 }:
+let
+  pinToCCD1 = import ../../lib/pin-to-ccd1.nix { inherit pkgs; };
+in
 {
   imports = [
     ./common.nix
@@ -46,7 +49,7 @@
         ++ (with pkgs-unstable; [
           antigravity
           mcpelauncher-ui-qt
-          warp-terminal
+          (pinToCCD1 warp-terminal)
         ]);
 
       dconf.settings = {
