@@ -234,6 +234,14 @@
           "pcie_aspm.policy=performance"
         ];
 
+        # The Marvell/Aquantia 10GbE port (enp14s0) on the X870E-CREATOR is
+        # unused. Its `atlantic` driver deadlocks in `aq_nic_stop` →
+        # `napi_disable_locked` during suspend when there is no carrier,
+        # holding rtnl_mutex forever. Every subsequent netlink caller blocks
+        # in D state, new processes can't initialize networking, and even
+        # `systemd-reboot` can't kill the wedged tasks. See KNOWN_ISSUES.md.
+        boot.blacklistedKernelModules = [ "atlantic" ];
+
         my.ollama.enable = true;
         my.comfyui.enable = true;
         my.comfyui.authSops = true;

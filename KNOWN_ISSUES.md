@@ -1,5 +1,14 @@
 # Known Issues
 
+## `atlantic` driver deadlock on suspend wedges the system
+
+- **Affected hardware:** ASUS ProArt X870E-CREATOR WIFI — Marvell/Aquantia AQC113 10GbE NIC (`enp14s0`, `atlantic` driver). Reproduced on kernel 7.0.1.
+- **Symptom:** After a suspend attempt, new processes hang at startup, networking calls block forever, and `systemctl reboot` cannot complete (services time out, `Still around after SIGKILL`). Only a hard reset recovers.
+- **Trigger:** System enters suspend while the 10GbE port has no carrier. NetworkManager calls `aq_ndev_close` to bring the link down; the driver hangs in `napi_disable_locked` waiting for NAPI to quiesce.
+- **Root cause:** NetworkManager is stuck holding `rtnl_mutex` inside the atlantic suspend path. Every subsequent rtnetlink call (basically any process that initializes networking) blocks in uninterruptible (D) state on the same mutex. `SIGKILL` is ignored on D-state tasks, so shutdown can't proceed either.
+- **Workaround:** Blacklist the `atlantic` module. The 10GbE port is not in use on this machine — the active NIC is the Intel I225/I226 (`enp13s0`, `igc`). See `boot.blacklistedKernelModules` in the `personalPc` block in `flake.nix`.
+- **Status:** Worked around. Revisit if the 10GbE port is ever needed; check upstream kernel changelog for fixes to `aq_nic_stop` / `napi_disable_locked` on suspend.
+
 ## GNOME Shell crash: `shell_app_dispose` assertion failure
 
 - **Upstream:** [GNOME/gnome-shell#7045](https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/7045)
