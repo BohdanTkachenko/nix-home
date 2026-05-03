@@ -1,5 +1,14 @@
 # Known Issues
 
+## RX 7900 XTX silent kernel hang on Chrome tab close / DXVK workloads
+
+- **Affected hardware:** Sapphire/reference RX 7900 XTX (Navi 31, gfx1100, PCI ID `1002:744C`) on `nyancat`. Reproduced on kernels 7.0.1 and 7.0.2.
+- **Symptom:** Total system lockup with no journal output. Kernel printk buffer just stops mid-stream — no `device lost from bus`, no fence timeout, no AER, no DRM scheduler error. Case fans ramp to 100% (BIOS Q-Fan failsafe — OS stopped updating PWM). Hard reset is the only recovery. `pstore` captured nothing because `kernel.panic=0` means the kernel hangs forever after panic instead of writing.
+- **Trigger:** Reproducibly when closing the **Unifi admin panel tab in Chrome** (heavy WebGL / canvas dashboard, releases a large pile of GPU resources at once). Also observed mid-session under DXVK workloads (Overwatch via Wine). Common pattern: many GPU buffer frees under contention.
+- **Root cause:** Navi 31 has a known kernel-level TLB / DMA-fence bug in the scatter-gather display buffer free path. Freeing SG-mapped display buffers while the MES is busy can leave the GPU's MMU in a state where the TLB-invalidate fence never completes; the amdgpu driver waits inside a non-printk-able path, the rest of the kernel stalls behind it, fans default to BIOS failsafe.
+- **Workaround:** `amdgpu.sg_display=0` on the kernel cmdline (set in `personalPc` block in `flake.nix`). Forces display buffers through the contiguous CMA path instead of SG/IOMMU. Small VRAM-bandwidth cost, big stability win. Combined with `kernel.panic=10` / `kernel.panic_on_oops=1` so any future hang gets captured by `efi_pstore` (read on next boot via `sudo cat /sys/fs/pstore/dmesg-*`).
+- **Status:** Mitigated 2026-05-03 — monitoring. The pre-existing `pcie_aspm.policy=performance` workaround was for a different signature (`device lost from bus` with logged SMU errors); both stay in place.
+
 ## `atlantic` driver deadlock on suspend wedges the system
 
 - **Affected hardware:** ASUS ProArt X870E-CREATOR WIFI — Marvell/Aquantia AQC113 10GbE NIC (`enp14s0`, `atlantic` driver). Reproduced on kernel 7.0.1.

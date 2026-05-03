@@ -211,57 +211,92 @@
         ];
       };
 
-      personalPc = mkNixos {
-        nixpkgs.config.permittedInsecurePackages = [
-          "mbedtls-2.28.10"
-        ];
+      personalPc = mkNixos (
+        { lib, ... }:
+        {
+          nixpkgs.config.permittedInsecurePackages = [
+            "mbedtls-2.28.10"
+          ];
 
-        networking.hostName = "nyancat";
+          networking.hostName = "nyancat";
 
-        my.hardware.cpu.amd.enable = true;
-        my.disk.diskDevice = "/dev/disk/by-id/nvme-WD_BLACK_SN850X_4000GB_23402H800030";
+          my.hardware.cpu.amd.enable = true;
+          my.disk.diskDevice = "/dev/disk/by-id/nvme-WD_BLACK_SN850X_4000GB_23402H800030";
 
-        boot.kernelParams = [
-          # Disable Multi-Plane Overlay on the RX 7900 XTX (Navi 31). MPO is a
-          # known source of black-screen freezes and stutters on multi-monitor
-          # / mixed-refresh setups under amdgpu's DC display engine.
-          "amdgpu.dcdebugmask=0x10"
+          boot.kernelParams = [
+            # Disable Multi-Plane Overlay on the RX 7900 XTX (Navi 31). MPO is a
+            # known source of black-screen freezes and stutters on multi-monitor
+            # / mixed-refresh setups under amdgpu's DC display engine.
+            "amdgpu.dcdebugmask=0x10"
 
-          # Force PCIe link to L0 (no L1/L1.x substates). Navi 31 has a
-          # long-standing bug where the GPU fails to wake from L1, surfacing
-          # as `amdgpu: device lost from bus!` followed by SMU bus errors —
-          # the card vanishes from PCIe and only a hard reset recovers it.
-          "pcie_aspm.policy=performance"
-        ];
+            # Force PCIe link to L0 (no L1/L1.x substates). Navi 31 has a
+            # long-standing bug where the GPU fails to wake from L1, surfacing
+            # as `amdgpu: device lost from bus!` followed by SMU bus errors —
+            # the card vanishes from PCIe and only a hard reset recovers it.
+            "pcie_aspm.policy=performance"
 
-        # The Marvell/Aquantia 10GbE port (enp14s0) on the X870E-CREATOR is
-        # unused. Its `atlantic` driver deadlocks in `aq_nic_stop` →
-        # `napi_disable_locked` during suspend when there is no carrier,
-        # holding rtnl_mutex forever. Every subsequent netlink caller blocks
-        # in D state, new processes can't initialize networking, and even
-        # `systemd-reboot` can't kill the wedged tasks. See KNOWN_ISSUES.md.
-        boot.blacklistedKernelModules = [ "atlantic" ];
+            # Disable scatter-gather display buffers. Navi 31 has a kernel-level
+            # TLB / DMA-fence bug where freeing SG display buffers under
+            # contention silently locks the GPU's MMU. The hang doesn't surface
+            # as `device lost from bus` — there's no log at all; the kernel
+            # stalls in the amdgpu fence path before printk can flush, fans go
+            # to BIOS failsafe, hard reset only. Reproducible by closing a
+            # heavy WebGL tab (Unifi admin) in Chrome and during DXVK workloads
+            # like Overwatch under Wine. Costs a small amount of VRAM
+            # bandwidth — display buffers go through a contiguous CMA path
+            # instead of SG/IOMMU. Worth it for stability.
+            "amdgpu.sg_display=0"
+          ];
 
-        my.ollama.enable = true;
-        my.comfyui.enable = true;
-        my.comfyui.authSops = true;
-        my.comfyui.dataDir = "/home/dan/ComfyUI";
-        my.comfyui.uid = 1000; # dan
-        my.comfyui.gid = 100; # users
-        my.comfyui.extraPipPackages = [
-          "onnxruntime"
-          "onnxruntime-gpu"
-          "insightface"
-        ];
+          # The Marvell/Aquantia 10GbE port (enp14s0) on the X870E-CREATOR is
+          # unused. Its `atlantic` driver deadlocks in `aq_nic_stop` →
+          # `napi_disable_locked` during suspend when there is no carrier,
+          # holding rtnl_mutex forever. Every subsequent netlink caller blocks
+          # in D state, new processes can't initialize networking, and even
+          # `systemd-reboot` can't kill the wedged tasks. See KNOWN_ISSUES.md.
+          boot.blacklistedKernelModules = [ "atlantic" ];
 
-        home-manager.sharedModules = [
-          {
-            my.hardware.pc.enable = true;
-            my.direnv-instant.enable = true;
-            services.easyeffects.enable = false;
-          }
-        ];
-      };
+          # Desktop on wall power: pin amd-pstate EPP to "performance" via udev
+          # and disable power-profiles-daemon (which GNOME and the shared
+          # performance module both enable). With PPD off, GNOME's
+          # quick-settings power toggle disappears — it's just a UI for PPD.
+          services.power-profiles-daemon.enable = lib.mkForce false;
+          services.udev.extraRules = ''
+            ACTION=="add|change", SUBSYSTEM=="cpu", KERNEL=="cpu[0-9]*", ATTR{cpufreq/energy_performance_preference}="performance"
+          '';
+
+          # Kernel panic / oops behavior: if the GPU silent-hang ever recurs
+          # despite amdgpu.sg_display=0, force the kernel to panic on oops
+          # (instead of trying to limp along) and auto-reboot 10s later. This
+          # gives efi_pstore a chance to write the last printk buffer to UEFI
+          # variables — readable from /sys/fs/pstore on the next boot. Without
+          # this, panic=0 means "hang forever" and pstore captures nothing.
+          boot.kernel.sysctl = {
+            "kernel.panic" = 10;
+            "kernel.panic_on_oops" = 1;
+          };
+
+          my.ollama.enable = true;
+          my.comfyui.enable = true;
+          my.comfyui.authSops = true;
+          my.comfyui.dataDir = "/home/dan/ComfyUI";
+          my.comfyui.uid = 1000; # dan
+          my.comfyui.gid = 100; # users
+          my.comfyui.extraPipPackages = [
+            "onnxruntime"
+            "onnxruntime-gpu"
+            "insightface"
+          ];
+
+          home-manager.sharedModules = [
+            {
+              my.hardware.pc.enable = true;
+              my.direnv-instant.enable = true;
+              services.easyeffects.enable = false;
+            }
+          ];
+        }
+      );
 
       mkNixosIso =
         targetConfig:
