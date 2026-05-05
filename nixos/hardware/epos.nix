@@ -12,16 +12,19 @@ let
     set -eu
     PACTL="${pkgs.pulseaudio}/bin/pactl"
 
-    HP_SINK="alsa_output.usb-GeneralPlus_USB_Audio_Device-00.analog-stereo"
-    HP_SOURCE="alsa_input.usb-GeneralPlus_USB_Audio_Device-00.mono-fallback"
+    HP_SINK_RE='^alsa_output\.usb-Sennheiser_EPOS_GSX_300_.*-00\.analog-stereo$'
+    HP_SOURCE_RE='^alsa_input\.usb-Sennheiser_EPOS_GSX_300_.*-00\.mono-fallback$'
     SB_SINK="alsa_output.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.analog-stereo"
     SB_SOURCE="alsa_input.usb-046d_Logitech_BRIO_827A05B4-03.analog-stereo"
 
+    HP_SINK=$($PACTL list short sinks | ${pkgs.gawk}/bin/awk -v re="$HP_SINK_RE" '$2 ~ re { print $2; exit }')
+    HP_SOURCE=$($PACTL list short sources | ${pkgs.gawk}/bin/awk -v re="$HP_SOURCE_RE" '$2 ~ re { print $2; exit }')
+
     current_sink=$($PACTL get-default-sink)
-    if [ "$current_sink" = "$HP_SINK" ]; then
+    if [ -n "$HP_SINK" ] && [ "$current_sink" = "$HP_SINK" ]; then
       $PACTL set-default-sink "$SB_SINK"
       $PACTL set-default-source "$SB_SOURCE"
-    else
+    elif [ -n "$HP_SINK" ] && [ -n "$HP_SOURCE" ]; then
       $PACTL set-default-sink "$HP_SINK"
       $PACTL set-default-source "$HP_SOURCE"
     fi

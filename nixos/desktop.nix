@@ -20,7 +20,7 @@
         }
         {
           matches = [
-            { "device.name" = "alsa_card.usb-GeneralPlus_USB_Audio_Device-00"; }
+            { "device.name" = "~alsa_card\\.usb-Sennheiser_EPOS_GSX_300_.*-00"; }
           ];
           actions.update-props = {
             "device.description" = "Headphones";
@@ -45,13 +45,26 @@
             { "device.name" = "alsa_card.usb-046d_Logitech_BRIO_827A05B4-03"; }
           ];
           actions.update-props = {
+            "device.description" = "Webcam";
+            "device.nick" = "Webcam";
             "api.acp.hidden-profiles" = ''[ "input:iec958-stereo", "pro-audio" ]'';
             "api.acp.hidden-ports" = ''[ "iec958-stereo-input" ]'';
           };
         }
         {
           matches = [
+            { "node.name" = "~alsa_output\\.usb-Sennheiser_EPOS_GSX_300_.*-00\\.analog-stereo"; }
+            { "node.name" = "~alsa_input\\.usb-Sennheiser_EPOS_GSX_300_.*-00\\.mono-fallback"; }
+          ];
+          actions.update-props = {
+            "node.description" = "Headphones";
+            "node.nick" = "Headphones";
+          };
+        }
+        {
+          matches = [
             { "node.name" = "~alsa_(input|output)\\..*\\.pro-(input|output)-.*"; }
+            { "node.name" = "~alsa_output\\.usb-Sennheiser_EPOS_GSX_300_.*-00\\.iec958-stereo"; }
           ];
           actions.update-props."node.disabled" = true;
         }
