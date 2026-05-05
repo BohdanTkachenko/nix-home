@@ -223,11 +223,13 @@ let
         ui.footer.hideContextPercentage = false;
         ui.footer.hideSandboxStatus = true;
         ui.showStatusInTitle = true;
-        ui.useAlternateBuffer = true;
+        ui.useAlternateBuffer = false;
         general.enableAutoUpdate = false;
         privacy.usageStatisticsEnabled = false;
         advanced.autoConfigureMemory = true;
-        experimental.plan = true;
+        general.plan.enabled = true;
+        general.enableNotifications = true;
+        agents.overrides = {};
         general.defaultApprovalMode = "default";
         tools.disableLLMCorrection = false;
       }

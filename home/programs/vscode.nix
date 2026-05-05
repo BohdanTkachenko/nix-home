@@ -16,6 +16,7 @@ let
     "extensions.autoCheckUpdates" = false;
     "extensions.autoUpdate" = false;
     "update.mode" = "none";
+    "update.showReleaseNotes" = false;
 
     # Formatting
     "editor.formatOnSave" = true;
