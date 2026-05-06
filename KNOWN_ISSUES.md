@@ -34,6 +34,21 @@
 - **Workaround:** Blacklist the `atlantic` module. The 10GbE port is not in use on this machine — the active NIC is the Intel I225/I226 (`enp13s0`, `igc`). See `boot.blacklistedKernelModules` in the `personalPc` block in `flake.nix`.
 - **Status:** Worked around. Revisit if the 10GbE port is ever needed; check upstream kernel changelog for fixes to `aq_nic_stop` / `napi_disable_locked` on suspend.
 
+## EPOS GSX 300 PCM wedges after USB reset
+
+- **Affected hardware:** Sennheiser EPOS GSX 300 (USB `1395:0098`), connected through a USB switch + powered USB hub on `nyancat`. Direct USB connection is not an option in this setup. Reproduced on kernel 7.0.2 with PipeWire 1.4.9.
+- **Symptom:** Audio output to the headset stops mid-session. PipeWire still shows the device, but playback is silent. The USB device remains enumerated in `/sys/bus/usb/devices` (and the hardware volume knob keeps reporting position changes), so it looks healthy from userspace, but the ALSA PCM is dead. Sometimes preceded by audio glitches and spurious GSX 300 "Smart Button" events (the `epos-smart-button` user service flips the default sink as if the button were pressed).
+- **Trigger:** xHCI-level USB reset on the GSX 300 — visible in `dmesg` as `usb X-Y.Z.W: reset full-speed USB device number N using xhci_hcd`. Most likely caused by signal-integrity or power issues on the USB switch + hub chain (long cable runs, marginal hub power, switch chip glitches).
+- **Root cause:** When the USB device resets, snd-usb-audio's PCM endpoints become invalid mid-stream. PipeWire's existing PCM handles return `ENODEV` from every operation:
+  ```
+  spa.alsa: hw:0c: snd_pcm_status error: No such device
+  spa.alsa: hw:0c: snd_pcm_prepare error: No such device
+  spa.alsa: hw:0c: close failed: No such device
+  ```
+  PipeWire does not re-open the device automatically, and even restarting `wireplumber pipewire pipewire-pulse` does not recover — the kernel-side PCM is stuck. Only a full USB re-enumeration of the device (physical replug or sysfs unbind/bind) restores audio.
+- **Workaround:** `epos-self-heal` system service tails the system journal for the `spa.alsa.*No such device` pattern; when seen, it locates the EPOS USB device by vendor/product ID (path-independent — works through the hub/switch on whatever bus position the device shows up on) and rebinds it via `/sys/bus/usb/drivers/usb/{un,bind}` after a short debounce. 60s cooldown prevents flapping. Defined in `nixos/hardware/epos.nix`.
+- **Status:** Mitigated 2026-05-07. The underlying USB instability is unfixed; if it gets worse, replace the USB switch/hub or move the GSX 300 to a direct port.
+
 ## GNOME Shell crash: `shell_app_dispose` assertion failure
 
 - **Upstream:** [GNOME/gnome-shell#7045](https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/7045)
