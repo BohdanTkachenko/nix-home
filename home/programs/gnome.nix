@@ -65,7 +65,6 @@
     extensions = with pkgs.gnomeExtensions; [
       { package = appindicator; }
       { package = blur-my-shell; }
-      { package = caffeine; }
       { package = dash-to-dock; }
       { package = just-perfection; }
       # { package = paperwm; }
@@ -88,7 +87,7 @@
 
     "org/gnome/settings-daemon/plugins/power" = {
       sleep-inactive-battery-timeout = 1800;
-      sleep-inactive-ac-timeout = 3600;
+      sleep-inactive-ac-timeout = 14400;
     };
 
     "org/gnome/shell/extensions/bingwallpaper" = {
@@ -157,10 +156,6 @@
       next = [ "AudioNext" ];
       play = [ "AudioPlay" ];
       previous = [ "AudioPrev" ];
-    };
-
-    "org/gnome/shell/extensions/caffeine" = {
-      show-notifications = false;
     };
 
     "org/gnome/shell/extensions/dash-to-dock" = {

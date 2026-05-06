@@ -29,6 +29,15 @@
       ta = "t --absolute=on -L 5";
     };
 
+    functions = {
+      nosleep = {
+        description = "Run a command with system suspend inhibited for its lifetime";
+        body = ''
+          systemd-inhibit --what=idle:sleep --who=nosleep --why="user-requested" --mode=block -- $argv
+        '';
+      };
+    };
+
     plugins = with pkgs.fishPlugins; [
       {
         name = "sponge";

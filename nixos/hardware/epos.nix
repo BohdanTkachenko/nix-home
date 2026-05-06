@@ -71,6 +71,84 @@ let
         main()
   '';
 
+  selfHealer = pkgs.writers.writePython3 "epos-self-healer" {
+    flakeIgnore = [ "E501" ];
+  } ''
+    import glob
+    import os
+    import re
+    import subprocess
+    import sys
+    import time
+
+    JOURNALCTL = "${pkgs.systemd}/bin/journalctl"
+    VENDOR = "1395"
+    PRODUCT = "0098"
+    ERROR_RE = re.compile(r"spa\.alsa.*No such device")
+    COOLDOWN_SECONDS = 60
+    DEBOUNCE_SECONDS = 3
+
+
+    def find_epos_usb_path():
+        for vp in glob.glob("/sys/bus/usb/devices/*/idVendor"):
+            try:
+                with open(vp) as f:
+                    if f.read().strip().lower() != VENDOR:
+                        continue
+                pp = vp.replace("idVendor", "idProduct")
+                with open(pp) as f:
+                    if f.read().strip().lower() != PRODUCT:
+                        continue
+                return os.path.basename(os.path.dirname(vp))
+            except OSError:
+                pass
+        return None
+
+
+    def rebind(usb_path):
+        try:
+            with open("/sys/bus/usb/drivers/usb/unbind", "w") as f:
+                f.write(usb_path)
+            time.sleep(2)
+            with open("/sys/bus/usb/drivers/usb/bind", "w") as f:
+                f.write(usb_path)
+            print(f"rebound USB {usb_path}", flush=True)
+            return True
+        except OSError as e:
+            print(f"rebind failed: {e}", file=sys.stderr, flush=True)
+            return False
+
+
+    def main():
+        last_heal = 0.0
+        proc = subprocess.Popen(
+            [JOURNALCTL, "-f", "-n", "0", "--output=cat"],
+            stdout=subprocess.PIPE, text=True, bufsize=1,
+        )
+        try:
+            for line in proc.stdout:
+                if not ERROR_RE.search(line):
+                    continue
+                now = time.monotonic()
+                if now - last_heal < COOLDOWN_SECONDS:
+                    continue
+                if not find_epos_usb_path():
+                    continue
+                time.sleep(DEBOUNCE_SECONDS)
+                path = find_epos_usb_path()
+                if not path:
+                    continue
+                print(f"EPOS PCM stuck, rebinding {path}", flush=True)
+                if rebind(path):
+                    last_heal = time.monotonic()
+        finally:
+            proc.terminate()
+
+
+    if __name__ == "__main__":
+        main()
+  '';
+
   volumeRedirect = pkgs.writers.writePython3 "epos-volume-redirect" {
     flakeIgnore = [ "E501" ];
   } ''
@@ -201,6 +279,17 @@ in
       after = [ "graphical-session.target" ];
       serviceConfig = {
         ExecStart = "${reader} ${lib.escapeShellArg cfg.smartButtonAction}";
+        Restart = "on-failure";
+        RestartSec = "5s";
+      };
+    };
+
+    systemd.services.epos-self-heal = {
+      description = "Detect EPOS GSX 300 stuck PCM and rebind USB to recover";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "systemd-journald.service" ];
+      serviceConfig = {
+        ExecStart = "${selfHealer}";
         Restart = "on-failure";
         RestartSec = "5s";
       };
