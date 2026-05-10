@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  pkgs-unstable,
   ...
 }:
 let
@@ -12,9 +13,16 @@ in
 
   programs.jujutsu = {
     enable = true;
-    package = pkgs.jujutsu;
+    package = pkgs-unstable.jujutsu;
     settings = {
       ui.diff-formatter = ":git";
+      # NixOS sets PAGER=less globally; without explicit flags jj inherits
+      # bare `less` and loses ANSI rendering (codes print literally). Pin the
+      # default -FRX flags that jj would have applied if PAGER were unset.
+      ui.pager = [
+        (lib.getExe pkgs.less)
+        "-FRX"
+      ];
 
       user.name = cfg.identity.name;
       user.email = cfg.identity.email;

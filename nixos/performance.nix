@@ -105,6 +105,18 @@
     # we're using ananicy-cpp to manage process priorities, autogroups would
     # just fight with it.
     "kernel.sched_autogroup_enabled" = 0;
+
+    # Disable split-lock mitigation. The default (`1` = warn + 10ms sleep
+    # penalty per offending task per trap) was designed for Intel, where bus
+    # locks across cache lines can be abused as a noisy-neighbor side channel
+    # in cloud/multi-tenant scenarios. AMD doesn't have that concern, and on
+    # this single-user desktop the security benefit is zero — the cost is
+    # real: Steam alone trips ~100k+ traps in the first minute after launch
+    # (`x86/split lock detection: #DB: steam/...`), each one paying the sleep
+    # penalty. Wine/Proton workloads are notorious for split-locks. Setting
+    # this to `0` removes both the warning spam and the per-trap sleep, with
+    # no downside on AMD.
+    "kernel.split_lock_mitigate" = 0;
   };
 
   # NVMe drives have their own sophisticated internal queue management with

@@ -181,6 +181,7 @@ let
   userSettings = {
     "$schema" = "https://json.schemastore.org/claude-code-settings.json";
 
+    cleanupPeriodDays = 3650;
     effortLevel = "high";
     enabledPlugins = {
       "gopls-lsp@claude-plugins-official" = true;

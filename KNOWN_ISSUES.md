@@ -6,8 +6,33 @@
 - **Symptom:** Total system lockup with no journal output. Kernel printk buffer just stops mid-stream — no `device lost from bus`, no fence timeout, no AER, no DRM scheduler error. Case fans ramp to 100% (BIOS Q-Fan failsafe — OS stopped updating PWM). Hard reset is the only recovery. `pstore` captured nothing because `kernel.panic=0` means the kernel hangs forever after panic instead of writing.
 - **Trigger:** Reproducibly when closing the **Unifi admin panel tab in Chrome** (heavy WebGL / canvas dashboard, releases a large pile of GPU resources at once). Also observed mid-session under DXVK workloads (Overwatch via Wine). Common pattern: many GPU buffer frees under contention.
 - **Root cause:** Navi 31 has a known kernel-level TLB / DMA-fence bug in the scatter-gather display buffer free path. Freeing SG-mapped display buffers while the MES is busy can leave the GPU's MMU in a state where the TLB-invalidate fence never completes; the amdgpu driver waits inside a non-printk-able path, the rest of the kernel stalls behind it, fans default to BIOS failsafe.
-- **Workaround:** `amdgpu.sg_display=0` on the kernel cmdline (set in `personalPc` block in `flake.nix`). Forces display buffers through the contiguous CMA path instead of SG/IOMMU. Small VRAM-bandwidth cost, big stability win. Combined with `kernel.panic=10` / `kernel.panic_on_oops=1` so any future hang gets captured by `efi_pstore` (read on next boot via `sudo cat /sys/fs/pstore/dmesg-*`).
+- **Workaround:** `amdgpu.sg_display=0` on the kernel cmdline (set in `personalPc` block in `flake.nix`). Forces display buffers through the contiguous CMA path instead of SG/IOMMU. Small VRAM-bandwidth cost, big stability win. Combined with `kernel.panic=10` / `kernel.panic_on_oops=1` / `kernel.hung_task_panic=1` so any future hang gets captured by `efi_pstore` (read on next boot via `sudo cat /sys/fs/pstore/dmesg-*`).
 - **Status:** Mitigated 2026-05-03 — monitoring. The pre-existing `pcie_aspm.policy=performance` workaround was for a different signature (`device lost from bus` with logged SMU errors); both stay in place.
+
+## RX 7900 XTX MES wedge during DRM file close from Chromium-based apps
+
+- **Affected hardware:** RX 7900 XTX on `nyancat`. Reproduced on kernel 7.0.3 with VCN/JPEG already disabled via `amdgpu.ip_block_mask=0xfffffcff`.
+- **Symptom:** Logged `device lost from bus` with a clear preamble (unlike the silent-hang above). Display freezes, fans go to 100%. Importantly, the system slowly *rots into unreachability*: TTM kthreads pile up on `dma_fence_wait` for fences belonging to GPU work the dead card will never complete (`Workqueue: ttm ttm_bo_delayed_delete`); after enough wedged workers the kernel workqueue saturates and SSH stops responding. Without `kernel.hung_task_panic=1`, only a hard reset recovers.
+- **Trigger:** A Chromium-based app's GPU resources being released while a long-running compute workload is hammering the GPU. Observed 2026-05-09: model training (`uv run train.py`) running in the background, then `1password` (Electron/CEF) was closed — its DRM file release path triggered VM cleanup that the MES couldn't service. Earlier 2026-05-07 hit had Chrome as the trigger; same shape.
+- **Root cause:** The MES (Micro Engine Scheduler) firmware on Navi 31 wedges under cleanup contention. dmesg signature, in order:
+  ```
+  amdgpu: MES failed to respond to msg=MISC (WAIT_REG_MEM)
+  amdgpu: failed to reg_write_reg_wait
+  amdgpu: MES ring buffer is full        ← repeats for ~15s
+  amdgpu: VM memory stats for proc <chromium-app>(pid) task ...:cs0(pid) is non-zero when fini
+  amdgpu: reset sdma queue (0:0:0)
+  amdgpu: failed to wait on sdma queue reset done
+  amdgpu: Ring sdma0 reset failed
+  amdgpu: GPU reset begin!. Source:  1
+  amdgpu: device lost from bus!
+  amdgpu: GPU reset end with ret = -19
+  ```
+  The MES is mandatory on `gfx_v11` — there is no legacy KIQ fallback to switch to. `amdgpu.mes=0` is not a usable workaround.
+- **Workaround options:**
+  1. **Recovery, not prevention:** `kernel.hung_task_panic=1` ensures the system auto-reboots within ~120s (`hung_task_timeout_secs`) of the first wedged task instead of slowly suffocating into SSH-unreachability. pstore captures the trace. Set in `personalPc` sysctl block.
+  2. **Avoidance:** disable hardware acceleration in Chromium-based apps (1Password, Spotify, Chrome extensions that do GPU work) so they never allocate GPU resources. Per-app config; not robust.
+  3. **Upstream fix needed:** check linux-firmware updates for newer Navi 31 MES firmware; track amdgpu mailing list for `MES failed to respond` reports on `gfx_v11`.
+- **Status:** Recovery mitigation in place 2026-05-09 (`kernel.hung_task_panic=1`). Root cause unfixed; capture pstore on next occurrence to see if signature changes after the gfxoff disable (`amdgpu.ppfeaturemask=0xfff7bdff`, applied same day).
 
 ## MediaTek MT7927 Wi-Fi 7 chip has no mainline driver
 

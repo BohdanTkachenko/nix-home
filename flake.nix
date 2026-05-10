@@ -246,6 +246,41 @@
             # bandwidth — display buffers go through a contiguous CMA path
             # instead of SG/IOMMU. Worth it for stability.
             "amdgpu.sg_display=0"
+
+            # Disable the VCN (Video Core Next) and JPEG IP blocks on Navi 31.
+            # NOTE on the mask: `amdgpu.ip_block_mask` indexes by the GPU's
+            # per-device IP-block array position, NOT by AMD_IP_BLOCK_TYPE
+            # enum. On Navi 31 the array is: 0=common, 1=gmc, 2=ih, 3=psp,
+            # 4=smc, 5=dm, 6=gfx, 7=sdma, 8=vcn, 9=jpeg, 10=mes. So clearing
+            # bits 8 and 9 = 0xfffffcff disables VCN and JPEG (which share
+            # hardware on RDNA3 — disabling one without the other tends to
+            # leave the survivor in a broken state). Verified post-boot via
+            # `detected ip block number 8 <vcn_v4_0_0>` in dmesg.
+            #
+            # Why disable: the RX 7900 XTX cascades a `device lost from bus`
+            # into VCN errors (`vcn sram load failed`, `Ring vcn_unified_0
+            # reset failed`) that flood the log and block recovery. Removing
+            # the VCN engine cuts that noise and reduces the surface area for
+            # SMU/MES wedges. Trade-off: hwaccel video decode falls back to
+            # CPU/shader paths — small power/perf cost, big stability win.
+            "amdgpu.ip_block_mask=0xfffffcff"
+
+            # Disable gfxoff (the GPU's internal graphics power-gating) by
+            # masking PP_GFXOFF_MASK (bit 9) out of `ppfeaturemask`. Default
+            # on kernel 7.0.x is `0xfff7bfff`; clearing bit 9 → `0xfff7bdff`.
+            # NOTE: there is no `amdgpu.gfxoff` module parameter — the kernel
+            # silently ignores it (`unknown parameter 'gfxoff' ignored`); the
+            # ppfeaturemask is the only sanctioned mechanism. Verify default
+            # before bumping kernel:
+            #   cat /sys/module/amdgpu/parameters/ppfeaturemask
+            # On Navi 31, gfxoff exit failures correlate with `device lost
+            # from bus` — first observed 2026-05-07 with the dmesg signature
+            # `Failed to disable gfxoff!` repeating right after bus loss.
+            # Costs ~10W idle power. Targets failure mode 1; failure mode 2
+            # (MES wedge under DRM file close from Electron apps, observed
+            # 2026-05-09 with 1password as the trigger) has no kernel-param
+            # workaround on Navi 31 — gfx_v11 has no MES-disable fallback.
+            "amdgpu.ppfeaturemask=0xfff7bdff"
           ];
 
           # The Marvell/Aquantia 10GbE port (enp14s0) on the X870E-CREATOR is
@@ -271,9 +306,24 @@
           # gives efi_pstore a chance to write the last printk buffer to UEFI
           # variables — readable from /sys/fs/pstore on the next boot. Without
           # this, panic=0 means "hang forever" and pstore captures nothing.
+          #
+          # `hung_task_panic=1` extends the same auto-reboot behavior to the
+          # slow-death failure mode: when the GPU dies under load, TTM kthreads
+          # pile up on `dma_fence_wait` for fences that will never signal
+          # (`Workqueue: ttm ttm_bo_delayed_delete`). With enough wedged
+          # workers, the kernel workqueue saturates and even SSH stops
+          # responding — the only sign at the seat is fans at 100% and a
+          # frozen console. Observed 2026-05-09 (1password Electron app
+          # closing under sustained training compute → MES wedge → SDMA reset
+          # fail → `device lost from bus`). Without this sysctl, the system
+          # rots into an unreachable state and only a hard reset recovers.
+          # With it, the first task blocked >120s (default
+          # `hung_task_timeout_secs`) panics → reboot in 10s → pstore captures
+          # the trace.
           boot.kernel.sysctl = {
             "kernel.panic" = 10;
             "kernel.panic_on_oops" = 1;
+            "kernel.hung_task_panic" = 1;
           };
 
           my.ollama.enable = true;
