@@ -5,5 +5,5 @@
   ...
 }:
 {
-  home.packages = [ (config.lib.nixGL.wrap pkgs._1password-gui) ];
+  home.packages = with pkgs; [ _1password-gui ];
 }
