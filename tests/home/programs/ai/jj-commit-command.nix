@@ -3,7 +3,7 @@
 let
   config = self.nixosConfigurations.nyancat.config.home-manager.users.dan;
 
-  claudeCommitCommand = config.programs.claude-code.commands.commit or "";
+  claudeCommitCommand = config.home.file.".claude/skills/commit/SKILL.md".text or "";
   geminiCommitCommand = config.programs.gemini-cli.commands.commit.prompt or "";
   geminiPolicyFile = builtins.readFile config._geminiPolicyFile;
 

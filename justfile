@@ -6,18 +6,14 @@ root_dir := justfile_directory()
 flake_path := 'path:' + root_dir
 flake_arg := '--flake "' + flake_path + '"'
 
-is_nixos := `if [ -f /etc/NIXOS ]; then echo true; else echo false; fi`
-switch_cmd := if is_nixos == "true" { "sudo nixos-rebuild switch" } else { "home-manager switch" }
-boot_cmd := if is_nixos == "true" { "sudo nixos-rebuild boot" } else { "echo 'rebuild-boot is NixOS-only' >&2; exit 1;" }
-
 default:
   @just --choose
 
 rebuild *args:
-    {{ switch_cmd }} {{ flake_arg }} {{ args }}
+    sudo nixos-rebuild switch {{ flake_arg }} {{ args }}
 
 rebuild-boot *args:
-    {{ boot_cmd }} {{ flake_arg }} {{ args }}
+    sudo nixos-rebuild boot {{ flake_arg }} {{ args }}
 
 update flake_update_args="" *rebuild_args:
     nix flake update {{ flake_arg }} {{ flake_update_args }}

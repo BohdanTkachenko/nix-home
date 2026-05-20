@@ -47,7 +47,6 @@ in
           orca-slicer
         ])
         ++ (with pkgs-unstable; [
-          antigravity
           mcpelauncher-ui-qt
           (pinToCCD1 warp-terminal)
         ]);

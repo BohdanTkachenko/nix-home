@@ -1,5 +1,7 @@
 ---
+name: commit
 allowed-tools:
+- Bash(jj new:*)
 - Bash(jj status:*)
 - Bash(jj log:*)
 - Bash(jj diff:*)
