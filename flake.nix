@@ -162,6 +162,7 @@
             ./nixos/hardware/gpu-amd.nix
             ./nixos/hardware/bluetooth.nix
             ./nixos/hardware/keychron.nix
+            ./nixos/hardware/laptop-lenovo-z16-gen1.nix
             ./nixos/hardware/epos.nix
             ./nixos/hardware/moonlander.nix
             ./nixos/hardware/touchpad.nix
@@ -192,6 +193,7 @@
 
         my.hardware.cpu.amd.enable = true;
         my.hardware.touchpad.enable = true;
+        my.hardware.lenovo.z16Gen1.enable = true;
         my.disk.diskDevice = "/dev/disk/by-id/nvme-Samsung_SSD_980_PRO_2TB_S6B0NG0R703558Y";
 
         # Unlock all PowerPlay features (incl. overdrive). Helpful on the iGPU
