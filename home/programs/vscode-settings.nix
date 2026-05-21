@@ -33,4 +33,8 @@
   "jj-view.showSourceControlColocated" = true;
   "security.promptForLocalFileProtocolHandling" = false;
   "rust-analyzer.runnables.command" = "${pkgs-unstable.cargo}/bin/cargo";
+
+  # Nix IDE LSP config
+  "nix.enableLSP" = true;
+  "nix.serverPath" = "nixd";
 }

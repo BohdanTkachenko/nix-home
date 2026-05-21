@@ -12,11 +12,7 @@ let
 
   extensions = import ./vscode-extensions.nix { inherit pkgs lib config; isAntigravity = true; };
 
-  antigravityPkg =
-    if !config.my.vscode.useFHS then
-      pkgs-unstable.antigravity
-    else
-      (config.lib.nixGL.wrap pkgs-unstable.antigravity-fhs);
+  antigravityPkg = pkgs-unstable.antigravity-fhs;
 
   antigravityWithExtensions = pkgs.vscode-with-extensions.override {
     vscode = antigravityPkg;
@@ -28,6 +24,9 @@ in
     home.packages = [
       (pinToCCD1 antigravityWithExtensions)
     ];
+
+    home.file.".local/share/pixmaps/antigravity.png".source = "${antigravityPkg}/share/pixmaps/antigravity.png";
+    home.file.".local/share/icons/antigravity.png".source = "${antigravityPkg}/share/pixmaps/antigravity.png";
 
     anti-drift.files.".config/Antigravity/User/settings.json" = {
       source = settingsFile;

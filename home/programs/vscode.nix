@@ -16,6 +16,7 @@ in
     [
       nix
       nil
+      nixd
       nixfmt
     ]
     ++ lib.optionals (!config.my.google.enable) [

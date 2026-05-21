@@ -57,7 +57,7 @@ in
             "Google Gemini.desktop"
             "google-chrome.desktop"
             "org.gnome.Ptyxis.desktop"
-            "code.desktop"
+            "antigravity.desktop"
             "WhatsApp Web.desktop"
             "Messages.desktop"
             "spotify.desktop"

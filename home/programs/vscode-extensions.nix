@@ -1,11 +1,21 @@
 { pkgs, lib, config, isAntigravity ? false }:
+let
+  pinnedNixIde = pkgs.vscode-utils.buildVscodeMarketplaceExtension {
+    mktplcRef = {
+      publisher = "jnoortheen";
+      name = "nix-ide";
+      version = "0.5.7";
+      sha256 = "sha256-6wIjuvMlA+mwg5gzctkfOAdaQLBy2K6YcV3kJxK3VOo=";
+    };
+  };
+in
 with pkgs.nix-vscode-extensions.vscode-marketplace;
 [
   coolbear.systemd-unit-file
   davidanson.vscode-markdownlint
   foxundermoon.shell-format
   github.vscode-github-actions
-  jnoortheen.nix-ide
+  pinnedNixIde
   mkhl.direnv
   ms-dotnettools.csharp
   ms-python.black-formatter
