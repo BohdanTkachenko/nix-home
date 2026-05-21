@@ -16,15 +16,6 @@
       };
     };
 
-    environment = lib.mkOption {
-      type = lib.types.enum [
-        "personal"
-        "work"
-      ];
-      description = "Environment type for this machine";
-    };
-
-    google.enable = lib.mkEnableOption "Google corp environment";
 
     google-chrome.mkWrapper = lib.mkOption {
       type = with lib.types; functionTo (functionTo package);

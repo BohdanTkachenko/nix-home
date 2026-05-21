@@ -79,18 +79,7 @@ in
           "-r"
           "@ | parents(@)"
         ];
-      }
-      // (
-        if cfg.google.enable then
-          {
-            mv = [
-              "piper"
-              "rename"
-            ];
-          }
-        else
-          { }
-      );
+      };
     };
   };
 

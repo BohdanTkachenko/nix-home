@@ -8,7 +8,7 @@ in
     ../programs/ai/claude-code.nix
   ];
 
-  config = lib.mkIf (config.my.environment == "personal") {
+  config = {
     home.packages = with pkgs-unstable; [
       act
       (pinToCCD1 codex)

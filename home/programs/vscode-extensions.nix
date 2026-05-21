@@ -1,4 +1,4 @@
-{ pkgs, lib, config, isAntigravity ? false }:
+{ pkgs, lib, isAntigravity ? false, ... }:
 let
   pinnedNixIde = pkgs.vscode-utils.buildVscodeMarketplaceExtension {
     mktplcRef = {
@@ -30,9 +30,4 @@ with pkgs.nix-vscode-extensions.vscode-marketplace;
 ++ lib.optionals (!isAntigravity) [
   google.gemini-cli-vscode-ide-companion
   google.geminicodeassist
-]
-++ lib.optionals (!config.my.google.enable) [
-  anthropic.claude-code
-  rust-lang.rust-analyzer
-  tamasfe.even-better-toml
 ]

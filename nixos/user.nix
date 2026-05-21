@@ -26,7 +26,6 @@ let
   sharedHomeImports = [
     ../home
     {
-      my.environment = "personal";
       my.screenshotPathClipboard.enable = true;
     }
   ];

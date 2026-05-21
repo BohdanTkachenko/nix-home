@@ -7,7 +7,6 @@
 {
   imports = [
     ../programs/1password.nix
-    ../programs/antigravity.nix
     ../programs/fonts.nix
     ../programs/gnome.nix
     ../programs/ptyxis.nix

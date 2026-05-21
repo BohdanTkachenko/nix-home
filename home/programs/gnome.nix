@@ -5,7 +5,7 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
+    home.packages = with pkgs; [
     adw-gtk3
     adwaita-icon-theme
     gnome-themes-extra
@@ -28,24 +28,9 @@
 
     autostart = {
       enable = true;
-      entries =
-        (
-          if !config.my.google.enable then
-            [
-              "${
-                pkgs.makeDesktopItem {
-                  name = "1password-silent";
-                  desktopName = "1Password";
-                  exec = "${pkgs._1password-gui}/bin/1password -silent";
-                }
-              }/share/applications/1password-silent.desktop"
-            ]
-          else
-            [ ]
-        )
-        ++ [
-          "${pkgs.spotify}/share/applications/spotify.desktop"
-        ];
+      entries = [
+        "${pkgs.spotify}/share/applications/spotify.desktop"
+      ];
     };
   };
 

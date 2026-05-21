@@ -71,7 +71,7 @@ in
   ];
 
   config = {
-    home.file.".claude/skills/commit/SKILL.md" = lib.mkIf config.my.claude-code.enable {
+    home.file.".claude/skills/commit/SKILL.md" = lib.mkIf (config.my ? claude-code && config.my.claude-code.enable) {
       text = claudeFrontmatter + claudeMarkdown;
     };
 

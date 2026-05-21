@@ -2,7 +2,7 @@
   config,
   lib,
   pkgs,
-  pkgs-claude-code,
+  pkgs-claude-code ? null,
   ...
 }:
 

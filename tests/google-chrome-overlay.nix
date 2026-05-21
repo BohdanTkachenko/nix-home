@@ -7,12 +7,9 @@
   ...
 }:
 let
-  optionsModule = ../home/modules/options.nix;
-
-  # Evaluate the module with my.google.enable = true
+  # Evaluate the module with Chrome autostart imported (simulating Work profile)
   evaluatedWork = lib.evalModules {
     modules = [
-      # Minimal home-manager compatible module interface
       (
         { ... }:
         {
@@ -32,22 +29,16 @@ let
           };
         }
       )
-      optionsModule
-      (
-        { ... }:
-        {
-          my.google.enable = true;
-        }
-      )
-      # The module under test
+      # The modules under test
       (import ../overlays/google-chrome.nix)
+      (import ../home/programs/google-chrome-autostart.nix)
     ];
     specialArgs = {
       inherit pkgs lib;
     };
   };
 
-  # Evaluate the module with my.google.enable = false (default)
+  # Evaluate the module without Chrome autostart (simulating Personal/Default profile)
   evaluatedPersonal = lib.evalModules {
     modules = [
       (
@@ -69,7 +60,6 @@ let
           };
         }
       )
-      optionsModule
       (import ../overlays/google-chrome.nix)
     ];
     specialArgs = {

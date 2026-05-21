@@ -3,7 +3,7 @@
   lib,
   pkgs,
   pkgs-unstable,
-  pkgs-claude-code,
+  pkgs-claude-code ? null,
   ...
 }:
 
@@ -58,7 +58,7 @@ let
     ];
   };
 
-  ask-claude = mkAskAiScript {
+  ask-claude = if pkgs-claude-code != null then mkAskAiScript {
     name = "ask-claude";
     exe = "${pkgs-claude-code.claude-code}/bin/claude";
     args = [
@@ -68,24 +68,12 @@ let
       "--print"
       "-"
     ];
-  };
+  } else null;
 
-  ask =
-    let
-      targetPkg = if config.my.google.enable then ask-gemini else ask-claude;
-      targetBin = if config.my.google.enable then "ask-gemini" else "ask-claude";
-    in
-    pkgs.runCommand "ask" { } ''
-      mkdir -p $out/bin
-      ln -s ${targetPkg}/bin/${targetBin} $out/bin/ask
-    '';
 in
 {
   home.packages = [
-    ask
     ask-gemini
   ]
-  ++ lib.optionals (!config.my.google.enable) [
-    ask-claude
-  ];
+  ++ lib.optional (ask-claude != null) ask-claude;
 }

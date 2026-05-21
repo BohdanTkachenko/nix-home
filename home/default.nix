@@ -6,18 +6,15 @@
 }:
 {
   imports = [
-    ./common.nix
+    ./profiles/common.nix
+    ./profiles/personal.nix
     ./hardware
-    ./cli
-    ./gui
-    ./services/screenshot-path-clipboard.nix
     ./services/winapps.nix
-    ./services/yubikey-touch-notifier.nix
   ];
 
   config = {
-    home.username = "dan";
-    home.homeDirectory = "/var/home/dan";
+    home.username = lib.mkDefault "dan";
+    home.homeDirectory = lib.mkDefault "/var/home/dan";
     sops.age.sshKeyPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
 
     # Derive a native age identity from the ed25519 SSH key so the `sops`

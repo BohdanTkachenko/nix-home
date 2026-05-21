@@ -18,12 +18,6 @@ in
       nil
       nixd
       nixfmt
-    ]
-    ++ lib.optionals (!config.my.google.enable) [
-      terraform-ls
-      (pkgs.writeShellScriptBin "terraform" ''
-        exec ${pkgs-unstable.opentofu}/bin/tofu "$@"
-      '')
     ];
 
   programs.vscode.enable = true;
@@ -36,7 +30,9 @@ in
       if !config.my.vscode.useFHS then pkgs-unstable.vscode else (config.lib.nixGL.wrap pkgs-unstable.vscode.fhs)
     );
   programs.vscode.mutableExtensionsDir = false;
-  programs.vscode.profiles.default.extensions = import ./vscode-extensions.nix { inherit pkgs lib config; };
+  programs.vscode.profiles.default.extensions = import ./vscode-extensions.nix {
+    inherit pkgs lib;
+  };
 
   anti-drift.files.".config/Code/User/settings.json" = { source = settingsFile; json = true; };
 }

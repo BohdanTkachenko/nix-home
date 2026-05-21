@@ -248,7 +248,10 @@ in
   systemd.user.services.yubikey-touch-notifier = {
     Unit = {
       Description = "YubiKey touch notifier with command info";
-      After = [ "graphical-session.target" "yubikey-touch-detector.socket" ];
+      After = [
+        "graphical-session.target"
+        "yubikey-touch-detector.socket"
+      ];
       PartOf = [ "graphical-session.target" ];
     };
     Service = {

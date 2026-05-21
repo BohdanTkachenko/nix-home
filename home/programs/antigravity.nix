@@ -20,17 +20,15 @@ let
   };
 in
 {
-  config = lib.mkIf (config.my.environment == "personal") {
-    home.packages = [
-      (pinToCCD1 antigravityWithExtensions)
-    ];
+  home.packages = [
+    (pinToCCD1 antigravityWithExtensions)
+  ];
 
-    home.file.".local/share/pixmaps/antigravity.png".source = "${antigravityPkg}/share/pixmaps/antigravity.png";
-    home.file.".local/share/icons/antigravity.png".source = "${antigravityPkg}/share/pixmaps/antigravity.png";
+  home.file.".local/share/pixmaps/antigravity.png".source = "${antigravityPkg}/share/pixmaps/antigravity.png";
+  home.file.".local/share/icons/antigravity.png".source = "${antigravityPkg}/share/pixmaps/antigravity.png";
 
-    anti-drift.files.".config/Antigravity/User/settings.json" = {
-      source = settingsFile;
-      json = true;
-    };
+  anti-drift.files.".config/Antigravity/User/settings.json" = {
+    source = settingsFile;
+    json = true;
   };
 }

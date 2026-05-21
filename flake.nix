@@ -393,6 +393,27 @@
         nyancat-iso = mkNixosIso personalPc;
       };
 
+      homeManagerModules.base = import ./home/profiles/base.nix;
+      homeManagerModules.cli = import ./home/profiles/cli.nix;
+      homeManagerModules.gui = import ./home/profiles/gui.nix;
+      homeManagerModules.work =
+        { config, lib, ... }:
+        {
+          _module.args = {
+            inherit pkgs-unstable pkgs-master nix-vscode-extensions;
+          };
+
+          imports = [
+            chromium-pwa-wmclass-sync.homeManagerModules.default
+            direnv-instant.homeModules.direnv-instant
+            sops-nix.homeManagerModules.sops
+            xremap.homeManagerModules.default
+            ./overlays
+            ./home/hardware
+            ./home/profiles/work.nix
+          ];
+        };
+
       homeManagerModules.default =
         { config, lib, ... }:
         {
@@ -464,10 +485,10 @@
             workHm = home-manager.lib.homeManagerConfiguration {
               inherit pkgs;
               modules = [
-                self.homeManagerModules.default
+                self.homeManagerModules.work
                 {
-                  my.google.enable = true;
-                  my.environment = "work";
+                  nixpkgs.config.allowUnfree = true;
+                  home.username = "bohdant";
                   home.homeDirectory = "/home/bohdant";
                   home.stateVersion = "25.11";
                 }
