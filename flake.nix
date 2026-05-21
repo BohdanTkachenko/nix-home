@@ -408,8 +408,14 @@
           ];
         };
 
-      packages.${system} = {
+      packages.${system} = rec {
         init-secureboot = pkgs.callPackage ./scripts/init-secureboot.nix { };
+        rebuild = pkgs.callPackage ./scripts/rebuild.nix { };
+        rebuild-boot = pkgs.callPackage ./scripts/rebuild-boot.nix { };
+        update = pkgs.callPackage ./scripts/update.nix { inherit rebuild; };
+        check-flake = pkgs.callPackage ./scripts/check-flake.nix { };
+        show-age-pubkey = pkgs.callPackage ./scripts/show-age-pubkey.nix { };
+        rekey = pkgs.callPackage ./scripts/rekey.nix { };
       };
 
       devShells.${system}.default = pkgs.mkShell {
@@ -418,12 +424,19 @@
           gnumake
           nodejs
           python3
-          just
           inetutils
           iperf
           sops
           traceroute
           wireguard-tools
+
+          # Custom flake commands
+          self.packages.${system}.rebuild
+          self.packages.${system}.rebuild-boot
+          self.packages.${system}.update
+          self.packages.${system}.check-flake
+          self.packages.${system}.show-age-pubkey
+          self.packages.${system}.rekey
         ];
       };
 
