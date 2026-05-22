@@ -396,7 +396,7 @@
       homeManagerModules.base = import ./home/profiles/base.nix;
       homeManagerModules.cli = import ./home/profiles/cli.nix;
       homeManagerModules.gui = import ./home/profiles/gui.nix;
-      homeManagerModules.work =
+      homeManagerModules.common =
         { config, lib, ... }:
         {
           _module.args = {
@@ -410,7 +410,7 @@
             xremap.homeManagerModules.default
             ./overlays
             ./home/hardware
-            ./home/profiles/work.nix
+            ./home/profiles/common.nix
           ];
         };
 
