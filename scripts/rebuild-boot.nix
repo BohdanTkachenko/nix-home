@@ -6,7 +6,7 @@ pkgs.writeShellScriptBin "rebuild-boot" ''
   if [[ -f "./flake.nix" ]]; then
     FLAKE_DIR="$(pwd)"
   else
-    FLAKE_DIR="/home/dan/.config/nix"
+    FLAKE_DIR="/home/dan/Projects/nix-home"
   fi
 
   echo "--> Rebuilding NixOS bootloader configuration..."

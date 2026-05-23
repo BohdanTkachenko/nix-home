@@ -17,6 +17,11 @@
       url = "github:NixOS/nixpkgs/99b135bc06e4e6df5f182c5bb9d4edc639b64846";
     };
 
+    # antigravity-cli 1.0.1 — NixOS/nixpkgs#523246
+    nixpkgs-antigravity-cli = {
+      url = "github:NixOS/nixpkgs/pull/523246/head";
+    };
+
     browser-previews = {
       url = "github:nix-community/browser-previews";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -80,6 +85,7 @@
       nixpkgs-unstable,
       nixpkgs-master,
       nixpkgs-claude-code,
+      nixpkgs-antigravity-cli,
       browser-previews,
       nix-vscode-extensions,
       sops-nix,
@@ -90,6 +96,10 @@
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
       pkgs-claude-code = import nixpkgs-claude-code {
+        inherit system;
+        config.allowUnfree = true;
+      };
+      pkgs-antigravity-cli = import nixpkgs-antigravity-cli {
         inherit system;
         config.allowUnfree = true;
       };
@@ -123,6 +133,7 @@
               pkgs-unstable
               pkgs-master
               pkgs-claude-code
+              pkgs-antigravity-cli
               nix-vscode-extensions
               ;
           };
@@ -141,6 +152,7 @@
                     pkgs-unstable
                     pkgs-master
                     pkgs-claude-code
+                    pkgs-antigravity-cli
                     nix-vscode-extensions
                     ;
                 };
@@ -400,7 +412,7 @@
         { config, lib, ... }:
         {
           _module.args = {
-            inherit pkgs-unstable pkgs-master nix-vscode-extensions;
+            inherit pkgs-unstable pkgs-master pkgs-antigravity-cli nix-vscode-extensions;
           };
 
           imports = [
@@ -418,7 +430,7 @@
         { config, lib, ... }:
         {
           _module.args = {
-            inherit pkgs-unstable pkgs-master pkgs-claude-code nix-vscode-extensions;
+            inherit pkgs-unstable pkgs-master pkgs-claude-code pkgs-antigravity-cli nix-vscode-extensions;
           };
 
           imports = [

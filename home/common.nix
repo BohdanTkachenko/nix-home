@@ -5,7 +5,7 @@
     ./modules/options.nix
   ];
 
-  anti-drift.driftDir = "$HOME/.config/nix/drifts";
+  anti-drift.driftDir = "$HOME/Projects/nix-home/drifts";
 
   home.stateVersion = "25.11";
   programs.home-manager.enable = true;

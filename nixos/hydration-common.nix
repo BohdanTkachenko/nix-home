@@ -62,7 +62,7 @@ in
 
   config = lib.mkIf cfg.enable {
     systemd.tmpfiles.rules = [
-      "L+ /etc/nixos - - - - ${primaryHome}/.config/nix"
+      "L+ /etc/nixos - - - - ${primaryHome}/Projects/nix-home"
     ];
 
     systemd.services = lib.listToAttrs [
@@ -70,7 +70,7 @@ in
         name = "nixos-config";
         description = "Clone NixOS Config";
         repo = "https://github.com/BohdanTkachenko/nix-home.git";
-        path = "${primaryHome}/.config/nix";
+        path = "${primaryHome}/Projects/nix-home";
       })
     ];
   };

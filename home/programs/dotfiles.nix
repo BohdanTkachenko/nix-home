@@ -3,12 +3,12 @@
   programs.bash.initExtra = ''
     dotfiles() {
       if [[ "$1" == "cd" ]]; then
-        cd "$HOME/.config/nix"
+        cd "$HOME/Projects/nix-home"
       else
         if [ -e /etc/NIXOS ]; then
-          nix-shell -p gnumake --run "make -C $HOME/.config/nix ''$@"
+          nix-shell -p gnumake --run "make -C $HOME/Projects/nix-home ''$@"
         else
-          make -C "$HOME/.config/nix" "$@"
+          make -C "$HOME/Projects/nix-home" "$@"
         fi
       fi
     }
@@ -17,12 +17,12 @@
   programs.fish.functions = {
     dotfiles = ''
       if test "$argv[1]" = "cd"
-        cd "$HOME/.config/nix"
+        cd "$HOME/Projects/nix-home"
       else
         if test -e /etc/NIXOS
-          nix-shell -p gnumake --run "make -C $HOME/.config/nix $argv"
+          nix-shell -p gnumake --run "make -C $HOME/Projects/nix-home $argv"
         else
-          make -C "$HOME/.config/nix" $argv
+          make -C "$HOME/Projects/nix-home" $argv
         end
       end
     '';

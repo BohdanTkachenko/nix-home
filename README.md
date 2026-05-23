@@ -3,8 +3,8 @@
 ## Installation
 
 ```sh
-jj git clone https://github.com/BohdanTkachenko/nix-home $HOME/.config/nix
-cd $HOME/.config/nix
+jj git clone https://github.com/BohdanTkachenko/nix-home $HOME/Projects/nix-home
+cd $HOME/Projects/nix-home
 make setup
 make
 ```

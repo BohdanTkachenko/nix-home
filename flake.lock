@@ -340,6 +340,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-antigravity-cli": {
+      "locked": {
+        "lastModified": 1779536156,
+        "narHash": "sha256-WsWwcaPNUH5TbX0BqyQC2jrbq3kmDJmrG3WJy/ekQuI=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "34636533edd7fdc1fc743fe2d71a291459af48e6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "pull/523246/head",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-claude-code": {
       "locked": {
         "lastModified": 1776380144,
@@ -435,6 +451,7 @@
         "lanzaboote": "lanzaboote",
         "nix-vscode-extensions": "nix-vscode-extensions",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-antigravity-cli": "nixpkgs-antigravity-cli",
         "nixpkgs-claude-code": "nixpkgs-claude-code",
         "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-unstable": "nixpkgs-unstable",

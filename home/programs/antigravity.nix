@@ -3,6 +3,7 @@
   lib,
   pkgs,
   pkgs-unstable,
+  pkgs-antigravity-cli,
   ...
 }:
 let
@@ -22,6 +23,7 @@ in
 {
   home.packages = [
     (pinToCCD1 antigravityWithExtensions)
+    pkgs-antigravity-cli.antigravity-cli
   ];
 
   home.file.".local/share/pixmaps/antigravity.png".source = "${antigravityPkg}/share/pixmaps/antigravity.png";
