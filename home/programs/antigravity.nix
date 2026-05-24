@@ -28,12 +28,11 @@ let
         ];
       };
       home-assistant = {
-        type = "http";
-        url = "\${CLAUDE_HA_MCP_URL}";
-        oauth = {
-          clientId = "http://localhost:48721";
-          callbackPort = 48721;
-        };
+        command = "bash";
+        args = [
+          "-c"
+          "npx -y mcp-remote \"$CLAUDE_HA_MCP_URL\" 48721 --static-oauth-client-info '{\"client_id\": \"http://localhost:48721\", \"redirect_uris\": [\"http://localhost:48721/oauth/callback\"]}'"
+        ];
       };
       github-mcp-server = {
         command = "docker";
@@ -46,15 +45,16 @@ let
           "ghcr.io/github/github-mcp-server"
         ];
         env = {
-          GITHUB_PERSONAL_ACCESS_TOKEN = "\${GITHUB_PERSONAL_ACCESS_TOKEN}";
+          GITHUB_PERSONAL_ACCESS_TOKEN = "\${env:GITHUB_PERSONAL_ACCESS_TOKEN}";
         };
       };
       plane = {
         type = "http";
-        url = "https://mcp.plane.so/http/api-key/mcp";
+        disabled = true;
+        serverURL = "https://mcp.plane.so/http/api-key/mcp";
         headers = {
-          Authorization = "Bearer \${PLANE_API_KEY}";
-          X-Workspace-slug = "\${PLANE_WORKSPACE_SLUG}";
+          Authorization = "Bearer \${env:PLANE_API_KEY}";
+          X-Workspace-slug = "\${env:PLANE_WORKSPACE_SLUG}";
         };
       };
     };
