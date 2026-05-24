@@ -38,7 +38,7 @@ let
         url = "https://mcp.plane.so/http/api-key/mcp";
         headers = {
           Authorization = "Bearer \${PLANE_API_KEY}";
-          X-Workspace-slug = "ideasmash";
+          X-Workspace-slug = "\${PLANE_WORKSPACE_SLUG}";
         };
       };
     };
@@ -65,6 +65,7 @@ let
         --add-flags '--mcp-config="''$HOME/.claude/mcp.json"' \
         --run '${exportSecret "github-pat" "GITHUB_PERSONAL_ACCESS_TOKEN"}' \
         --run '${exportSecret "plane-api-key" "PLANE_API_KEY"}' \
+        --run '${exportSecret "plane-workspace-slug" "PLANE_WORKSPACE_SLUG"}' \
         --run '${exportSecret "claude-ha-mcp-url" "CLAUDE_HA_MCP_URL"}'
     '';
   };
@@ -439,6 +440,11 @@ in
     sops.secrets.plane-api-key = lib.mkIf config.my.secrets.sops.enable {
       sopsFile = ./secrets/claude-code.yaml;
       key = "plane_api_key";
+    };
+
+    sops.secrets.plane-workspace-slug = lib.mkIf config.my.secrets.sops.enable {
+      sopsFile = ./secrets/claude-code.yaml;
+      key = "plane_workspace_slug";
     };
 
     xdg.desktopEntries.ssh-askpass = {
