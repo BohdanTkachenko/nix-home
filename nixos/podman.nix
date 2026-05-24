@@ -5,7 +5,12 @@ let
 in
 {
   virtualisation = {
-    containers.enable = true;
+    containers = {
+      enable = true;
+      policy = {
+        default = [ { type = "insecureAcceptAnything"; } ];
+      };
+    };
     podman = {
       enable = true;
       dockerCompat = true;

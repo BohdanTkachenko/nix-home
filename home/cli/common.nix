@@ -17,6 +17,7 @@
 
   imports = [
     ../programs/bash.nix
+    ../programs/containers.nix
     ../programs/direnv.nix
     ../programs/dotfiles.nix
     ../programs/fish.nix
