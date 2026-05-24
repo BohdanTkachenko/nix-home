@@ -17,9 +17,20 @@
       url = "github:NixOS/nixpkgs/99b135bc06e4e6df5f182c5bb9d4edc639b64846";
     };
 
-    # antigravity-cli 1.0.1 — NixOS/nixpkgs#523246
-    nixpkgs-antigravity-cli = {
-      url = "github:NixOS/nixpkgs/pull/523246/head";
+    # antigravity 2.0.0
+    antigravity-nix = {
+      url = "github:briossant/antigravity2.0-nix";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
+    # antigravity-ide — NixOS/nixpkgs#522168
+    nixpkgs-antigravity-ide = {
+      url = "github:NixOS/nixpkgs/pull/522168/head";
+    };
+
+    # antigravity-hub — NixOS/nixpkgs#524225
+    nixpkgs-antigravity-hub = {
+      url = "github:NixOS/nixpkgs/pull/524225/head";
     };
 
     browser-previews = {
@@ -85,7 +96,9 @@
       nixpkgs-unstable,
       nixpkgs-master,
       nixpkgs-claude-code,
-      nixpkgs-antigravity-cli,
+      nixpkgs-antigravity-ide,
+      nixpkgs-antigravity-hub,
+      antigravity-nix,
       browser-previews,
       nix-vscode-extensions,
       sops-nix,
@@ -99,7 +112,11 @@
         inherit system;
         config.allowUnfree = true;
       };
-      pkgs-antigravity-cli = import nixpkgs-antigravity-cli {
+      pkgs-antigravity-ide = import nixpkgs-antigravity-ide {
+        inherit system;
+        config.allowUnfree = true;
+      };
+      pkgs-antigravity-hub = import nixpkgs-antigravity-hub {
         inherit system;
         config.allowUnfree = true;
       };
@@ -112,7 +129,9 @@
           # The test isn't load-bearing for our use of openldap as a
           # transitive dep — skip it.
           (_: prev: {
-            openldap = prev.openldap.overrideAttrs (_: { doCheck = false; });
+            openldap = prev.openldap.overrideAttrs (_: {
+              doCheck = false;
+            });
           })
         ];
       };
@@ -133,7 +152,9 @@
               pkgs-unstable
               pkgs-master
               pkgs-claude-code
-              pkgs-antigravity-cli
+              pkgs-antigravity-ide
+              pkgs-antigravity-hub
+              antigravity-nix
               nix-vscode-extensions
               ;
           };
@@ -152,7 +173,9 @@
                     pkgs-unstable
                     pkgs-master
                     pkgs-claude-code
-                    pkgs-antigravity-cli
+                    pkgs-antigravity-ide
+                    pkgs-antigravity-hub
+                    antigravity-nix
                     nix-vscode-extensions
                     ;
                 };
@@ -412,7 +435,15 @@
         { config, lib, ... }:
         {
           _module.args = {
-            inherit pkgs-unstable pkgs-master pkgs-antigravity-cli nix-vscode-extensions;
+            inherit
+              pkgs-unstable
+              pkgs-master
+              pkgs-claude-code
+              pkgs-antigravity-ide
+              pkgs-antigravity-hub
+              antigravity-nix
+              nix-vscode-extensions
+              ;
           };
 
           imports = [
@@ -430,7 +461,15 @@
         { config, lib, ... }:
         {
           _module.args = {
-            inherit pkgs-unstable pkgs-master pkgs-claude-code pkgs-antigravity-cli nix-vscode-extensions;
+            inherit
+              pkgs-unstable
+              pkgs-master
+              pkgs-claude-code
+              pkgs-antigravity-ide
+              pkgs-antigravity-hub
+              antigravity-nix
+              nix-vscode-extensions
+              ;
           };
 
           imports = [

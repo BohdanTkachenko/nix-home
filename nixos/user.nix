@@ -55,9 +55,7 @@ in
     ];
   };
 
-  config.my.users.maria = {
-    description = "Maria";
-  };
+
 
   config.users.users = lib.mapAttrs (name: cfg: {
     isNormalUser = true;

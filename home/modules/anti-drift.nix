@@ -18,13 +18,20 @@ let
       target = "$HOME/${path}";
       baseline = "${target}.nix-baseline";
       driftFile = "${cfg.driftDir}/${flatDriftName path}";
+      jqDelPaths = lib.concatMapStringsSep ", " (p: if lib.hasPrefix "." p then p else ".${p}") opts.preserve;
+      jqMergePaths = lib.concatMapStringsSep " | " (p:
+        let pathStr = if lib.hasPrefix "." p then p else ".${p}";
+        in "if ($target${pathStr} != null) then ${pathStr} = $target${pathStr} else . end"
+      ) opts.preserve;
       normalize = if opts.json then
-        ''$jq --sort-keys . "$1" 2>/dev/null || cat "$1"''
+        if opts.preserve != [ ] then
+          ''$jq --sort-keys 'del(${jqDelPaths})' "$1" 2>/dev/null || cat "$1"''
+        else
+          ''$jq --sort-keys . "$1" 2>/dev/null || cat "$1"''
       else
         ''cat "$1"'';
     in ''
-      # --- ${path} ---
-      normalize_${builtins.replaceStrings [ "." "-" "/" ] [ "_" "_" "_" ] path}() {
+      normalize_${builtins.replaceStrings [ "." "-" "/" " " ] [ "_" "_" "_" "_" ] path}() {
         ${normalize}
       }
 
@@ -40,8 +47,8 @@ let
 
       # Detect drift
       if [ -f "${target}" ] && [ -e "${baseline}" ]; then
-        normalizedBaseline=$(normalize_${builtins.replaceStrings [ "." "-" "/" ] [ "_" "_" "_" ] path} "${baseline}")
-        normalizedCurrent=$(normalize_${builtins.replaceStrings [ "." "-" "/" ] [ "_" "_" "_" ] path} "${target}")
+        normalizedBaseline=$(normalize_${builtins.replaceStrings [ "." "-" "/" " " ] [ "_" "_" "_" "_" ] path} "${baseline}")
+        normalizedCurrent=$(normalize_${builtins.replaceStrings [ "." "-" "/" " " ] [ "_" "_" "_" "_" ] path} "${target}")
 
         if [ "$normalizedBaseline" != "$normalizedCurrent" ]; then
           # Save drift diff to repo
@@ -59,8 +66,17 @@ let
       fi
 
       # Copy new version and update baseline
+      ${if opts.json && opts.preserve != [ ] then ''
+        if [ -f "${target}" ]; then
+          $jq --argfile target "${target}" '${jqMergePaths}' "${opts.source}" > "${target}.tmp" 2>/dev/null || run cp "${opts.source}" "${target}.tmp"
+        else
+          run cp "${opts.source}" "${target}.tmp"
+        fi
+      '' else ''
+        run cp "${opts.source}" "${target}.tmp"
+      ''}
       run rm -f "${target}" "${baseline}"
-      run cp "${opts.source}" "${target}"
+      run mv "${target}.tmp" "${target}"
       run chmod 644 "${target}"
       run ln -s "${opts.source}" "${baseline}"
     ''
@@ -76,13 +92,18 @@ in
     type = lib.types.attrsOf (lib.types.submodule {
       options = {
         source = lib.mkOption {
-          type = lib.types.path;
-          description = "Nix store path to copy from";
+          type = with lib.types; either path str;
+          description = "Nix store path or absolute path to copy from";
         };
         json = lib.mkOption {
           type = lib.types.bool;
           default = false;
           description = "Normalize with jq --sort-keys before diffing";
+        };
+        preserve = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [ ];
+          description = "JSON keys/paths to preserve from the existing file and ignore during drift detection (only applicable when json = true)";
         };
       };
     });
@@ -95,7 +116,7 @@ in
       lib.nameValuePair path { enable = false; }
     ) cfg.files;
 
-    home.activation.antiDrift = lib.hm.dag.entryAfter [ "reloadSystemd" ] ''
+    home.activation.antiDrift = lib.hm.dag.entryAfter [ "reloadSystemd" "setupSops" ] ''
       jq="${jq}"
       diff="${diff}"
 

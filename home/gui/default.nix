@@ -12,7 +12,7 @@ in
   imports = [
     ./common.nix
     ../programs/easyeffects.nix
-    ../programs/antigravity.nix
+    ../programs/antigravity
   ];
 
   config = {

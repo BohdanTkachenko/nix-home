@@ -17,7 +17,7 @@ let
     nativeBuildInputs = [ pkgs.makeWrapper ];
     # Forward attrs that downstream modules (e.g. programs.vscode) read off the
     # package: pname, version, meta. symlinkJoin drops them by default.
-    inherit (pkg) meta;
+    meta = pkg.meta or {};
     pname = pkg.pname or pkg.name or "pkg";
     version = pkg.version or "0";
     postBuild = ''

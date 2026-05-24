@@ -17,31 +17,7 @@ let
   # anti-drift; the wrapper below exports the env vars from sops-rendered
   # secret files just before exec, then passes --mcp-config to claude.
   mcpFile = (pkgs.formats.json { }).generate "claude-mcp.json" {
-    mcpServers = {
-      home-assistant = {
-        type = "http";
-        url = "\${CLAUDE_HA_MCP_URL}";
-        oauth = {
-          clientId = "http://localhost:48721";
-          callbackPort = 48721;
-        };
-      };
-      github = {
-        command = "${github-mcp-server}/bin/github-mcp-server";
-        args = [ "stdio" ];
-        env = {
-          GITHUB_PERSONAL_ACCESS_TOKEN = "\${GITHUB_PERSONAL_ACCESS_TOKEN}";
-        };
-      };
-      plane = {
-        type = "http";
-        url = "https://mcp.plane.so/http/api-key/mcp";
-        headers = {
-          Authorization = "Bearer \${PLANE_API_KEY}";
-          X-Workspace-slug = "\${PLANE_WORKSPACE_SLUG}";
-        };
-      };
-    };
+    mcpServers = config.lib.mcp.makeMcpServers { isClaude = true; };
   };
 
   # Helper: produce a `--run` snippet that exports VAR from a sops-rendered
@@ -70,18 +46,7 @@ let
     '';
   };
 
-  github-mcp-server = pkgs.buildGoModule {
-    pname = "github-mcp-server";
-    version = "0.2.0-unstable";
-    src = pkgs.fetchFromGitHub {
-      owner = "github";
-      repo = "github-mcp-server";
-      rev = "b01f7f5b6aa4c251136f9adbc51d489f241a07a4";
-      hash = "sha256-hcIE6aAF/B3UAsZ1ESN7Rqi4F7eVEUaLSIEZRdwVduE=";
-    };
-    vendorHash = "sha256-q21hnMnWOzfg7BGDl4KM1I3v0wwS5sSxzLA++L6jO4s=";
-    subPackages = [ "cmd/github-mcp-server" ];
-  };
+
 
   ticktick-mcp-server = pkgs.buildNpmPackage {
     pname = "ticktick-mcp-server";
@@ -402,6 +367,7 @@ in
 {
   imports = [
     ./jj-commit-command.nix
+    ./mcp.nix
   ];
 
   options.my.claude-code.enable = lib.mkEnableOption "Claude Code";
@@ -427,25 +393,7 @@ in
       };
     };
 
-    sops.secrets.claude-ha-mcp-url = lib.mkIf config.my.secrets.sops.enable {
-      sopsFile = ./secrets/claude-code.yaml;
-      key = "ha_mcp_url";
-    };
 
-    sops.secrets.github-pat = lib.mkIf config.my.secrets.sops.enable {
-      sopsFile = ./secrets/claude-code.yaml;
-      key = "github_pat";
-    };
-
-    sops.secrets.plane-api-key = lib.mkIf config.my.secrets.sops.enable {
-      sopsFile = ./secrets/claude-code.yaml;
-      key = "plane_api_key";
-    };
-
-    sops.secrets.plane-workspace-slug = lib.mkIf config.my.secrets.sops.enable {
-      sopsFile = ./secrets/claude-code.yaml;
-      key = "plane_workspace_slug";
-    };
 
     xdg.desktopEntries.ssh-askpass = {
       name = "ssh-askpass";
