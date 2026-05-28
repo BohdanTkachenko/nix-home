@@ -71,35 +71,28 @@ in
           "upstream_trunk()..@"
         ];
 
-        # backend: Detects the active repository backend: "git" (via git root), "piper" (Google Monorepo), or default "native".
-        backend = [
+        # pull-git: Fetches remote updates from the git upstream and rebases work onto origin's trunk.
+        pull-git = [
           "util"
           "exec"
           "--"
           "sh"
           "-c"
-          "if jj git root > /dev/null 2>&1; then echo 'git'; elif jj piper repo info > /dev/null 2>&1; then echo 'piper'; else echo 'native'; fi"
+          "jj git fetch && jj rebase -d 'origin_trunk()'"
         ];
 
-        # pull: Fetches remote updates from the git upstream and rebases work onto origin's trunk (or syncs in a Piper repository).
-        pull = [
+        # push-git: Commits any active changes by opening a new revision if the working copy is not empty, advances the closest bookmark to @-, and pushes.
+        push-git = [
           "util"
           "exec"
           "--"
           "sh"
           "-c"
-          "case $(jj backend) in git) jj git fetch && jj rebase -d 'origin_trunk()' ;; piper) jj sync ;; *) echo 'Unsupported backend'; ;; esac"
+          "if [ \"$(jj --no-pager log -r @ --no-graph -T 'empty')\" = \"false\" ]; then jj new; fi && jj bookmark advance && jj git push"
         ];
 
-        # push: Commits any active changes by opening a new revision if the working copy is not empty, advances the closest bookmark to @-, and pushes.
-        push = [
-          "util"
-          "exec"
-          "--"
-          "sh"
-          "-c"
-          "case $(jj backend) in git) if [ \"$(jj --no-pager log -r @ --no-graph -T 'empty')\" = \"false\" ]; then jj new; fi && jj bookmark advance && jj git push ;; piper) jj upload ;; *) echo 'Unsupported backend'; ;; esac"
-        ];
+        pull = lib.mkDefault [ "pull-git" ];
+        push = lib.mkDefault [ "push-git" ];
       };
     };
   };
