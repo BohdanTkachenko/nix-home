@@ -1,4 +1,4 @@
-{ pkgs-unstable }:
+{ pkgs-unstable, ... }:
 {
   # Fonts
   "editor.fontFamily" = "'MesloLGL Nerd Font Mono', 'Droid Sans Mono', 'monospace', monospace";
@@ -27,8 +27,6 @@
   # Extensions
   "puppet.editorService.enable" = false;
   "claudeCode.preferredLocation" = "sidebar";
-  "geminicodeassist.project" = "gen-lang-client-0113783863";
-  "http.systemCertificatesNode" = true; # Needed for Gemini Code Assist
   "nushellLanguageServer.nushellExecutablePath" = "${pkgs-unstable.nushell}/bin/nu";
   "jj-view.showSourceControlColocated" = true;
   "security.promptForLocalFileProtocolHandling" = false;
