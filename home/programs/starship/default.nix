@@ -108,11 +108,7 @@ in
       directory = {
         truncation_length = 2;
         truncate_to_repo = false;
-        substitutions = {
-          "/google/src/cloud/${config.home.username}/" = " ";
-          "/google3/" = " //";
-          "/google3" = " //";
-        };
+        substitutions = { };
       };
 
       cmd_duration = {
