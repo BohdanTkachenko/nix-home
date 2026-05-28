@@ -1,4 +1,4 @@
-{ pkgs, pkgs-unstable }:
+{ pkgs-unstable }:
 {
   # Fonts
   "editor.fontFamily" = "'MesloLGL Nerd Font Mono', 'Droid Sans Mono', 'monospace', monospace";
@@ -37,4 +37,7 @@
   # Nix IDE LSP config
   "nix.enableLSP" = true;
   "nix.serverPath" = "nixd";
+
+  # Other
+  "git.enabled" = false;
 }

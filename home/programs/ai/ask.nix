@@ -1,9 +1,8 @@
 {
-  config,
   lib,
   pkgs,
   pkgs-unstable,
-  pkgs-claude-code ? null,
+  pkgs-master,
   ...
 }:
 
@@ -58,17 +57,21 @@ let
     ];
   };
 
-  ask-claude = if pkgs-claude-code != null then mkAskAiScript {
-    name = "ask-claude";
-    exe = "${pkgs-claude-code.claude-code}/bin/claude";
-    args = [
-      "--no-session-persistence"
-      "--model"
-      "haiku"
-      "--print"
-      "-"
-    ];
-  } else null;
+  ask-claude =
+    if pkgs-master != null then
+      mkAskAiScript {
+        name = "ask-claude";
+        exe = "${pkgs-master.claude-code}/bin/claude";
+        args = [
+          "--no-session-persistence"
+          "--model"
+          "haiku"
+          "--print"
+          "-"
+        ];
+      }
+    else
+      null;
 
 in
 {

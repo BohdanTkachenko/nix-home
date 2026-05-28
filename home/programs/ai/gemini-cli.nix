@@ -7,152 +7,6 @@
 }:
 let
   pinToCCD1 = import ../../../lib/pin-to-ccd1.nix { inherit pkgs; };
-  deniedTools = [ ];
-
-  allowedShellCommands = {
-    # Fully allow these commands
-    awk = null;
-    basename = null;
-    cat = null;
-    curl = null;
-    cut = null;
-    date = null;
-    diff = null;
-    dig = null;
-    dirname = null;
-    du = null;
-    echo = null;
-    env = null;
-    eza = null;
-    fd = null;
-    file = null;
-    find = null;
-    grep = null;
-    head = null;
-    host = null;
-    jq = null;
-    ls = null;
-    man = null;
-    md5sum = null;
-    mktemp = null;
-    nslookup = null;
-    printenv = null;
-    rg = null;
-    sed = null;
-    sha256sum = null;
-    sort = null;
-    stat = null;
-    tail = null;
-    tee = null;
-    tokei = null;
-    tr = null;
-    tree = null;
-    uname = null;
-    uniq = null;
-    wc = null;
-    wget = null;
-    which = null;
-    yq = null;
-
-    # Only allow certain sub-commands for these commands
-    cargo = [
-      "bench"
-      "build"
-      "check"
-      "clippy"
-      "doc"
-      "metadata"
-      "read-manifest"
-      "search"
-      "test"
-      "tree"
-      "verify-project"
-    ];
-    go = [
-      "build"
-      "doc"
-      "env"
-      "list"
-      "mod graph"
-      "mod verify"
-      "test"
-      "version"
-      "vet"
-    ];
-    gh = [
-      "api"
-      "issue list"
-      "issue status"
-      "issue view"
-      "pr checks"
-      "pr diff"
-      "pr list"
-      "pr status"
-      "pr view"
-      "repo list"
-      "repo view"
-      "run list"
-      "run view"
-      "search"
-      "status"
-    ];
-    git = [
-      "blame"
-      "diff"
-      "log"
-      "show"
-      "status"
-    ];
-    npm = [
-      "audit"
-      "explain"
-      "list"
-      "outdated"
-      "run"
-      "search"
-      "test"
-      "view"
-    ];
-    npx = null;
-    nix = [
-      "build"
-      "derivation show"
-      "eval"
-      "flake"
-      "hash"
-      "path-info"
-      "search"
-      "store"
-      "why-depends"
-    ];
-    nix-instantiate = [ "--eval" ];
-    nix-store = [
-      "--query"
-      "-q"
-    ];
-    nixos-option = null;
-    systemctl = [
-      "cat"
-      "is-active"
-      "is-enabled"
-      "list-dependencies"
-      "list-timers"
-      "list-unit-files"
-      "list-units"
-      "show"
-      "status"
-    ];
-    journalctl = null;
-    jj = [
-      "describe"
-      "describe-to-file"
-      "describe-from-file"
-      "diff"
-      "log"
-      "show"
-      "status"
-    ];
-  };
 
   mkRule = toolName: decision: priority: {
     inherit toolName decision priority;
@@ -189,8 +43,7 @@ let
 
   policies = {
     rule =
-      (builtins.map (toolName: mkRule toolName "deny" 100) deniedTools)
-      ++ (mkRunShellCommandRules "allow" 100 allowedShellCommands);
+      mkRunShellCommandRules "allow" 100 config.lib.permissions.commands;
   };
 
   policyFile = (pkgs.formats.toml { }).generate "nix.toml" policies;
@@ -233,6 +86,7 @@ in
 {
   imports = [
     ./jj-commit-command.nix
+    ./permissions.nix
   ];
 
   options._geminiPolicyFile = lib.mkOption {
