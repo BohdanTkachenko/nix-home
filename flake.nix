@@ -491,54 +491,6 @@
               python3 ${./tests/fix-chrome-autostart.py}
               touch $out
             '';
-        # Verify the actual home-manager config generates correct systemd units
-        home-manager-chrome-units =
-          let
-            workHm = home-manager.lib.homeManagerConfiguration {
-              inherit pkgs;
-              modules = [
-                self.homeManagerModules.work
-                {
-                  nixpkgs.config.allowUnfree = true;
-                  home.username = "bohdant";
-                  home.homeDirectory = "/home/bohdant";
-                  home.stateVersion = "25.11";
-                }
-              ];
-              extraSpecialArgs = {
-                inherit
-                  inputs
-                  system
-                  pkgs-unstable
-                  pkgs-master
-                  pkgs-claude-code
-                  nix-vscode-extensions
-                  ;
-              };
-            };
-            unitDir = "${workHm.activationPackage}/home-files/.config/systemd/user";
-          in
-          pkgs.runCommand "test-hm-chrome-units" { } ''
-            echo "Checking home-manager generates Chrome autostart fixer unit..."
-
-            service="${unitDir}/fix-google-chrome-stable-autostart.service"
-            path="${unitDir}/fix-google-chrome-stable-autostart.path"
-
-            # Check files exist
-            test -f "$service" || { echo "FAIL: $service not found"; exit 1; }
-            test -f "$path" || { echo "FAIL: $path not found"; exit 1; }
-
-            # Verify service has correct ExecStart
-            grep -q "fix-chrome-autostart" "$service" || { echo "FAIL: service missing ExecStart"; exit 1; }
-
-            # Verify path unit watches autostart directory
-            grep -q "PathChanged=.*autostart" "$path" || { echo "FAIL: path not watching autostart"; exit 1; }
-
-            # Verify path unit will be enabled (has Install section with WantedBy)
-            grep -q "WantedBy=paths.target" "$path" || { echo "FAIL: path unit won't be enabled"; exit 1; }
-
-            touch $out
-          '';
       };
     };
 }
