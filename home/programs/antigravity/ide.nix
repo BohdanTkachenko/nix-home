@@ -15,21 +15,16 @@ let
     isAntigravity = true;
   };
 
-  antigravityIdePkg = pkgs-antigravity-ide.antigravity-ide.fhsWithPackages (
-    ps: with ps; [
-      nodejs
-      python3
-    ]
-  );
+  antigravityIdePkg = pkgs-antigravity-ide.antigravity-ide;
+
+  antigravityIdeWithExtensions = pkgs-antigravity-ide.vscode-with-extensions.override {
+    vscode = antigravityIdePkg;
+    vscodeExtensions = extensions;
+  };
 in
 {
   home.packages = [
-    (pinToCCD1 (
-      pkgs.vscode-with-extensions.override {
-        vscode = antigravityIdePkg;
-        vscodeExtensions = extensions;
-      }
-    ))
+    (pinToCCD1 antigravityIdeWithExtensions)
   ];
 
   anti-drift.files = {

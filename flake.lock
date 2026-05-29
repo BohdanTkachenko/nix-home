@@ -379,6 +379,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-antigravity-cli": {
+      "locked": {
+        "lastModified": 1780159606,
+        "narHash": "sha256-+H0ZmSELjtxicqz/pIpoP9RTRG/K+qlkAeqDN8Pgc3Q=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "155f4bc47fa2b3d1dfc70e1e550af8e981e279ef",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "pull/526033/head",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-antigravity-hub": {
       "locked": {
         "lastModified": 1780092297,
@@ -397,16 +413,16 @@
     },
     "nixpkgs-antigravity-ide": {
       "locked": {
-        "lastModified": 1779486593,
-        "narHash": "sha256-+06Hjs64b3ViaAkyXTXF4ijqlBdjiQKa7A0X2qbX5Wg=",
-        "owner": "NixOS",
+        "lastModified": 1780167067,
+        "narHash": "sha256-Ljlq2w21oE195Pwkw2OGKyeEyT6IU7r4SZSFOngkdPI=",
+        "owner": "BohdanTkachenko",
         "repo": "nixpkgs",
-        "rev": "f6252713f19a41ef848984c3de9324b8b1574b29",
+        "rev": "606c34980dc3db8f0f367a74f5e7c8daf848f24b",
         "type": "github"
       },
       "original": {
-        "owner": "NixOS",
-        "ref": "pull/522168/head",
+        "owner": "BohdanTkachenko",
+        "ref": "antigravity-ide-with-icon-fix",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -507,6 +523,7 @@
         "lanzaboote": "lanzaboote",
         "nix-vscode-extensions": "nix-vscode-extensions",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-antigravity-cli": "nixpkgs-antigravity-cli",
         "nixpkgs-antigravity-hub": "nixpkgs-antigravity-hub",
         "nixpkgs-antigravity-ide": "nixpkgs-antigravity-ide",
         "nixpkgs-claude-code": "nixpkgs-claude-code",

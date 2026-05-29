@@ -1,6 +1,6 @@
 {
   pkgs,
-  pkgs-master,
+  pkgs-antigravity-cli,
   ...
 }:
 let
@@ -8,7 +8,7 @@ let
 in
 {
   home.packages = [
-    (pinToCCD1 pkgs-master.antigravity-cli)
+    (pinToCCD1 pkgs-antigravity-cli.antigravity-cli)
   ];
 
   anti-drift.files = {
@@ -18,6 +18,10 @@ in
       source = (pkgs.formats.json { }).generate "antigravity-cli-settings.json" {
         colorScheme = "dark";
         enableTelemetry = false;
+        # Terminal sandbox (rootless podman/crun) works in interactive `agy`
+        # sessions; under `agy -p` it silently runs on the host instead — an
+        # upstream agy bug, not a NixOS issue.
+        enableTerminalSandbox = true;
       };
     };
   };

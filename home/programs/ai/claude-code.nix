@@ -144,6 +144,7 @@ let
   userSettings = {
     "$schema" = "https://json.schemastore.org/claude-code-settings.json";
 
+    agentPushNotifEnabled = true;
     cleanupPeriodDays = 3650;
     effortLevel = "high";
     enabledPlugins = {

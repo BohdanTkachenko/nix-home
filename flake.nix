@@ -23,14 +23,20 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    # antigravity-ide — NixOS/nixpkgs#522168
+    # antigravity-ide — fork branch merging the antigravity-ide package (+ NixOS
+    # agent fix) with the vscode-with-extensions iconName fix (NixOS/nixpkgs#526069)
     nixpkgs-antigravity-ide = {
-      url = "github:NixOS/nixpkgs/pull/522168/head";
+      url = "github:BohdanTkachenko/nixpkgs/antigravity-ide-with-icon-fix";
     };
 
     # antigravity-hub — NixOS/nixpkgs#524225
     nixpkgs-antigravity-hub = {
       url = "github:NixOS/nixpkgs/pull/524225/head";
+    };
+
+    # antigravity-cli — NixOS/nixpkgs#526033
+    nixpkgs-antigravity-cli = {
+      url = "github:NixOS/nixpkgs/pull/526033/head";
     };
 
     browser-previews = {
@@ -98,6 +104,7 @@
       nixpkgs-claude-code,
       nixpkgs-antigravity-ide,
       nixpkgs-antigravity-hub,
+      nixpkgs-antigravity-cli,
       antigravity-nix,
       browser-previews,
       nix-vscode-extensions,
@@ -117,6 +124,10 @@
         config.allowUnfree = true;
       };
       pkgs-antigravity-hub = import nixpkgs-antigravity-hub {
+        inherit system;
+        config.allowUnfree = true;
+      };
+      pkgs-antigravity-cli = import nixpkgs-antigravity-cli {
         inherit system;
         config.allowUnfree = true;
       };
@@ -154,6 +165,7 @@
               pkgs-claude-code
               pkgs-antigravity-ide
               pkgs-antigravity-hub
+              pkgs-antigravity-cli
               antigravity-nix
               nix-vscode-extensions
               ;
@@ -175,6 +187,7 @@
                     pkgs-claude-code
                     pkgs-antigravity-ide
                     pkgs-antigravity-hub
+                    pkgs-antigravity-cli
                     antigravity-nix
                     nix-vscode-extensions
                     ;
@@ -441,6 +454,7 @@
               pkgs-claude-code
               pkgs-antigravity-ide
               pkgs-antigravity-hub
+              pkgs-antigravity-cli
               antigravity-nix
               nix-vscode-extensions
               ;
@@ -467,6 +481,7 @@
               pkgs-claude-code
               pkgs-antigravity-ide
               pkgs-antigravity-hub
+              pkgs-antigravity-cli
               antigravity-nix
               nix-vscode-extensions
               ;
