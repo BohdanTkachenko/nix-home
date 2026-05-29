@@ -77,6 +77,21 @@ in
         } else {
           serverURL = "https://mcp.plane.so/http/api-key/mcp";
         });
+
+        playwright = {
+          command = lib.getExe' pkgs.nodejs "npx";
+          args = [
+            "-y"
+            "@playwright/mcp@latest"
+          ];
+          env = {
+            PATH = "${lib.makeBinPath [
+              pkgs.nodejs
+              pkgs.bash
+              pkgs.coreutils
+            ]}";
+          };
+        };
       } // (if isClaude then {
         github = {
           command = lib.getExe pkgs.podman;
