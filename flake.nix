@@ -383,6 +383,11 @@
           # `systemd-reboot` can't kill the wedged tasks. See KNOWN_ISSUES.md.
           boot.blacklistedKernelModules = [ "atlantic" ];
 
+          # Build aarch64 artifacts (the OCI workbench image) here via emulation.
+          # OCI A1 VMs lack /dev/kvm, so the image's make-disk-image build can't
+          # run there; this box has KVM, satisfying the build's `kvm` feature.
+          boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
           # Desktop on wall power: pin amd-pstate EPP to "performance" via udev
           # and disable power-profiles-daemon (which GNOME and the shared
           # performance module both enable). With PPD off, GNOME's
