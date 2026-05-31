@@ -43,12 +43,18 @@ let
     let
       allowedTools = [
         "Bash(jj new:*)"
+        "Bash(jj root:*)"
         "Bash(jj status:*)"
         "Bash(jj log:*)"
         "Bash(jj diff:*)"
         "Bash(jj show:*)"
         "Bash(jj describe-to-file *)"
         "Bash(jj describe-from-file *)"
+        "Bash(git rev-parse:*)"
+        "Bash(git status:*)"
+        "Bash(git diff:*)"
+        "Bash(git add:*)"
+        "Bash(git commit:*)"
         "Read(//tmp/jj-commit-msg/*)"
         "Write(//tmp/jj-commit-msg/*)"
       ];
