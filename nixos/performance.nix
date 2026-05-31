@@ -41,6 +41,16 @@
     '')
   ];
 
+  # Confine all Nix builds to CCD1. The per-tool `build-run`/pinToCCD1 wrappers
+  # only set affinity on the wrapped process tree, but `nix build` hands the
+  # actual work to nix-daemon.service — a root system service outside that tree
+  # that never inherits the pin, so its build jobs (cc/rustc, qemu-user cross
+  # builds) otherwise spread onto the V-cache CCD0 and stutter games. A cgroup
+  # AllowedCPUs on the daemon reaches every build child and keeps CCD0 free.
+  # Hardcodes the 9950X3D core ranges, hence the X3D gate.
+  systemd.services.nix-daemon.serviceConfig.AllowedCPUs =
+    lib.mkIf config.my.hardware.cpu.amd.x3d.enable "8-15,24-31";
+
   # ananicy-cpp: auto-nice daemon that assigns CPU/IO priorities by process name.
   # Deprioritizes known heavy background processes (cargo, rustc, cc, ld, etc.)
   # and boosts interactive/game processes — system-wide, regardless of how they're

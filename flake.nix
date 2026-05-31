@@ -313,6 +313,7 @@
           my.gui.enable = true;
 
           my.hardware.cpu.amd.enable = true;
+          my.hardware.cpu.amd.x3d.enable = true;
           my.disk.diskDevice = "/dev/disk/by-id/nvme-WD_BLACK_SN850X_4000GB_23402H800030";
 
           boot.kernelParams = [
