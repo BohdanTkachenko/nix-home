@@ -1,10 +1,10 @@
 ---
 allowed-tools:
-- Bash(just rebuild:*)
+- Bash(nix run .#rebuild:*)
 description: Rebuild the NixOS/home-manager configuration after making changes to Nix files.
 ---
 
-After making changes to Nix configuration files, proactively run `just rebuild` to apply them.
+After making changes to Nix configuration files, proactively run `nix run .#rebuild` to apply them.
 
 - Always rebuild after editing Nix files — don't wait to be asked
 - Can be run from any subdirectory of the repo
