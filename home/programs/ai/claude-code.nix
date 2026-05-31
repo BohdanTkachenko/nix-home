@@ -168,6 +168,7 @@ in
 {
   imports = [
     ./jj-commit-command.nix
+    ./finish-worktree-command.nix
     ./mcp.nix
     ./permissions.nix
   ];
