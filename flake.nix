@@ -113,46 +113,68 @@
       ...
     }:
     let
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
-      pkgs-claude-code = import nixpkgs-claude-code {
-        inherit system;
-        config.allowUnfree = true;
-      };
-      pkgs-antigravity-ide = import nixpkgs-antigravity-ide {
-        inherit system;
-        config.allowUnfree = true;
-      };
-      pkgs-antigravity-hub = import nixpkgs-antigravity-hub {
-        inherit system;
-        config.allowUnfree = true;
-      };
-      pkgs-antigravity-cli = import nixpkgs-antigravity-cli {
-        inherit system;
-        config.allowUnfree = true;
-      };
-      pkgs-unstable = import nixpkgs-unstable {
-        inherit system;
-        config.allowUnfree = true;
-        overlays = [
-          # openldap's syncreplication test (test017) is flaky upstream and
-          # blocks rebuilds whenever pkgs-unstable rolls past a cache miss.
-          # The test isn't load-bearing for our use of openldap as a
-          # transitive dep — skip it.
-          (_: prev: {
-            openldap = prev.openldap.overrideAttrs (_: {
-              doCheck = false;
-            });
-          })
-        ];
-      };
-      pkgs-master = import nixpkgs-master {
-        inherit system;
-        config.allowUnfree = true;
+      defaultSystem = "x86_64-linux";
+
+      # Arch-dependent package sets, parameterised by target system so a host
+      # can build for aarch64 (the cloud workbench) while the desktops stay on
+      # x86_64.
+      mkPkgs = system: {
+        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs-claude-code = import nixpkgs-claude-code {
+          inherit system;
+          config.allowUnfree = true;
+        };
+        pkgs-antigravity-ide = import nixpkgs-antigravity-ide {
+          inherit system;
+          config.allowUnfree = true;
+        };
+        pkgs-antigravity-hub = import nixpkgs-antigravity-hub {
+          inherit system;
+          config.allowUnfree = true;
+        };
+        pkgs-antigravity-cli = import nixpkgs-antigravity-cli {
+          inherit system;
+          config.allowUnfree = true;
+        };
+        pkgs-unstable = import nixpkgs-unstable {
+          inherit system;
+          config.allowUnfree = true;
+          overlays = [
+            # openldap's syncreplication test (test017) is flaky upstream and
+            # blocks rebuilds whenever pkgs-unstable rolls past a cache miss.
+            # The test isn't load-bearing for our use of openldap as a
+            # transitive dep — skip it.
+            (_: prev: {
+              openldap = prev.openldap.overrideAttrs (_: {
+                doCheck = false;
+              });
+            })
+          ];
+        };
+        pkgs-master = import nixpkgs-master {
+          inherit system;
+          config.allowUnfree = true;
+        };
       };
 
-      mkNixos =
-        machineModule:
+      # x86_64 bundle bound at top level so packages/devShells/checks and the
+      # homeManagerModules outputs (which use `pkgs`/`system`) are unchanged.
+      system = defaultSystem;
+      inherit (mkPkgs defaultSystem)
+        pkgs
+        pkgs-claude-code
+        pkgs-antigravity-ide
+        pkgs-antigravity-hub
+        pkgs-antigravity-cli
+        pkgs-unstable
+        pkgs-master
+        ;
+
+      mkNixosSystem =
+        system: machineModule:
+        let
+          p = mkPkgs system;
+        in
         nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = {
@@ -160,14 +182,16 @@
               self
               inputs
               system
+              antigravity-nix
+              nix-vscode-extensions
+              ;
+            inherit (p)
               pkgs-unstable
               pkgs-master
               pkgs-claude-code
               pkgs-antigravity-ide
               pkgs-antigravity-hub
               pkgs-antigravity-cli
-              antigravity-nix
-              nix-vscode-extensions
               ;
           };
           modules = [
@@ -182,14 +206,16 @@
                   inherit
                     inputs
                     system
+                    antigravity-nix
+                    nix-vscode-extensions
+                    ;
+                  inherit (p)
                     pkgs-unstable
                     pkgs-master
                     pkgs-claude-code
                     pkgs-antigravity-ide
                     pkgs-antigravity-hub
                     pkgs-antigravity-cli
-                    antigravity-nix
-                    nix-vscode-extensions
                     ;
                 };
                 sharedModules = [
@@ -244,6 +270,9 @@
             machineModule
           ];
         };
+
+      # Default builder for the x86_64 desktop hosts.
+      mkNixos = mkNixosSystem defaultSystem;
 
       personalLaptop = mkNixos {
         networking.hostName = "dan-idea";
@@ -445,6 +474,33 @@
           ++ flakeOutPaths;
           image.fileName = lib.mkForce "nixos-dan.iso";
         };
+
+      # Headless aarch64 cloud VM (Oracle Cloud Ampere A1), deployed as a custom
+      # image built from oci-image.nix (GRUB-EFI, ext4 root, qemu-guest).
+      workbench = mkNixosSystem "aarch64-linux" (
+        {
+          lib,
+          modulesPath,
+          ...
+        }:
+        {
+          imports = [ "${modulesPath}/virtualisation/oci-image.nix" ];
+
+          networking.hostName = "workbench";
+          nixpkgs.hostPlatform = "aarch64-linux"; # beats hardware/common.nix mkDefault x86_64
+
+          my.gui.enable = false; # my.gaming follows
+          my.secureBoot.enable = false; # lanzaboote/TPM off → GRUB-EFI from oci-common
+
+          # Exactly one bootloader: GRUB (from oci-common), not systemd-boot/lanzaboote.
+          boot.loader.grub.enable = lib.mkForce true;
+
+          # Override the desktop defaults baked into mkNixos's base block.
+          my.hardware.gpu.amd.enable = lib.mkForce false;
+          my.disk.enable = lib.mkForce false;
+          my.wireguard.enable = lib.mkForce false;
+        }
+      );
     in
     {
       nixosConfigurations = {
@@ -452,7 +508,12 @@
         dan-idea-iso = mkNixosIso personalLaptop;
         nyancat = personalPc;
         nyancat-iso = mkNixosIso personalPc;
+        workbench = workbench;
       };
+
+      # Importable OCI custom image (qcow2) for the workbench host. Build on an
+      # aarch64 host: nix build .#packages.aarch64-linux.workbench-image
+      packages.aarch64-linux.workbench-image = workbench.config.system.build.OCIImage;
 
       homeManagerModules.base = import ./home/profiles/base.nix;
       homeManagerModules.cli = import ./home/profiles/cli.nix;
