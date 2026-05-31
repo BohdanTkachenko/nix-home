@@ -481,8 +481,10 @@
           image.fileName = lib.mkForce "nixos-dan.iso";
         };
 
-      # Headless aarch64 cloud VM (Oracle Cloud Ampere A1), deployed as a custom
-      # image built from oci-image.nix (GRUB-EFI, ext4 root, qemu-guest).
+      # Headless aarch64 cloud VM (Oracle Cloud Ampere A1). The bootable image is
+      # built + provisioned by the separate `nixos-oci` repo; this is the config
+      # the box is switched into afterwards. oci-common gives the OCI runtime
+      # (GRUB-EFI, ext4 root, qemu-guest, networkd) so rebuilds stay bootable.
       workbench = mkNixosSystem "aarch64-linux" (
         {
           lib,
@@ -490,7 +492,7 @@
           ...
         }:
         {
-          imports = [ "${modulesPath}/virtualisation/oci-image.nix" ];
+          imports = [ "${modulesPath}/virtualisation/oci-common.nix" ];
 
           networking.hostName = "workbench";
           nixpkgs.hostPlatform = "aarch64-linux"; # beats hardware/common.nix mkDefault x86_64
@@ -516,10 +518,6 @@
         nyancat-iso = mkNixosIso personalPc;
         workbench = workbench;
       };
-
-      # Importable OCI custom image (qcow2) for the workbench host. Build on an
-      # aarch64 host: nix build .#packages.aarch64-linux.workbench-image
-      packages.aarch64-linux.workbench-image = workbench.config.system.build.OCIImage;
 
       homeManagerModules.base = import ./home/profiles/base.nix;
       homeManagerModules.cli = import ./home/profiles/cli.nix;
@@ -598,10 +596,6 @@
           sops
           traceroute
           wireguard-tools
-
-          # workbench/oracle-a1 — OCI provisioning (state in OCI Object Storage)
-          opentofu
-          oci-cli
 
           # Custom flake commands
           self.packages.${system}.rebuild

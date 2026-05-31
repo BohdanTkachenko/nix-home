@@ -1,8 +1,0 @@
-# Copy to terraform.tfvars and fill in. terraform.tfvars is gitignored.
-region                     = "us-ashburn-1"
-compartment_ocid           = "ocid1.tenancy.oc1..xxxxxxxxxxxxxxxxxxxxxxxxxxxx" # tenancy root OCID is fine
-availability_domain_number = 1
-instance_name              = "workbench"
-namespace                  = "xxxxxxxxxxxx" # oci os ns get
-image_bucket               = "tofu-state"
-image_object_name          = "nixos-aarch64.qcow2"

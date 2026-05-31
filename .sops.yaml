@@ -4,6 +4,8 @@ keys:
   - &dan-idea age1n969uhtu3mum8falnm746knzlnx8zexwjfttvq490f8u3yr79d3qeh6s2f
   - &dan-work-pc age1cvfvcpt63vhngg3q2yr0kr73fa4at2naqcjzvrf9evwjm4nmr3gqpgfs4g
   - &dan-work-laptop age1dvtqendfzuwnhrqgvuc4zu28efs8z2ymqm6zavu0p37r704qaf9snnltp0
+  # Headless Oracle A1 cloud box (dan's ~/.ssh/id_ed25519 generated on the box).
+  - &dan-workbench age1h88cyfx4cxar47r29l6kutydkdtvj2z3w0p92dhf7gs4cwutm4xqf0thl5
   # Host keys (derived from /etc/ssh/ssh_host_ed25519_key.pub). Required for
   # system-level secrets that must decrypt during early boot activation,
   # before /home (and thus the user key) is mounted.
@@ -19,8 +21,19 @@ creation_rules:
           - *dan-work-pc
           - *dan-work-laptop
           - *host-nyancat
-  # User-level secrets (home-manager) — only need user keys; decryption runs
-  # post-login, after /home is available.
+  # HM secrets the headless workbench cloud box activates (AI/MCP secrets + the
+  # private SSH config). Scoped to just these files so the public cloud box can
+  # only decrypt what it actually uses — not winapps or system secrets.
+  - path_regex: (home/programs/ai/secrets/.*\.yaml|home/programs/ssh/private-ssh-config)$
+    key_groups:
+      - age:
+          - *dan-nyancat
+          - *dan-idea
+          - *dan-work-pc
+          - *dan-work-laptop
+          - *dan-workbench
+  # Other user-level secrets (home-manager) — only need user keys; decryption
+  # runs post-login, after /home is available.
   - key_groups:
       - age:
           - *dan-nyancat
