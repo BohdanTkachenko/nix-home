@@ -18,6 +18,9 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # TPM2 auto-unlock for the LUKS root (the cryptroot device defined below).
+    boot.initrd.luks.devices.cryptroot.crypttabExtraOpts = [ "tpm2-device=auto" ];
+
     disko.devices = {
       disk = {
         main = {

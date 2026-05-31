@@ -30,7 +30,7 @@
     enableRedistributableFirmware = true;
     enableAllFirmware = true;
     
-    graphics = {
+    graphics = lib.mkIf config.my.gui.enable {
       enable = true;
       enable32Bit = true;
     };

@@ -10,8 +10,13 @@
 #   in pinToCCD1 pkgs.gemini-cli
 { pkgs }:
 pkg:
-let
-  joined = pkgs.symlinkJoin {
+# CCD pinning is a 9950X3D (x86) concern; on other arches (e.g. aarch64 cloud)
+# the wrapper has nothing to pin to, so pass the package through unchanged.
+if !pkgs.stdenv.hostPlatform.isx86_64 then
+  pkg
+else
+  let
+    joined = pkgs.symlinkJoin {
     name = "${pkg.pname or pkg.name or "pkg"}-ccd1-pinned";
     paths = [ pkg ];
     nativeBuildInputs = [ pkgs.makeWrapper ];

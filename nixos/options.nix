@@ -15,4 +15,13 @@
     defaultText = lib.literalExpression "config.my.gui.enable";
     description = "Gaming stack (Steam, gamemode, Waydroid, Minecraft). Requires a graphical session.";
   };
+
+  # Lanzaboote secure boot and the TPM2-unlocked LUKS initrd. On by default for
+  # the physical machines; cloud/UEFI hosts disable it to boot without secure
+  # boot or encryption.
+  options.my.secureBoot.enable = lib.mkOption {
+    type = lib.types.bool;
+    default = true;
+    description = "Lanzaboote secure boot and TPM2 LUKS initrd.";
+  };
 }

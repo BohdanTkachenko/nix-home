@@ -53,11 +53,12 @@
         enable = lib.mkForce false;
         configurationLimit = lib.mkDefault 20;
       };
-      efi.canTouchEfiVariables = true;
+      # mkDefault so image-based hosts (OCI) can set it false.
+      efi.canTouchEfiVariables = lib.mkDefault true;
       timeout = lib.mkDefault 0;
     };
 
-    lanzaboote = {
+    lanzaboote = lib.mkIf config.my.secureBoot.enable {
       enable = true;
       pkiBundle = "/var/lib/sbctl";
     };
@@ -75,8 +76,8 @@
     consoleLogLevel = 3;
     initrd.verbose = false;
     initrd.systemd.enable = true;
-    initrd.systemd.tpm2.enable = true;
-    initrd.luks.devices.cryptroot.crypttabExtraOpts = [ "tpm2-device=auto" ];
+    initrd.systemd.tpm2.enable = config.my.secureBoot.enable;
+    # The cryptroot crypttab opt lives with the LUKS layout (disk-luks-btrfs.nix).
     kernelParams = [
       "quiet"
       "splash"
@@ -87,7 +88,8 @@
   };
 
   networking = {
-    networkmanager.enable = true;
+    # NetworkManager is a desktop concern; headless hosts use systemd-networkd.
+    networkmanager.enable = config.my.gui.enable;
     nftables.enable = true;
     firewall.enable = true;
     useDHCP = lib.mkDefault true;
@@ -121,14 +123,16 @@
       fish
       git
       htop
-      nvtopPackages.amd
+    ]
+    ++ lib.optional config.my.gui.enable nvtopPackages.amd
+    ++ [
       jj
       sbctl
       tmux
       vim
       wget
-      androidenv.androidPkgs.platform-tools
     ]
+    ++ lib.optional config.my.gui.enable androidenv.androidPkgs.platform-tools
     ++ lib.optionals config.my.gui.enable [
       firefox
     ];
@@ -141,7 +145,7 @@
   services.envfs.enable = true;
 
   # Android Debug Bridge
-  programs.adb.enable = true;
+  programs.adb.enable = config.my.gui.enable;
 
   # Disable NixOS xremap (using home-manager xremap instead)
   services.xremap.enable = false;
@@ -160,13 +164,13 @@
   # Disable Avahi printer discovery to avoid duplicates with declarative printers
   services.avahi.enable = false;
 
-  # Printing
-  services.printing = {
+  # Printing (declarative LAN printers — a desktop concern).
+  services.printing = lib.mkIf config.my.gui.enable {
     enable = true;
     browsed.enable = false;
   };
 
-  systemd.services.ensure-printers = {
+  systemd.services.ensure-printers = lib.mkIf config.my.gui.enable {
     wants = [ "network-online.target" ];
     after = [ "network-online.target" ];
     script = lib.mkForce ''
@@ -185,7 +189,7 @@
     startLimitIntervalSec = 300;
   };
 
-  hardware.printers = {
+  hardware.printers = lib.mkIf config.my.gui.enable {
     ensurePrinters = [
       {
         name = "Brother-MFC-L3750CDW";

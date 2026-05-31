@@ -1,22 +1,22 @@
 # Security configuration (sudo, TPM, polkit, gnupg, 1password)
-{ ... }:
+{ config, lib, ... }:
 
 {
   security.polkit.enable = true;
 
   # YubiKey U2F authentication (touch to sudo, with password fallback)
-  security.pam.u2f = {
+  security.pam.u2f = lib.mkIf config.my.gui.enable {
     enable = true;
     control = "sufficient";
     settings.cue = true;
   };
 
-  programs.yubikey-touch-detector = {
+  programs.yubikey-touch-detector = lib.mkIf config.my.gui.enable {
     enable = true;
     libnotify = false;
   };
 
-  systemd.user.services.yubikey-touch-detector.serviceConfig.Environment = [
+  systemd.user.services.yubikey-touch-detector.serviceConfig.Environment = lib.mkIf config.my.gui.enable [
     "YUBIKEY_TOUCH_DETECTOR_LIBNOTIFY=false"
   ];
 
@@ -29,7 +29,7 @@
     '';
   };
 
-  security.tpm2 = {
+  security.tpm2 = lib.mkIf config.my.secureBoot.enable {
     enable = true;
     pkcs11.enable = true;
     tctiEnvironment.enable = true;
@@ -40,8 +40,9 @@
     enableSSHSupport = true;
   };
 
-  programs._1password.enable = true;
-  programs._1password-gui = {
+  # 1Password (CLI + GUI) is a desktop concern — follows my.gui.enable.
+  programs._1password.enable = config.my.gui.enable;
+  programs._1password-gui = lib.mkIf config.my.gui.enable {
     enable = true;
     polkitPolicyOwners = [ "dan" ];
   };
