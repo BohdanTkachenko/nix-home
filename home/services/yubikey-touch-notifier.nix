@@ -1,5 +1,10 @@
 # Custom YubiKey touch notifier with command info and persistent notification
-{ pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   notifier = pkgs.writeScript "yubikey-touch-notifier" ''
@@ -235,32 +240,34 @@ let
   '';
 in
 {
-  home.packages = [
-    (pkgs.makeDesktopItem {
-      name = "yubikey.touch.notifier";
-      desktopName = "YubiKey";
-      exec = "${notifier}";
-      noDisplay = true;
-      extraConfig.DBusActivatable = "true";
-    })
-  ];
+  config = lib.mkIf config.my.gui.enable {
+    home.packages = [
+      (pkgs.makeDesktopItem {
+        name = "yubikey.touch.notifier";
+        desktopName = "YubiKey";
+        exec = "${notifier}";
+        noDisplay = true;
+        extraConfig.DBusActivatable = "true";
+      })
+    ];
 
-  systemd.user.services.yubikey-touch-notifier = {
-    Unit = {
-      Description = "YubiKey touch notifier with command info";
-      After = [
-        "graphical-session.target"
-        "yubikey-touch-detector.socket"
-      ];
-      PartOf = [ "graphical-session.target" ];
-    };
-    Service = {
-      ExecStart = "${notifier}";
-      Restart = "on-failure";
-      RestartSec = "5s";
-    };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
+    systemd.user.services.yubikey-touch-notifier = {
+      Unit = {
+        Description = "YubiKey touch notifier with command info";
+        After = [
+          "graphical-session.target"
+          "yubikey-touch-detector.socket"
+        ];
+        PartOf = [ "graphical-session.target" ];
+      };
+      Service = {
+        ExecStart = "${notifier}";
+        Restart = "on-failure";
+        RestartSec = "5s";
+      };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
     };
   };
 }

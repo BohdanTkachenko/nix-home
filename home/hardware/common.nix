@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   # programs.gnome-shell = {
   #   enable = true;
@@ -7,8 +12,9 @@
   #   ];
   # };
 
+  # Input remapping only matters with a graphical session.
   services.xremap = {
-    enable = lib.mkForce true;
+    enable = lib.mkForce config.my.gui.enable;
     watch = true;
     mouse = true;
     withGnome = true;

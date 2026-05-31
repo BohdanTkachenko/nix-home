@@ -33,7 +33,7 @@
     };
   };
 
-  config = {
+  config = lib.mkIf config.my.gui.enable {
     programs.chromium-pwa-wmclass-sync.service.enable = true;
 
     home.packages = map config.my.gui.wrapper config.my.gui.apps;

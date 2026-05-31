@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
 
   emojiFontFamily = "Noto Color Emoji";
@@ -10,28 +15,30 @@ let
   gnomeMonospaceFontName = "${monospaceFontFamily} ${gnomeMonospaceFontSize}";
 in
 {
+  config = lib.mkIf config.my.gui.enable {
 
-  home.packages = with pkgs; [
-    adwaita-fonts
-    nerd-fonts.meslo-lg
-    noto-fonts-color-emoji
-  ];
+    home.packages = with pkgs; [
+      adwaita-fonts
+      nerd-fonts.meslo-lg
+      noto-fonts-color-emoji
+    ];
 
-  fonts.fontconfig = {
-    enable = true;
-    defaultFonts = {
-      emoji = [ emojiFontFamily ];
-      monospace = [ monospaceFontFamily ];
-      sansSerif = [ fontFamily ];
-      serif = [ fontFamily ];
+    fonts.fontconfig = {
+      enable = true;
+      defaultFonts = {
+        emoji = [ emojiFontFamily ];
+        monospace = [ monospaceFontFamily ];
+        sansSerif = [ fontFamily ];
+        serif = [ fontFamily ];
+      };
     };
-  };
 
-  dconf.settings = {
-    "org/gnome/desktop/interface" = {
-      font-name = gnomeFontName;
-      document-font-name = gnomeFontName;
-      monospace-font-name = gnomeMonospaceFontName;
+    dconf.settings = {
+      "org/gnome/desktop/interface" = {
+        font-name = gnomeFontName;
+        document-font-name = gnomeFontName;
+        monospace-font-name = gnomeMonospaceFontName;
+      };
     };
   };
 }

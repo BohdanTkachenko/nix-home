@@ -26,10 +26,13 @@ let
   sharedHomeImports = [
     ../home
     {
-      my.screenshotPathClipboard.enable = true;
+      my.screenshotPathClipboard.enable = lib.mkDefault systemGuiEnable;
     }
   ];
   primaryUser = builtins.head (builtins.attrNames config.my.users);
+  # Captured here so it isn't shadowed by the per-user home-manager `config`
+  # inside the mapAttrs lambda below.
+  systemGuiEnable = config.my.gui.enable;
 in
 {
   options.my.users = lib.mkOption {
@@ -55,8 +58,6 @@ in
     ];
   };
 
-
-
   config.users.users = lib.mapAttrs (name: cfg: {
     isNormalUser = true;
     description = cfg.description;
@@ -78,6 +79,9 @@ in
         homeDirectory = lib.mkForce "/home/${name}";
         stateVersion = lib.mkForce "25.11";
       };
+      # Mirror the system-level graphical toggle into home-manager so a host
+      # sets my.gui.enable once (at the NixOS level) and both layers follow.
+      my.gui.enable = lib.mkDefault systemGuiEnable;
       my.claude-code.enable = name == primaryUser;
       my.secrets.sops.enable = lib.mkForce (name == primaryUser);
       sops.age.sshKeyPaths = lib.mkForce [ "/home/${primaryUser}/.ssh/id_ed25519" ];

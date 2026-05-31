@@ -5,13 +5,20 @@
 #   sudo waydroid init
 # Or with Google Play Services:
 #   sudo waydroid init -s GAPPS -f
-{ pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
-  virtualisation.waydroid.enable = true;
+  config = lib.mkIf config.my.gaming.enable {
+    virtualisation.waydroid.enable = true;
 
-  # Clipboard sharing between host and Waydroid
-  environment.systemPackages = with pkgs; [
-    wl-clipboard
-  ];
+    # Clipboard sharing between host and Waydroid
+    environment.systemPackages = with pkgs; [
+      wl-clipboard
+    ];
+  };
 }

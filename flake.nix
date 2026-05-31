@@ -220,17 +220,26 @@
             ./nixos/disk-luks-btrfs.nix
             ./nixos/installer-iso.nix
 
-            {
-              my.hardware.gpu.amd.enable = true;
-              my.hardware.bluetooth.enable = true;
-              my.hardware.keychron.enable = true;
-              my.hardware.epos.enable = true;
-              my.hardware.hidpi.enable = true;
-              my.hardware.ssd.enable = true;
-              my.wireguard.enable = true;
-              my.hydration.enable = true;
-              my.disk.enable = true;
-            }
+            (
+              { config, lib, ... }:
+              {
+                my.hardware.gpu.amd.enable = true;
+                my.hardware.ssd.enable = true;
+                my.wireguard.enable = true;
+                my.hydration.enable = true;
+                my.disk.enable = true;
+
+                # Input/output peripherals only make sense with a graphical
+                # session, so they follow my.gui.enable by default. A headless
+                # host that sets my.gui.enable = false gets none of them; any
+                # host can still override an individual device explicitly.
+                my.hardware.bluetooth.enable = lib.mkDefault config.my.gui.enable;
+                my.hardware.keychron.enable = lib.mkDefault config.my.gui.enable;
+                my.hardware.epos.enable = lib.mkDefault config.my.gui.enable;
+                my.hardware.hidpi.enable = lib.mkDefault config.my.gui.enable;
+                my.hardware.moonlander.enable = lib.mkDefault config.my.gui.enable;
+              }
+            )
 
             machineModule
           ];
@@ -238,6 +247,8 @@
 
       personalLaptop = mkNixos {
         networking.hostName = "dan-idea";
+
+        my.gui.enable = true;
 
         my.hardware.cpu.amd.enable = true;
         my.hardware.touchpad.enable = true;
@@ -269,6 +280,8 @@
           ];
 
           networking.hostName = "nyancat";
+
+          my.gui.enable = true;
 
           my.hardware.cpu.amd.enable = true;
           my.disk.diskDevice = "/dev/disk/by-id/nvme-WD_BLACK_SN850X_4000GB_23402H800030";

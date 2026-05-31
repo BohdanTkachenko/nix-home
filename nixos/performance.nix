@@ -1,19 +1,25 @@
 # System performance optimizations inspired by CachyOS
-{ pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
 
   # GameMode: per-game performance boost activated via gamemoderun or Steam's
   # built-in integration. Switches CPU governor to "performance", raises I/O
   # priority, disables screensaver, and applies GPU clock optimizations.
   # Complements ananicy (which handles background deprioritization) by actively
-  # boosting the foreground game.
-  programs.gamemode.enable = true;
+  # boosting the foreground game. Gaming-only.
+  programs.gamemode.enable = config.my.gaming.enable;
 
   # power-profiles-daemon: runtime power/perf knob exposed via GNOME's power
   # menu and `powerprofilesctl`. On amd-pstate-epp it maps performance/balanced/
   # power-saver to EPP performance/balance_performance/power. Doesn't conflict
-  # with scx_lavd — different layer (EPP vs scheduler).
-  services.power-profiles-daemon.enable = true;
+  # with scx_lavd — different layer (EPP vs scheduler). Tied to the graphical
+  # session since its only UI lives in GNOME.
+  services.power-profiles-daemon.enable = config.my.gui.enable;
 
   # CCD pinning wrappers for the 9950X3D's asymmetric topology:
   #   CCD0 (cores 0-7, threads 0-7,16-23): V-cache, 96MB L3 — best for games

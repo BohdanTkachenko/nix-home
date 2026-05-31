@@ -1,6 +1,8 @@
 { config, lib, ... }:
 {
   options.my = {
+    gui.enable = lib.mkEnableOption "graphical session: desktop apps, GNOME integration, and I/O peripheral helpers (xremap, etc.)";
+
     hardware.lenovo.thinkpad = {
       enable = lib.mkEnableOption "Enable Lenovo Thinkpad tweaks";
 
@@ -15,7 +17,6 @@
         description = "Lenovo Thinkpad model";
       };
     };
-
 
     google-chrome.mkWrapper = lib.mkOption {
       type = with lib.types; functionTo (functionTo package);

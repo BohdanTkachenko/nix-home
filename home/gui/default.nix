@@ -12,10 +12,9 @@ in
   imports = [
     ./common.nix
     ../programs/easyeffects.nix
-    ../programs/antigravity
   ];
 
-  config = {
+  config = lib.mkIf config.my.gui.enable {
     home.packages =
       (with pkgs; [
         alpaca

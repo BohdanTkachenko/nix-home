@@ -9,6 +9,7 @@
 {
   imports = [
     ../overlays
+    ./options.nix
     ./comfyui.nix
     ./desktop.nix
     ./minecraft.nix
@@ -61,7 +62,7 @@
       pkiBundle = "/var/lib/sbctl";
     };
 
-    plymouth = {
+    plymouth = lib.mkIf config.my.gui.enable {
       enable = true;
       theme = "lone";
       themePackages = with pkgs; [
@@ -112,21 +113,25 @@
     keyMap = "us";
   };
 
-  environment.systemPackages = with pkgs; [
-    bash
-    curl
-    firefox
-    fish
-    git
-    htop
-    nvtopPackages.amd
-    jj
-    sbctl
-    tmux
-    vim
-    wget
-    androidenv.androidPkgs.platform-tools
-  ];
+  environment.systemPackages =
+    with pkgs;
+    [
+      bash
+      curl
+      fish
+      git
+      htop
+      nvtopPackages.amd
+      jj
+      sbctl
+      tmux
+      vim
+      wget
+      androidenv.androidPkgs.platform-tools
+    ]
+    ++ lib.optionals config.my.gui.enable [
+      firefox
+    ];
 
   services.fwupd.enable = true;
 

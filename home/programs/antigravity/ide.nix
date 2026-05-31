@@ -23,19 +23,21 @@ let
   };
 in
 {
-  home.packages = [
-    (pinToCCD1 antigravityIdeWithExtensions)
-  ];
+  config = lib.mkIf config.my.gui.enable {
+    home.packages = [
+      (pinToCCD1 antigravityIdeWithExtensions)
+    ];
 
-  anti-drift.files = {
-    ".config/Antigravity IDE/User/settings.json" = {
-      source = (pkgs.formats.json { }).generate "antigravity-settings.json" (
-        settings
-        // {
-          "securecoder.enabled" = true;
-        }
-      );
-      json = true;
+    anti-drift.files = {
+      ".config/Antigravity IDE/User/settings.json" = {
+        source = (pkgs.formats.json { }).generate "antigravity-settings.json" (
+          settings
+          // {
+            "securecoder.enabled" = true;
+          }
+        );
+        json = true;
+      };
     };
   };
 }
