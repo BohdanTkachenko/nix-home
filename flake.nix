@@ -593,6 +593,10 @@
           traceroute
           wireguard-tools
 
+          # workbench/oracle-a1 — OCI provisioning (state in OCI Object Storage)
+          opentofu
+          oci-cli
+
           # Custom flake commands
           self.packages.${system}.rebuild
           self.packages.${system}.rebuild-boot

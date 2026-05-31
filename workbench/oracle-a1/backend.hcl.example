@@ -1,0 +1,12 @@
+# Copy to backend.hcl, fill in, then: tofu init -backend-config=backend.hcl
+# Values aren't secret — the Customer Secret Key goes in AWS_ACCESS_KEY_ID /
+# AWS_SECRET_ACCESS_KEY env vars (see .env.example), not here.
+bucket = "tofu-state"
+key    = "nix-home/oracle-a1/terraform.tfstate"
+region = "us-ashburn-1"
+
+# Endpoint: https://<namespace>.compat.objectstorage.<region>.oraclecloud.com
+# Find <namespace> with: oci os ns get
+endpoints = {
+  s3 = "https://<namespace>.compat.objectstorage.us-ashburn-1.oraclecloud.com"
+}
