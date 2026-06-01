@@ -38,14 +38,13 @@
           }
           {
             matches = [
-              { "device.name" = "alsa_card.usb-C-Media_Electronics_Inc._USB_Audio_Device-00"; }
+              { "device.name" = "~alsa_card\\.usb-Generic_USB_SPDIF_Adapter_.*-00"; }
             ];
             actions.update-props = {
               "device.description" = "Soundbar";
               "device.nick" = "Soundbar";
-              "api.acp.hidden-profiles" =
-                ''[ "output:iec958-stereo", "output:iec958-stereo+input:mono-fallback", "output:analog-stereo+input:mono-fallback", "input:mono-fallback", "pro-audio" ]'';
-              "api.acp.hidden-ports" = ''[ "iec958-stereo-output", "analog-input-mic" ]'';
+              "api.acp.hidden-profiles" = ''[ "output:iec958-stereo", "pro-audio" ]'';
+              "api.acp.hidden-ports" = ''[ "iec958-stereo-output" ]'';
             };
           }
           {
@@ -67,6 +66,15 @@
             actions.update-props = {
               "node.description" = "Headphones";
               "node.nick" = "Headphones";
+            };
+          }
+          {
+            matches = [
+              { "node.name" = "~alsa_output\\.usb-Generic_USB_SPDIF_Adapter_.*-00\\.analog-stereo"; }
+            ];
+            actions.update-props = {
+              "node.description" = "Soundbar";
+              "node.nick" = "Soundbar";
             };
           }
           {
