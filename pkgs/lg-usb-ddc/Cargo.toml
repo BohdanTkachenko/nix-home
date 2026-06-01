@@ -1,0 +1,19 @@
+[package]
+name = "lg-usb-ddc"
+version = "0.1.0"
+edition = "2021"
+description = "Send DDC/CI commands to an LG monitor through a RealSil RTS5411 USB-HID I2C bridge (reverse-engineered from LG Switch's iUSB2I2C.framework)"
+license = "MIT"
+
+[[bin]]
+name = "lg-usb-ddc"
+path = "src/main.rs"
+
+[dependencies]
+# hidapi 2.x. The default `linux-static-hidraw` feature builds the bundled hidraw backend,
+# so it does not need a system libudev/hidapi at link time. We disable default features and
+# enable the static hidraw backend explicitly so the build is self-contained on NixOS.
+hidapi = { version = "2", default-features = false, features = ["linux-static-hidraw"] }
+
+[profile.release]
+opt-level = 2
