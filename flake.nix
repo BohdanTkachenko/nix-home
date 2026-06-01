@@ -170,6 +170,48 @@
         pkgs-master
         ;
 
+      # Flake CLI commands + devShell, parameterised by pkgs so the aarch64
+      # cloud workbench gets the same rebuild/rekey/etc. helpers as the x86_64
+      # desktops (otherwise `nix run .#rebuild` 404s on aarch64).
+      mkScripts = pkgs: rec {
+        init-secureboot = pkgs.callPackage ./scripts/init-secureboot.nix { };
+        rebuild = pkgs.callPackage ./scripts/rebuild.nix { };
+        rebuild-boot = pkgs.callPackage ./scripts/rebuild-boot.nix { };
+        update = pkgs.callPackage ./scripts/update.nix { inherit rebuild; };
+        check-flake = pkgs.callPackage ./scripts/check-flake.nix { };
+        show-age-pubkey = pkgs.callPackage ./scripts/show-age-pubkey.nix { };
+        rekey = pkgs.callPackage ./scripts/rekey.nix { };
+      };
+      mkDevShell =
+        pkgs: scripts:
+        pkgs.mkShell {
+          packages =
+            (with pkgs; [
+              asn
+              gnumake
+              nodejs
+              python3
+              inetutils
+              iperf
+              sops
+              traceroute
+              wireguard-tools
+            ])
+            ++ [
+              # Custom flake commands
+              scripts.rebuild
+              scripts.rebuild-boot
+              scripts.update
+              scripts.check-flake
+              scripts.show-age-pubkey
+              scripts.rekey
+            ];
+        };
+      scriptsByArch = {
+        x86_64-linux = mkScripts pkgs;
+        aarch64-linux = mkScripts (mkPkgs "aarch64-linux").pkgs;
+      };
+
       mkNixosSystem =
         system: machineModule:
         let
@@ -575,37 +617,12 @@
           ];
         };
 
-      packages.${system} = rec {
-        init-secureboot = pkgs.callPackage ./scripts/init-secureboot.nix { };
-        rebuild = pkgs.callPackage ./scripts/rebuild.nix { };
-        rebuild-boot = pkgs.callPackage ./scripts/rebuild-boot.nix { };
-        update = pkgs.callPackage ./scripts/update.nix { inherit rebuild; };
-        check-flake = pkgs.callPackage ./scripts/check-flake.nix { };
-        show-age-pubkey = pkgs.callPackage ./scripts/show-age-pubkey.nix { };
-        rekey = pkgs.callPackage ./scripts/rekey.nix { };
-      };
+      packages.x86_64-linux = scriptsByArch.x86_64-linux;
+      packages.aarch64-linux = scriptsByArch.aarch64-linux;
 
-      devShells.${system}.default = pkgs.mkShell {
-        packages = with pkgs; [
-          asn
-          gnumake
-          nodejs
-          python3
-          inetutils
-          iperf
-          sops
-          traceroute
-          wireguard-tools
-
-          # Custom flake commands
-          self.packages.${system}.rebuild
-          self.packages.${system}.rebuild-boot
-          self.packages.${system}.update
-          self.packages.${system}.check-flake
-          self.packages.${system}.show-age-pubkey
-          self.packages.${system}.rekey
-        ];
-      };
+      devShells.x86_64-linux.default = mkDevShell pkgs scriptsByArch.x86_64-linux;
+      devShells.aarch64-linux.default =
+        mkDevShell (mkPkgs "aarch64-linux").pkgs scriptsByArch.aarch64-linux;
 
       checks.${system} = {
         default = import ./tests {
