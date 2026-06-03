@@ -145,8 +145,10 @@ let
     "$schema" = "https://json.schemastore.org/claude-code-settings.json";
 
     agentPushNotifEnabled = true;
+    inputNeededNotifEnabled = true;
     cleanupPeriodDays = 3650;
     effortLevel = "high";
+    theme = "dark";
     enabledPlugins = {
       "gopls-lsp@claude-plugins-official" = true;
       "rust-analyzer-lsp@claude-plugins-official" = true;
