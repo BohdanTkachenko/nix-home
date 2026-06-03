@@ -13,11 +13,7 @@ in
 
   programs.jujutsu = {
     enable = true;
-    # Unstable jujutsu everywhere, except aarch64: nixpkgs-unstable's aarch64
-    # jobset lags, so the unstable build isn't in the binary cache and would be
-    # compiled from source under qemu emulation (very slow). Stable's aarch64
-    # build is cached, so headless aarch64 hosts take the prebuilt binary.
-    package = if pkgs.stdenv.hostPlatform.isAarch64 then pkgs.jujutsu else pkgs-unstable.jujutsu;
+    package = pkgs-unstable.jujutsu;
     settings = {
       ui.diff-formatter = ":git";
       # NixOS sets PAGER=less globally; without explicit flags jj inherits
