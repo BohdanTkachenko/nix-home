@@ -51,14 +51,9 @@
     ];
 
     interactiveShellInit = ''
-      if not set -q fish_configured
-        set -U fish_greeting
-
-        set -U fish_color_command green --bold
-        set -U fish_color_end blue
-
-        set -U fish_configured
-      end
+      set -g fish_greeting
+      set -g fish_color_command green --bold
+      set -g fish_color_end blue
 
       if set -q SSH_CONNECTION && not set -q SSH_AUTH_SOCK
         echo (set_color yellow)"Warning: SSH_AUTH_SOCK is not set. SSH agent forwarding may not be working."(set_color normal)
