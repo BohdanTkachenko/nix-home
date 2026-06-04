@@ -10,6 +10,7 @@
   imports = [
     ../overlays
     ./options.nix
+    ./cloudflared.nix
     ./comfyui.nix
     ./desktop.nix
     ./minecraft.nix

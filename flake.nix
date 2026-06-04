@@ -539,6 +539,9 @@
           networking.hostName = "workbench";
           nixpkgs.hostPlatform = "aarch64-linux"; # beats hardware/common.nix mkDefault x86_64
 
+          # On-demand Cloudflare tunnel launcher (cf-tunnel <subdomain> <port>).
+          my.cloudflared.enable = true;
+
           my.gui.enable = false; # my.gaming follows
           my.secureBoot.enable = false; # lanzaboote/TPM off → GRUB-EFI from oci-common
 
