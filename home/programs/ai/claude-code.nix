@@ -171,6 +171,8 @@ in
   imports = [
     ./jj-commit-command.nix
     ./finish-worktree-command.nix
+    ./init-devshell-command.nix
+    ./init-agents-md-command.nix
     ./mcp.nix
     ./permissions.nix
   ];
