@@ -6,6 +6,34 @@ let
       "\${${envVar}}"
     else
       config.sops.placeholder."${name}";
+
+  # @playwright/mcp distributed on npm can't run on NixOS out of the box: it
+  # defaults to the system 'chrome' channel (/opt/google/chrome/chrome, absent
+  # on NixOS) and its self-downloaded browsers aren't patched for the Nix
+  # dynamic linker. Wrap it to use the prebuilt Chromium from nixpkgs'
+  # playwright-driver via --executable-path, which sidesteps the browser-
+  # revision matching entirely (the npm package bundles a much newer
+  # playwright-core than nixpkgs ships). The chromium-<rev> dir name changes
+  # each release, so resolve it with a runtime glob rather than hardcoding it.
+  playwrightMcp = pkgs.writeShellApplication {
+    name = "playwright-mcp";
+    runtimeInputs = [ pkgs.nodejs ];
+    text = ''
+      # Pin the binary explicitly; do NOT export PLAYWRIGHT_BROWSERS_PATH — when
+      # set to the Nix store path, @playwright/mcp tries to create its session
+      # profile dir *inside* it (read-only) and dies with ENOENT. --isolated
+      # keeps the profile in memory so nothing is written under the store.
+      export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+      chromium=$(echo ${pkgs.playwright-driver.browsers}/chromium-*/chrome-linux/chrome)
+      exec npx -y @playwright/mcp@latest \
+        --headless \
+        --browser chromium \
+        --executable-path "$chromium" \
+        --no-sandbox \
+        --isolated \
+        "$@"
+    '';
+  };
 in
 {
   # Centralized SOPS secrets
@@ -79,11 +107,8 @@ in
         });
 
         playwright = {
-          command = lib.getExe' pkgs.nodejs "npx";
-          args = [
-            "-y"
-            "@playwright/mcp@latest"
-          ];
+          command = lib.getExe playwrightMcp;
+          args = [ ];
           env = {
             PATH = "${lib.makeBinPath [
               pkgs.nodejs
