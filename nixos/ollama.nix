@@ -2,7 +2,7 @@
 {
   config,
   lib,
-  pkgs-master,
+  pkgs-unstable,
   ...
 }:
 let
@@ -25,7 +25,7 @@ in
   config = lib.mkIf cfg.enable {
     services.ollama = {
       enable = true;
-      package = pkgs-master.ollama-rocm;
+      package = pkgs-unstable.ollama-rocm;
       host = "0.0.0.0";
       port = 11434;
       acceleration = "rocm";

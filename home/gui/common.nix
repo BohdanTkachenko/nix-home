@@ -17,6 +17,7 @@
     apps = lib.mkOption {
       type = lib.types.listOf lib.types.package;
       default = with pkgs; [
+        apostrophe
         cameractrls-gtk4
         mission-center
         obsidian

@@ -17,6 +17,7 @@ pkgs.writeShellScriptBin "rekey" ''
     "home/programs/ssh/private-ssh-config"
     "home/services/secrets/winapps.yaml"
     "home/programs/ai/secrets/claude-code.yaml"
+    "home/programs/secrets/cargo.yaml"
   )
 
   if [[ $# -gt 0 ]]; then
