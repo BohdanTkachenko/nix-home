@@ -12,11 +12,6 @@
       url = "github:NixOS/nixpkgs";
     };
 
-    # claude-code 2.1.112 — NixOS/nixpkgs#510736
-    nixpkgs-claude-code = {
-      url = "github:NixOS/nixpkgs/99b135bc06e4e6df5f182c5bb9d4edc639b64846";
-    };
-
     # antigravity 2.0.0
     antigravity-nix = {
       url = "github:briossant/antigravity2.0-nix";
@@ -101,7 +96,6 @@
       nixpkgs,
       nixpkgs-unstable,
       nixpkgs-master,
-      nixpkgs-claude-code,
       nixpkgs-antigravity-ide,
       nixpkgs-antigravity-hub,
       nixpkgs-antigravity-cli,
@@ -120,10 +114,6 @@
       # x86_64.
       mkPkgs = system: {
         pkgs = nixpkgs.legacyPackages.${system};
-        pkgs-claude-code = import nixpkgs-claude-code {
-          inherit system;
-          config.allowUnfree = true;
-        };
         pkgs-antigravity-ide = import nixpkgs-antigravity-ide {
           inherit system;
           config.allowUnfree = true;
@@ -162,7 +152,6 @@
       system = defaultSystem;
       inherit (mkPkgs defaultSystem)
         pkgs
-        pkgs-claude-code
         pkgs-antigravity-ide
         pkgs-antigravity-hub
         pkgs-antigravity-cli
@@ -230,7 +219,6 @@
             inherit (p)
               pkgs-unstable
               pkgs-master
-              pkgs-claude-code
               pkgs-antigravity-ide
               pkgs-antigravity-hub
               pkgs-antigravity-cli
@@ -254,7 +242,6 @@
                   inherit (p)
                     pkgs-unstable
                     pkgs-master
-                    pkgs-claude-code
                     pkgs-antigravity-ide
                     pkgs-antigravity-hub
                     pkgs-antigravity-cli
@@ -574,7 +561,6 @@
             inherit
               pkgs-unstable
               pkgs-master
-              pkgs-claude-code
               pkgs-antigravity-ide
               pkgs-antigravity-hub
               pkgs-antigravity-cli
@@ -601,7 +587,6 @@
             inherit
               pkgs-unstable
               pkgs-master
-              pkgs-claude-code
               pkgs-antigravity-ide
               pkgs-antigravity-hub
               pkgs-antigravity-cli

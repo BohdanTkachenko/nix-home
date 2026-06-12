@@ -26,6 +26,7 @@
       Defaults timestamp_timeout=60
       %wheel ALL=(root) NOPASSWD: /run/current-system/sw/bin/nixos-rebuild switch*
       %wheel ALL=(root) NOPASSWD: /run/current-system/sw/bin/nixos-rebuild boot*
+      %wheel ALL=(root) NOPASSWD: /run/current-system/sw/bin/nix-collect-garbage *
       %wheel ALL=(root) NOPASSWD: /run/current-system/sw/bin/ddcutil
     '';
   };
