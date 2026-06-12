@@ -534,6 +534,9 @@
 
           # Exactly one bootloader: GRUB (from oci-common), not systemd-boot/lanzaboote.
           boot.loader.grub.enable = lib.mkForce true;
+          # /boot is only ~249M here; each generation is ~82M (kernel + initrd),
+          # so cap retained generations to avoid filling /boot during grub-install.
+          boot.loader.grub.configurationLimit = lib.mkForce 2;
 
           # Override the desktop defaults baked into mkNixos's base block.
           my.hardware.gpu.amd.enable = lib.mkForce false;

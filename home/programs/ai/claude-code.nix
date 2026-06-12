@@ -159,6 +159,7 @@ let
     };
     voiceEnabled = true;
     skipAutoPermissionPrompt = true;
+    skipWorkflowUsageWarning = true;
     permissions = {
       defaultMode = "auto";
       allow = config.lib.permissions.forClaude;
