@@ -41,6 +41,10 @@ in
     sopsFile = ./secrets/claude-code.yaml;
     key = "github_pat";
   };
+  sops.secrets.gitlab-pat = lib.mkIf config.my.secrets.sops.enable {
+    sopsFile = ./secrets/claude-code.yaml;
+    key = "gitlab_pat";
+  };
   sops.secrets.plane-api-key = lib.mkIf config.my.secrets.sops.enable {
     sopsFile = ./secrets/claude-code.yaml;
     key = "plane_api_key";
@@ -59,6 +63,7 @@ in
     makeMcpServers = { isClaude }:
       let
         githubPat = getSecret { inherit isClaude; name = "github-pat"; envVar = "GITHUB_PERSONAL_ACCESS_TOKEN"; };
+        gitlabPat = getSecret { inherit isClaude; name = "gitlab-pat"; envVar = "GITLAB_PERSONAL_ACCESS_TOKEN"; };
         planeApiKey = getSecret { inherit isClaude; name = "plane-api-key"; envVar = "PLANE_API_KEY"; };
         planeWorkspaceSlug = getSecret { inherit isClaude; name = "plane-workspace-slug"; envVar = "PLANE_WORKSPACE_SLUG"; };
         claudeHaMcpUrl = getSecret { inherit isClaude; name = "claude-ha-mcp-url"; envVar = "CLAUDE_HA_MCP_URL"; };
@@ -133,14 +138,26 @@ in
           };
         };
 
-        # GitLab's official native MCP server (beta as of GitLab 18.6).
-        # Authenticates via OAuth 2.0 Dynamic Client Registration, so no
-        # pre-set client or sops secret is needed — Claude Code performs the
-        # OAuth flow on first `/mcp` login and stores the token itself.
-        # Requires GitLab Duo + beta features enabled on the account.
+        # Third-party GitLab MCP server (zereight/gitlab-mcp), run as a stdio
+        # container like the github server above. Used instead of GitLab's
+        # native server, which requires Premium/Ultimate + Duo (not available
+        # on this account). Authenticates with a personal access token (api
+        # scope; use read_api + GITLAB_READ_ONLY_MODE for read-only).
         gitlab = {
-          type = "http";
-          url = "https://gitlab.com/api/v4/mcp";
+          command = lib.getExe pkgs.podman;
+          args = [
+            "run"
+            "-i"
+            "--rm"
+            "-e"
+            "GITLAB_PERSONAL_ACCESS_TOKEN"
+            "-e"
+            "GITLAB_API_URL=https://gitlab.com/api/v4"
+            "docker.io/zereight050/gitlab-mcp"
+          ];
+          env = {
+            GITLAB_PERSONAL_ACCESS_TOKEN = gitlabPat;
+          };
         };
       } else {
         github-mcp-server = {
