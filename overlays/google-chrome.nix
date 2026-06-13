@@ -94,6 +94,14 @@ let
     ];
 
   allFlags = vaapiFlags ++ [
+    # Pin the cookie/password encryption backend to the GNOME keyring
+    # (libsecret). Chrome otherwise auto-detects the backend once at launch,
+    # and on a slow/racy login it can fall back to the "basic" store (a
+    # hardcoded key). That fallback can't decrypt keyring-encrypted (v11)
+    # cookies, which silently logs out every site. Pinning it keeps the
+    # backend deterministic across updates and reboots.
+    "--password-store=gnome-libsecret"
+
     # Ignore theme reported by OS and use dark mode.
     # TIn certain cases there are issues with GNOME reporting theme correctly.
     "--force-dark-mode"
