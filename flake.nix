@@ -469,6 +469,9 @@
             {
               my.hardware.pc.enable = true;
               my.direnv-instant.enable = true;
+              # Local PC: run the lemonade server so the headless workbench can
+              # open URLs and set the clipboard here over an SSH reverse tunnel.
+              my.lemonade.server.enable = true;
               services.easyeffects.enable = false;
             }
           ];
@@ -542,6 +545,12 @@
           my.hardware.gpu.amd.enable = lib.mkForce false;
           my.disk.enable = lib.mkForce false;
           my.wireguard.enable = lib.mkForce false;
+
+          # Headless: route URL-opens and clipboard to the local PC (nyancat)
+          # via lemonade over the SSH reverse tunnel it sets up.
+          home-manager.sharedModules = [
+            { my.lemonade.client.enable = true; }
+          ];
         }
       );
     in

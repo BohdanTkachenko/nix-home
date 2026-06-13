@@ -50,6 +50,11 @@
 
     direnv-instant.enable = lib.mkEnableOption "direnv-instant async direnv daemon";
 
+    lemonade = {
+      client.enable = lib.mkEnableOption "lemonade client: forward URL-opens (xdg-open/$BROWSER) and clipboard from this headless host to a lemonade server on the local machine over an SSH reverse tunnel";
+      server.enable = lib.mkEnableOption "lemonade server: apply URL-opens and clipboard received from remote hosts to this machine's browser and clipboard, and add the SSH reverse tunnel out to workbench";
+    };
+
     secrets.sops.enable = lib.mkOption {
       type = lib.types.bool;
       default = false;

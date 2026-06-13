@@ -28,6 +28,7 @@
     ../programs/git.nix
     ../programs/jujutsu.nix
     ../programs/jj-workspace.nix
+    ../programs/lemonade.nix
     ../programs/micro.nix
     ../programs/ssh
     ../programs/starship
