@@ -132,6 +132,16 @@ in
             GITHUB_PERSONAL_ACCESS_TOKEN = githubPat;
           };
         };
+
+        # GitLab's official native MCP server (beta as of GitLab 18.6).
+        # Authenticates via OAuth 2.0 Dynamic Client Registration, so no
+        # pre-set client or sops secret is needed — Claude Code performs the
+        # OAuth flow on first `/mcp` login and stores the token itself.
+        # Requires GitLab Duo + beta features enabled on the account.
+        gitlab = {
+          type = "http";
+          url = "https://gitlab.com/api/v4/mcp";
+        };
       } else {
         github-mcp-server = {
           command = lib.getExe pkgs.podman;
