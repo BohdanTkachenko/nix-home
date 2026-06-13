@@ -158,6 +158,7 @@ let
       command = "claude-statusline";
     };
     voiceEnabled = true;
+    remoteControlAtStartup = true;
     skipAutoPermissionPrompt = true;
     skipWorkflowUsageWarning = true;
     permissions = {
