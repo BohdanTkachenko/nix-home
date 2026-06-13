@@ -36,6 +36,7 @@ let
       wrapProgram $out/bin/claude \
         --set SUDO_ASKPASS "${pkgs.seahorse}/libexec/seahorse/ssh-askpass" \
         --set UV_PYTHON_PREFERENCE only-system \
+        --set CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN 1 \
         --prefix PATH : "${pkgs.python3}/bin" \
         --add-flags '--mcp-config="''$HOME/.claude/mcp.json"' \
         --run '${exportSecret "github-pat" "GITHUB_PERSONAL_ACCESS_TOKEN"}' \
