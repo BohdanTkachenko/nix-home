@@ -20,6 +20,32 @@ let
       exec lemonade open --port ${toString port} "$@"
     '';
   };
+
+  # Pipe stdin to the local machine's clipboard via lemonade. With no piped
+  # input, copies the latest Claude Code `/copy` output file — Claude's own
+  # `/copy` emits OSC 52, which Ptyxis/VTE does not honor, so this is the
+  # working path on this terminal.
+  clip = pkgs.writeShellApplication {
+    name = "clip";
+    runtimeInputs = [
+      pkgs.lemonade
+      pkgs.coreutils
+    ];
+    text = ''
+      if [ -t 0 ]; then
+        f="/tmp/claude-$(id -u)/response.md"
+        if [ -f "$f" ]; then
+          lemonade copy --port ${toString port} < "$f"
+          echo "clip: copied $(wc -c < "$f") bytes from $f to the local clipboard" >&2
+        else
+          echo "usage: <command> | clip   (pipe text), or run after Claude's /copy" >&2
+          exit 1
+        fi
+      else
+        lemonade copy --port ${toString port}
+      fi
+    '';
+  };
 in
 {
   config = lib.mkMerge [
@@ -27,6 +53,7 @@ in
       home.packages = [
         pkgs.lemonade
         remoteXdgOpen
+        clip
       ];
       # Tools that consult $BROWSER (rather than calling xdg-open) also reach
       # the local browser.
