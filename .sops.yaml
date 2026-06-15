@@ -34,10 +34,10 @@ creation_rules:
           - *dan-work-pc
           - *dan-work-laptop
           - *host-nyancat
-  # HM secrets the headless workbench cloud box activates (AI/MCP secrets + the
-  # private SSH config). Scoped to just these files so the public cloud box can
-  # only decrypt what it actually uses — not winapps or system secrets.
-  - path_regex: (home/programs/ai/secrets/.*\.yaml|home/programs/ssh/private-ssh-config)$
+  # HM secrets the headless workbench cloud box activates (AI/MCP secrets).
+  # Scoped to just these files so the public cloud box can only decrypt what it
+  # actually uses — not winapps or system secrets.
+  - path_regex: (home/programs/ai/secrets/.*\.yaml)$
     key_groups:
       - age:
           - *dan-nyancat

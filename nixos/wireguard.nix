@@ -7,7 +7,44 @@ let
   cfg = config.my.wireguard;
 in
 {
-  options.my.wireguard.enable = lib.mkEnableOption "WireGuard VPN profiles";
+  options.my.wireguard = {
+    enable = lib.mkEnableOption "WireGuard VPN profiles";
+
+    # Peer endpoint IPs, set per host by the private overlay so they stay out of
+    # this public repo. The private keys still come from the sops env file.
+    endpoints = {
+      home = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = "Endpoint IP for the home VPN peer.";
+      };
+      gcpGamingSc = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = "Endpoint IP for the GCP gaming (SC) VPN peer.";
+      };
+      awsGamingVa = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = "Endpoint IP for the AWS gaming (VA) VPN peer.";
+      };
+      protonIl = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = "Endpoint IP for the Proton IL VPN peer.";
+      };
+      protonNj = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = "Endpoint IP for the Proton NJ VPN peer.";
+      };
+      protonUa = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = "Endpoint IP for the Proton UA VPN peer.";
+      };
+    };
+  };
 
   config = lib.mkIf cfg.enable {
     sops.secrets.wg-env = {
@@ -31,7 +68,7 @@ in
           private-key-flags = "0";
         };
         "wireguard-peer.Zrm58Xr1+MSy1Z+wSaGYh8tof6NQ2Z+NlKory1FL81Q=" = {
-          endpoint = "$WG_HOME_ENDPOINT:51820";
+          endpoint = "${cfg.endpoints.home}:51820";
           allowed-ips = "0.0.0.0/0;";
         };
         ipv4 = {
@@ -55,7 +92,7 @@ in
           mtu = "1420";
         };
         "wireguard-peer.bWq3e9vp3TBtqBf+/1CF/Gk3+J31QurrOrLuyBh5Tmc=" = {
-          endpoint = "$WG_GCP_GAMING_SC_ENDPOINT:51820";
+          endpoint = "${cfg.endpoints.gcpGamingSc}:51820";
           allowed-ips = "0.0.0.0/0;";
         };
         ipv4 = {
@@ -79,7 +116,7 @@ in
           mtu = "1420";
         };
         "wireguard-peer.+58DCzHj8WAd3ZvImRDgHOBlTFqdXj49gJZICOpoxWs=" = {
-          endpoint = "$WG_AWS_GAMING_VA_ENDPOINT:51820";
+          endpoint = "${cfg.endpoints.awsGamingVa}:51820";
           allowed-ips = "0.0.0.0/0;";
         };
         ipv4 = {
@@ -102,7 +139,7 @@ in
           private-key-flags = "0";
         };
         "wireguard-peer.C6GJzhSJVSKXNhagTOHn587mLXnvtvOGkOi4l2tN6hs=" = {
-          endpoint = "$WG_PROTON_IL_ENDPOINT:51820";
+          endpoint = "${cfg.endpoints.protonIl}:51820";
           allowed-ips = "0.0.0.0/0; ::/0;";
         };
         ipv4 = {
@@ -124,7 +161,7 @@ in
           private-key-flags = "0";
         };
         "wireguard-peer./HvEnSU5JaswyBC/YFs74eGLXqLdzsaFeVT8SD1KYAc=" = {
-          endpoint = "$WG_PROTON_NJ_ENDPOINT:51820";
+          endpoint = "${cfg.endpoints.protonNj}:51820";
           allowed-ips = "0.0.0.0/0; ::/0;";
         };
         ipv4 = {
@@ -146,7 +183,7 @@ in
           private-key-flags = "0";
         };
         "wireguard-peer.vx4tC7xZn44VN4dyiK0yUBHRC3/cmlwwaLuPpq3rIQg=" = {
-          endpoint = "$WG_PROTON_UA_ENDPOINT:51820";
+          endpoint = "${cfg.endpoints.protonUa}:51820";
           allowed-ips = "0.0.0.0/0; ::/0;";
         };
         ipv4 = {
