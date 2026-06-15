@@ -79,20 +79,22 @@ in
           };
         }
       );
-      default = {
-        public = {
-          url = "https://github.com/BohdanTkachenko/nix-home.git";
-          path = "${primaryHome}/Projects/nix-home/public";
-        };
-      };
+      default = { };
       description = ''
-        Repos cloned on first boot, keyed by name. The private overlay adds the
-        private repo here (cloned over SSH).
+        Repos cloned on first boot, keyed by name. The public repo is added in
+        config below; the private overlay merges in the private repo (over SSH).
       '';
     };
   };
 
   config = lib.mkIf cfg.enable {
+    # The public repo is always hydrated; the private overlay merges in the
+    # private repo on desktops (these are separate attr keys, so they combine).
+    my.hydration.repos.public = lib.mkDefault {
+      url = "https://github.com/BohdanTkachenko/nix-home.git";
+      path = "${primaryHome}/Projects/nix-home/public";
+    };
+
     systemd.tmpfiles.rules = [
       "L+ /etc/nixos - - - - ${cfg.flakeDir}"
     ];
