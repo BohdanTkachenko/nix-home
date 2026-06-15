@@ -5,8 +5,12 @@ pkgs.writeShellScriptBin "rebuild-boot" ''
 
   if [[ -f "./flake.nix" ]]; then
     FLAKE_DIR="$(pwd)"
+  elif [[ -f "/home/dan/Projects/nix-home/private/flake.nix" ]]; then
+    # Desktops: the private top-level flake (public + private overlay).
+    FLAKE_DIR="/home/dan/Projects/nix-home/private"
   else
-    FLAKE_DIR="/home/dan/Projects/nix-home"
+    # Servers: only the public flake is present.
+    FLAKE_DIR="/home/dan/Projects/nix-home/public"
   fi
 
   echo "--> Rebuilding NixOS bootloader configuration..."
