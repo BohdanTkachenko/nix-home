@@ -274,6 +274,7 @@
             ./nixos/hydration-common.nix
             ./nixos/disk-luks-btrfs.nix
             ./nixos/installer-iso.nix
+            ./nixos/private-overlay-guard.nix
 
             (
               { config, lib, ... }:
@@ -305,6 +306,9 @@
 
       personalLaptop = mkNixos {
         networking.hostName = "dan-idea";
+
+        # Completed by the private overlay — must be built from the private flake.
+        my.privateOverlay.required = true;
 
         my.gui.enable = true;
 
@@ -338,6 +342,9 @@
           ];
 
           networking.hostName = "nyancat";
+
+          # Completed by the private overlay — must be built from the private flake.
+          my.privateOverlay.required = true;
 
           my.gui.enable = true;
 
