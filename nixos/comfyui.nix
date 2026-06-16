@@ -20,11 +20,7 @@ let
     echo "[pre-start] ensuring extra pip packages: ${toString cfg.extraPipPackages}"
     pip install --user --no-warn-script-location ${lib.escapeShellArgs cfg.extraPipPackages}
   '';
-  authEnvFile =
-    if cfg.authSops then
-      config.sops.templates."comfyui-auth.env".path
-    else
-      cfg.authEnvFile;
+  authEnvFile = cfg.authEnvFile;
   authEnabled = authEnvFile != null;
   # When auth is enabled, ComfyUI binds loopback only and Caddy fronts the LAN
   # port. Without auth, ComfyUI itself binds the LAN port directly.
@@ -111,22 +107,10 @@ in
           COMFYUI_AUTH_USER=<username>
           COMFYUI_AUTH_HASH=<bcrypt hash from `caddy hash-password`>
 
-        When set (or when `authSops` is true), ComfyUI is moved to
-        loopback-only and Caddy fronts the LAN port with basic auth.
-        Otherwise ComfyUI is exposed to the LAN unauthenticated.
-
-        Ignored when `authSops` is true.
-      '';
-    };
-
-    authSops = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = ''
-        Pull basic-auth credentials from the sops-encrypted YAML at
-        `nixos/secrets/comfyui-auth.yaml` (keys `COMFYUI_AUTH_USER` and
-        `COMFYUI_AUTH_HASH`). A dotenv EnvironmentFile is rendered via
-        sops.templates and passed to Caddy. Overrides `authEnvFile`.
+        When set, ComfyUI is moved to loopback-only and Caddy fronts the
+        LAN port with basic auth. Otherwise ComfyUI is exposed to the LAN
+        unauthenticated. The private overlay supplies a sops-rendered file
+        here so no credentials live in this public repo.
       '';
     };
   };
@@ -233,19 +217,6 @@ in
       serviceConfig.ExecStartPre = [
         "${pkgs.coreutils}/bin/install -D -m 0755 -o ${ownerUid} -g ${ownerGid} ${preStartScript} ${dataDir}/user-scripts/pre-start.sh"
       ];
-    };
-
-    sops = lib.mkIf cfg.authSops {
-      secrets."COMFYUI_AUTH_USER" = {
-        sopsFile = ./secrets/comfyui-auth.yaml;
-      };
-      secrets."COMFYUI_AUTH_HASH" = {
-        sopsFile = ./secrets/comfyui-auth.yaml;
-      };
-      templates."comfyui-auth.env".content = ''
-        COMFYUI_AUTH_USER=${config.sops.placeholder."COMFYUI_AUTH_USER"}
-        COMFYUI_AUTH_HASH=${config.sops.placeholder."COMFYUI_AUTH_HASH"}
-      '';
     };
   };
 }

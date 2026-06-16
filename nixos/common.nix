@@ -156,15 +156,6 @@
   # Disable NixOS xremap (using home-manager xremap instead)
   services.xremap.enable = false;
 
-  # SOPS secrets. Order matters: the host key is on the root subvolume
-  # (mounted in initrd, available during early activation), so it's tried
-  # first and lets system-level secrets decrypt before /home mounts. The
-  # user key stays as a fallback for hosts that haven't been re-keyed yet.
-  sops.age.sshKeyPaths = [
-    "/etc/ssh/ssh_host_ed25519_key"
-    "${config.users.users.dan.home}/.ssh/id_ed25519"
-  ];
-
   environment.variables.EDITOR = "micro";
 
   # Disable Avahi printer discovery to avoid duplicates with declarative printers

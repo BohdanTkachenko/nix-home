@@ -49,11 +49,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     xremap = {
       url = "github:xremap/nix-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -102,7 +97,6 @@
       antigravity-nix,
       browser-previews,
       nix-vscode-extensions,
-      sops-nix,
       xremap,
       ...
     }:
@@ -168,8 +162,6 @@
         rebuild-boot = pkgs.callPackage ./scripts/rebuild-boot.nix { };
         update = pkgs.callPackage ./scripts/update.nix { inherit rebuild; };
         check-flake = pkgs.callPackage ./scripts/check-flake.nix { };
-        show-age-pubkey = pkgs.callPackage ./scripts/show-age-pubkey.nix { };
-        rekey = pkgs.callPackage ./scripts/rekey.nix { };
       };
       mkDevShell =
         pkgs: scripts:
@@ -182,7 +174,6 @@
               python3
               inetutils
               iperf
-              sops
               traceroute
               wireguard-tools
             ])
@@ -192,8 +183,6 @@
               scripts.rebuild-boot
               scripts.update
               scripts.check-flake
-              scripts.show-age-pubkey
-              scripts.rekey
             ];
         };
       scriptsByArch = {
@@ -225,7 +214,6 @@
               ;
           };
           modules = [
-            sops-nix.nixosModules.sops
             xremap.nixosModules.default
             home-manager.nixosModules.home-manager
             {
@@ -250,7 +238,6 @@
                 sharedModules = [
                   chromium-pwa-wmclass-sync.homeManagerModules.default
                   direnv-instant.homeModules.direnv-instant
-                  sops-nix.homeManagerModules.sops
                   xremap.homeManagerModules.default
                 ];
               };
@@ -462,7 +449,6 @@
 
           my.ollama.enable = true;
           my.comfyui.enable = true;
-          my.comfyui.authSops = true;
           my.comfyui.dataDir = "/home/dan/ComfyUI";
           my.comfyui.uid = 1000; # dan
           my.comfyui.gid = 100; # users
@@ -536,6 +522,11 @@
           networking.hostName = "workbench";
           nixpkgs.hostPlatform = "aarch64-linux"; # beats hardware/common.nix mkDefault x86_64
 
+          # Completed by the private overlay — its secrets (cloudflared tunnel
+          # bundle, AI/MCP tokens) live in the private flake, so the workbench
+          # must be built from there, not the public repo.
+          my.privateOverlay.required = true;
+
           # On-demand Cloudflare tunnel launcher (cf-tunnel <subdomain> <port>).
           my.cloudflared.enable = true;
 
@@ -591,7 +582,6 @@
           imports = [
             chromium-pwa-wmclass-sync.homeManagerModules.default
             direnv-instant.homeModules.direnv-instant
-            sops-nix.homeManagerModules.sops
             xremap.homeManagerModules.default
             ./overlays
             ./home/hardware
@@ -617,7 +607,6 @@
           imports = [
             chromium-pwa-wmclass-sync.homeManagerModules.default
             direnv-instant.homeModules.direnv-instant
-            sops-nix.homeManagerModules.sops
             xremap.homeManagerModules.default
             ./overlays
             ./home

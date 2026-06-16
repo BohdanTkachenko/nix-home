@@ -1,5 +1,4 @@
 {
-  pkgs,
   config,
   lib,
   ...
@@ -9,13 +8,19 @@
     ../ai/mcp.nix
   ];
 
-  sops.templates."antigravity-mcp-config.json".content = builtins.toJSON {
-    mcpServers = config.lib.mcp.makeMcpServers { isClaude = false; };
+  # Antigravity (Gemini) can't expand env-var references in its MCP config, so
+  # the real secret values must be baked into the rendered file. That rendering
+  # (with sops) lives in the private overlay, which sets this option to the
+  # rendered config's path. Null on a public build → no Gemini MCP config.
+  options.my.antigravity.mcpConfigFile = lib.mkOption {
+    type = lib.types.nullOr lib.types.path;
+    default = null;
+    description = "Path to the rendered Gemini/Antigravity MCP config (with secrets baked in).";
   };
 
-  anti-drift.files = {
-    ".gemini/config/mcp_config.json" = {
-      source = config.sops.templates."antigravity-mcp-config.json".path;
+  config = lib.mkIf (config.my.antigravity.mcpConfigFile != null) {
+    anti-drift.files.".gemini/config/mcp_config.json" = {
+      source = config.my.antigravity.mcpConfigFile;
       json = true;
     };
   };

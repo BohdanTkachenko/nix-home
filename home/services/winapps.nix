@@ -12,47 +12,57 @@ let
       mkValueString = v: ''"${toString v}"'';
     } "=";
   };
+
+  # Non-secret winapps.conf fields. RDP_PASS is injected by confText below so
+  # the password never appears in this public repo.
+  confSettings = {
+    RDP_USER = "dan";
+    RDP_DOMAIN = "";
+    RDP_IP = "127.0.0.1";
+    WAFLAVOR = "manual";
+    RDP_SCALE = "180";
+    REMOVABLE_MEDIA = "/run/media";
+    RDP_FLAGS = "/cert:tofu /sound /microphone +home-drive";
+    DEBUG = "true";
+    AUTOPAUSE = "on";
+    AUTOPAUSE_TIME = "300";
+    FREERDP_COMMAND = "";
+    PORT_TIMEOUT = "5";
+    RDP_TIMEOUT = "30";
+    APP_SCAN_TIMEOUT = "60";
+    BOOT_TIMEOUT = "120";
+  };
 in
 {
-  config = lib.mkIf config.my.winapps.enable {
-    home.packages = [
-      pkgs.gnome-connections
-      inputs.winapps.packages."${system}".winapps
-      inputs.winapps.packages."${system}".winapps-launcher
-    ];
+  options.my.winapps = {
+    # winapps.enable is declared in home/modules/options.nix.
 
-    sops.secrets.winapps-rdp-password = {
-      sopsFile = ./secrets/winapps.yaml;
-      key = "rdp_password";
+    # Path to a podman EnvironmentFile defining PASSWORD=<rdp password>.
+    # Supplied by the private overlay (sops-rendered); null on a public build.
+    envFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = "EnvironmentFile providing the WinApps RDP PASSWORD for the podman container.";
     };
+  };
 
-    sops.templates."winapps-env" = {
-      content = "PASSWORD=${config.sops.placeholder.winapps-rdp-password}\n";
-    };
+  config = lib.mkMerge [
+    {
+      # Builder for the full winapps.conf, given the RDP password. The private
+      # overlay calls this inside a sops.template so the rendered conf (with the
+      # real password) is written to ~/.config/winapps/winapps.conf at
+      # activation. Kept out of the enable gate so the overlay can reference it.
+      lib.winapps.confText = rdpPass: mkConf (confSettings // { RDP_PASS = rdpPass; });
+    }
 
-    sops.templates."winapps.conf" = {
-      content = mkConf {
-        RDP_USER = "dan";
-        RDP_PASS = config.sops.placeholder.winapps-rdp-password;
-        RDP_DOMAIN = "";
-        RDP_IP = "127.0.0.1";
-        WAFLAVOR = "manual";
-        RDP_SCALE = "180";
-        REMOVABLE_MEDIA = "/run/media";
-        RDP_FLAGS = "/cert:tofu /sound /microphone +home-drive";
-        DEBUG = "true";
-        AUTOPAUSE = "on";
-        AUTOPAUSE_TIME = "300";
-        FREERDP_COMMAND = "";
-        PORT_TIMEOUT = "5";
-        RDP_TIMEOUT = "30";
-        APP_SCAN_TIMEOUT = "60";
-        BOOT_TIMEOUT = "120";
-      };
-      path = "${config.home.homeDirectory}/.config/winapps/winapps.conf";
-    };
+    (lib.mkIf config.my.winapps.enable {
+      home.packages = [
+        pkgs.gnome-connections
+        inputs.winapps.packages."${system}".winapps
+        inputs.winapps.packages."${system}".winapps-launcher
+      ];
 
-    services.podman = {
+      services.podman = {
       enable = true;
 
       containers.WinApps = {
@@ -68,9 +78,7 @@ in
           HOME = config.home.homeDirectory;
         };
 
-        environmentFile = [
-          config.sops.templates."winapps-env".path
-        ];
+        environmentFile = lib.optional (config.my.winapps.envFile != null) config.my.winapps.envFile;
 
         ports = [
           "8006:8006"
@@ -107,5 +115,6 @@ in
         };
       };
     };
-  };
+    })
+  ];
 }

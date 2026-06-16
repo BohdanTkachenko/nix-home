@@ -10,8 +10,19 @@ in
   options.my.wireguard = {
     enable = lib.mkEnableOption "WireGuard VPN profiles";
 
+    # Path to a NetworkManager environment file providing the WireGuard private
+    # keys ($WG_CLOUD_PRIVATE_KEY, $WG_PROTON_*_PRIVATE_KEY). Supplied by the
+    # private overlay (sops-rendered) so no key material lives in this public
+    # repo. When null the profiles are still defined but have no private keys.
+    envFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      example = "/run/secrets/wg-env";
+      description = "Environment file with WireGuard private keys for the NM profiles.";
+    };
+
     # Peer endpoint IPs, set per host by the private overlay so they stay out of
-    # this public repo. The private keys still come from the sops env file.
+    # this public repo. The private keys come from envFile above.
     endpoints = {
       home = lib.mkOption {
         type = lib.types.str;
@@ -47,14 +58,10 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    sops.secrets.wg-env = {
-      sopsFile = ./secrets/wireguard.yaml;
-    };
-
     networking.firewall.checkReversePath = "loose";
 
     networking.networkmanager.ensureProfiles = {
-      environmentFiles = [ config.sops.secrets.wg-env.path ];
+      environmentFiles = lib.optional (cfg.envFile != null) cfg.envFile;
 
       profiles.home-vpn = {
         connection = {

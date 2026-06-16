@@ -16,34 +16,53 @@ let
   # itself contains no secrets and is rendered to ~/.claude/mcp.json via
   # anti-drift; the wrapper below exports the env vars from sops-rendered
   # secret files just before exec, then passes --mcp-config to claude.
+  # The MCP config carries env-var references (${VAR}); Claude Code expands them
+  # at load time from the process env, which the wrapper below exports just
+  # before exec. So the file itself holds no secrets.
   mcpFile = (pkgs.formats.json { }).generate "claude-mcp.json" {
-    mcpServers = config.lib.mcp.makeMcpServers { isClaude = true; };
+    mcpServers = config.lib.mcp.makeMcpServers {
+      isClaude = true;
+      secrets = {
+        githubPat = "\${GITHUB_PERSONAL_ACCESS_TOKEN}";
+        gitlabPat = "\${GITLAB_PERSONAL_ACCESS_TOKEN}";
+        planeApiKey = "\${PLANE_API_KEY}";
+        planeWorkspaceSlug = "\${PLANE_WORKSPACE_SLUG}";
+        claudeHaMcpUrl = "\${CLAUDE_HA_MCP_URL}";
+      };
+    };
   };
 
-  # Helper: produce a `--run` snippet that exports VAR from a sops-rendered
-  # secret file. Uses `2>/dev/null || true` so a missing secret doesn't abort
-  # the wrapper script (makeWrapper sets `bash -e`).
+  # The secret files live in config.my.ai.secretsDir (sops-decrypted by the
+  # private overlay; null on a public build → no token exports). Each `--run`
+  # snippet exports VAR from its file, with `2>/dev/null || true` so a missing
+  # secret doesn't abort the wrapper (makeWrapper sets `bash -e`).
+  secretsDir = config.my.ai.secretsDir;
   exportSecret =
-    file: var: ''export ${var}="$(cat "$HOME/.config/sops-nix/secrets/${file}" 2>/dev/null || true)"'';
+    file: var: ''export ${var}="$(cat "${secretsDir}/${file}" 2>/dev/null || true)"'';
+  wrapArgs = [
+    ''--set SUDO_ASKPASS "${pkgs.seahorse}/libexec/seahorse/ssh-askpass"''
+    "--set UV_PYTHON_PREFERENCE only-system"
+    "--set CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN 1"
+    ''--prefix PATH : "${pkgs.python3}/bin"''
+    # The --mcp-config path is single-quoted so nothing expands at build time;
+    # bash expands $HOME at exec time when the wrapper script runs.
+    "--add-flags '--mcp-config=\"\$HOME/.claude/mcp.json\"'"
+  ]
+  ++ lib.optionals (secretsDir != null) [
+    "--run '${exportSecret "github-pat" "GITHUB_PERSONAL_ACCESS_TOKEN"}'"
+    "--run '${exportSecret "gitlab-pat" "GITLAB_PERSONAL_ACCESS_TOKEN"}'"
+    "--run '${exportSecret "plane-api-key" "PLANE_API_KEY"}'"
+    "--run '${exportSecret "plane-workspace-slug" "PLANE_WORKSPACE_SLUG"}'"
+    "--run '${exportSecret "claude-ha-mcp-url" "CLAUDE_HA_MCP_URL"}'"
+  ];
 
   claude-code-wrapped = pkgs.symlinkJoin {
     name = "claude-code-wrapped";
     paths = [ pkgs-master.claude-code ];
     nativeBuildInputs = [ pkgs.makeWrapper ];
-    # The --mcp-config path is single-quoted so nothing expands at build time;
-    # bash expands $HOME at exec time when the wrapper script runs.
     postBuild = ''
       wrapProgram $out/bin/claude \
-        --set SUDO_ASKPASS "${pkgs.seahorse}/libexec/seahorse/ssh-askpass" \
-        --set UV_PYTHON_PREFERENCE only-system \
-        --set CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN 1 \
-        --prefix PATH : "${pkgs.python3}/bin" \
-        --add-flags '--mcp-config="''$HOME/.claude/mcp.json"' \
-        --run '${exportSecret "github-pat" "GITHUB_PERSONAL_ACCESS_TOKEN"}' \
-        --run '${exportSecret "gitlab-pat" "GITLAB_PERSONAL_ACCESS_TOKEN"}' \
-        --run '${exportSecret "plane-api-key" "PLANE_API_KEY"}' \
-        --run '${exportSecret "plane-workspace-slug" "PLANE_WORKSPACE_SLUG"}' \
-        --run '${exportSecret "claude-ha-mcp-url" "CLAUDE_HA_MCP_URL"}'
+        ${lib.concatStringsSep " \\\n        " wrapArgs}
     '';
   };
 

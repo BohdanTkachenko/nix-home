@@ -1,20 +1,22 @@
 { config, lib, ... }:
 {
-  # crates.io publish token. Sourced from sops (so it never lands in the
-  # world-readable Nix store) and exported into the interactive shell as
-  # CARGO_REGISTRY_TOKEN, which `cargo publish` reads. Gated to graphical
-  # desktops: the headless workbench box is deliberately not a recipient of
-  # this secret (see .sops.yaml) and never publishes crates, so declaring the
-  # sops.secret there would fail to decrypt at activation.
-  config = lib.mkIf (config.my.secrets.sops.enable && config.my.gui.enable) {
-    sops.secrets.cargo-registry-token = {
-      sopsFile = ./secrets/cargo.yaml;
-      key = "registry_token";
-    };
+  options.my.cargo.registryTokenFile = lib.mkOption {
+    type = lib.types.nullOr lib.types.path;
+    default = null;
+    example = "/run/user/1000/secrets/cargo-registry-token";
+    description = ''
+      Path to a file containing the crates.io publish token. When set, it is
+      exported into the interactive shell as CARGO_REGISTRY_TOKEN (which
+      `cargo publish` reads). The private overlay points this at a sops-decrypted
+      file so no token lands in the world-readable Nix store; the headless
+      workbench box never publishes crates and leaves it null.
+    '';
+  };
 
+  config = lib.mkIf (config.my.cargo.registryTokenFile != null) {
     programs.fish.interactiveShellInit = ''
-      if test -r "$HOME/.config/sops-nix/secrets/cargo-registry-token"
-        set -gx CARGO_REGISTRY_TOKEN (cat "$HOME/.config/sops-nix/secrets/cargo-registry-token")
+      if test -r "${config.my.cargo.registryTokenFile}"
+        set -gx CARGO_REGISTRY_TOKEN (cat "${config.my.cargo.registryTokenFile}")
       end
     '';
   };

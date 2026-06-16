@@ -6,12 +6,11 @@
 # until interrupted (Ctrl-C), then tears down.
 #
 # All sensitive material — the base domain, the reused `nix` tunnel's
-# credentials, and the account origin cert — lives encrypted in
-# ./secrets/cloudflared.yaml and is decrypted to a tmpfs-style temp dir only for
-# the lifetime of a run, using the invoking user's age key (~/.config/sops/age/
-# keys.txt, materialised by the home-manager activation). Nothing is written to
-# the world-readable Nix store in plaintext, and sops-nix never places it on
-# disk.
+# credentials, and the account origin cert — is supplied via the
+# `my.cloudflared.*File` options below, which the private overlay points at
+# sops-decrypted runtime files (tmpfs, never the world-readable Nix store). The
+# credentials and origin cert are base64-encoded in those files and decoded into
+# a per-run temp dir scrubbed on exit.
 {
   config,
   lib,
@@ -25,7 +24,6 @@ let
     name = "cf-tunnel";
     runtimeInputs = [
       pkgs.cloudflared
-      pkgs.sops
       pkgs.coreutils
     ];
     text = ''
@@ -53,15 +51,18 @@ let
           ;;
       esac
 
-      secret=${./secrets/cloudflared.yaml}
+      ${lib.optionalString (cfg.domainFile == null) ''
+        echo "cf-tunnel: no tunnel secrets configured (build from the private flake)" >&2
+        exit 1
+      ''}
 
       work=$(mktemp -d)
       trap 'rm -rf "$work"' EXIT
 
-      domain=$(sops -d --extract '["domain"]' "$secret")
-      tunnel_id=$(sops -d --extract '["tunnel_id"]' "$secret")
-      sops -d --extract '["credentials_b64"]' "$secret" | base64 -d > "$work/cred.json"
-      sops -d --extract '["cert_b64"]' "$secret" | base64 -d > "$work/cert.pem"
+      domain=$(cat ${lib.escapeShellArg (toString cfg.domainFile)})
+      tunnel_id=$(cat ${lib.escapeShellArg (toString cfg.tunnelIdFile)})
+      base64 -d ${lib.escapeShellArg (toString cfg.credentialsFile)} > "$work/cred.json"
+      base64 -d ${lib.escapeShellArg (toString cfg.certFile)} > "$work/cert.pem"
       chmod 600 "$work/cred.json" "$work/cert.pem"
 
       host="$sub.$domain"
@@ -89,8 +90,34 @@ let
   };
 in
 {
-  options.my.cloudflared.enable =
-    lib.mkEnableOption "on-demand Cloudflare tunnel launcher (cf-tunnel)";
+  options.my.cloudflared = {
+    enable = lib.mkEnableOption "on-demand Cloudflare tunnel launcher (cf-tunnel)";
+
+    # Runtime files holding the tunnel bundle, supplied by the private overlay
+    # (sops-decrypted, on tmpfs). domainFile/tunnelIdFile are plaintext; the
+    # credentials JSON and origin cert are base64-encoded. All null on a public
+    # build, in which case cf-tunnel refuses to run.
+    domainFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = "File containing the tunnel base domain.";
+    };
+    tunnelIdFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = "File containing the tunnel id.";
+    };
+    credentialsFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = "File containing the base64-encoded tunnel credentials JSON.";
+    };
+    certFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = "File containing the base64-encoded account origin cert (PEM).";
+    };
+  };
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [

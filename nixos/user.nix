@@ -84,8 +84,6 @@ in
       # sets my.gui.enable once (at the NixOS level) and both layers follow.
       my.gui.enable = lib.mkDefault systemGuiEnable;
       my.claude-code.enable = name == primaryUser;
-      my.secrets.sops.enable = lib.mkForce (name == primaryUser);
-      sops.age.sshKeyPaths = lib.mkForce [ "/home/${primaryUser}/.ssh/id_ed25519" ];
       targets.genericLinux.enable = lib.mkForce false;
     }
   ) config.my.users;

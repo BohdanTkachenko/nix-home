@@ -1,12 +1,5 @@
 { config, lib, pkgs, ... }:
 let
-  # Helper to resolve secret string depending on whether it is for Claude (env var) or Antigravity (SOPS placeholder)
-  getSecret = { isClaude, name, envVar }:
-    if isClaude then
-      "\${${envVar}}"
-    else
-      config.sops.placeholder."${name}";
-
   # @playwright/mcp distributed on npm can't run on NixOS out of the box: it
   # defaults to the system 'chrome' channel (/opt/google/chrome/chrome, absent
   # on NixOS) and its self-downloaded browsers aren't patched for the Nix
@@ -36,37 +29,32 @@ let
   };
 in
 {
-  # Centralized SOPS secrets
-  sops.secrets.github-pat = lib.mkIf config.my.secrets.sops.enable {
-    sopsFile = ./secrets/claude-code.yaml;
-    key = "github_pat";
-  };
-  sops.secrets.gitlab-pat = lib.mkIf config.my.secrets.sops.enable {
-    sopsFile = ./secrets/claude-code.yaml;
-    key = "gitlab_pat";
-  };
-  sops.secrets.plane-api-key = lib.mkIf config.my.secrets.sops.enable {
-    sopsFile = ./secrets/claude-code.yaml;
-    key = "plane_api_key";
-  };
-  sops.secrets.plane-workspace-slug = lib.mkIf config.my.secrets.sops.enable {
-    sopsFile = ./secrets/claude-code.yaml;
-    key = "plane_workspace_slug";
-  };
-  sops.secrets.claude-ha-mcp-url = lib.mkIf config.my.secrets.sops.enable {
-    sopsFile = ./secrets/claude-code.yaml;
-    key = "ha_mcp_url";
+  # Directory holding the AI/MCP secret files (github-pat, gitlab-pat,
+  # plane-api-key, plane-workspace-slug, claude-ha-mcp-url), read at runtime by
+  # the Claude Code wrapper. Supplied by the private overlay (sops-nix); null on
+  # a public build, in which case the wrapper exports no tokens.
+  options.my.ai.secretsDir = lib.mkOption {
+    type = lib.types.nullOr lib.types.path;
+    default = null;
+    example = "/home/dan/.config/sops-nix/secrets";
+    description = "Directory of AI/MCP secret files read by the Claude Code wrapper.";
   };
 
-  # Exposed helper for generating configs (nested in attribute set to satisfy Home Manager types)
-  lib.mcp = {
-    makeMcpServers = { isClaude }:
+  # Exposed helper for generating MCP server configs. `secrets` injects the
+  # secret-bearing strings — env-var references (${VAR}) for Claude, which
+  # expands them at load time, or sops placeholders for Antigravity, which bakes
+  # the real values into its rendered config (see private overlay). Keeping the
+  # secret resolution out of this module is what lets it stay sops-free.
+  config.lib.mcp = {
+    makeMcpServers = { isClaude, secrets }:
       let
-        githubPat = getSecret { inherit isClaude; name = "github-pat"; envVar = "GITHUB_PERSONAL_ACCESS_TOKEN"; };
-        gitlabPat = getSecret { inherit isClaude; name = "gitlab-pat"; envVar = "GITLAB_PERSONAL_ACCESS_TOKEN"; };
-        planeApiKey = getSecret { inherit isClaude; name = "plane-api-key"; envVar = "PLANE_API_KEY"; };
-        planeWorkspaceSlug = getSecret { inherit isClaude; name = "plane-workspace-slug"; envVar = "PLANE_WORKSPACE_SLUG"; };
-        claudeHaMcpUrl = getSecret { inherit isClaude; name = "claude-ha-mcp-url"; envVar = "CLAUDE_HA_MCP_URL"; };
+        inherit (secrets)
+          githubPat
+          gitlabPat
+          planeApiKey
+          planeWorkspaceSlug
+          claudeHaMcpUrl
+          ;
       in
       {
         home-assistant =
