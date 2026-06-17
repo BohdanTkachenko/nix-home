@@ -81,7 +81,7 @@ in
       text = claudeFrontmatter + claudeMarkdown;
     };
 
-    programs.gemini-cli.commands.commit = {
+    programs.antigravity-cli.commands.commit = {
       inherit description;
       prompt = geminiMarkdown;
     };

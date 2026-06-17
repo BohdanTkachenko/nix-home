@@ -1,5 +1,5 @@
 [[rule]]
-commandPrefix = ["awk", "basename", "cat", "curl", "cut", "date", "diff", "dig", "dirname", "du", "echo", "env", "eza", "fd", "file", "find", "grep", "head", "host", "journalctl", "jq", "ls", "man", "md5sum", "mktemp", "nixos-option", "npx", "nslookup", "printenv", "rg", "sed", "sha256sum", "sort", "stat", "tail", "tee", "tokei", "tr", "tree", "uname", "uniq", "wc", "wget", "which", "yq"]
+commandPrefix = ["awk", "basename", "cat", "curl", "cut", "date", "diff", "dig", "dirname", "du", "echo", "env", "eza", "fd", "file", "find", "grep", "head", "host", "journalctl", "jq", "ls", "man", "md5sum", "mktemp", "nix-hash", "nix-prefetch-url", "nixos-option", "npx", "nslookup", "printenv", "readlink", "rg", "sed", "sha256sum", "sort", "stat", "tail", "tee", "tokei", "tr", "tree", "uname", "uniq", "wc", "wget", "which", "yq"]
 decision = "allow"
 priority = 100
 toolName = "run_shell_command"
@@ -29,7 +29,7 @@ priority = 100
 toolName = "run_shell_command"
 
 [[rule]]
-commandRegex = "jj (describe|describe-to-file|describe-from-file|diff|log|show|status)"
+commandRegex = "jj (describe|describe-to-file|describe-from-file|diff|log|show|status|workspace list|workspace root)"
 decision = "allow"
 priority = 100
 toolName = "run_shell_command"

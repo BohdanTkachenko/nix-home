@@ -2,7 +2,7 @@
   description = "NixOS and Home Manager configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
     nixpkgs-unstable = {
       url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -45,7 +45,7 @@
     };
 
     home-manager = {
-      url = "github:BohdanTkachenko/home-manager/systemd-path-25.11";
+      url = "github:BohdanTkachenko/home-manager/systemd-path-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

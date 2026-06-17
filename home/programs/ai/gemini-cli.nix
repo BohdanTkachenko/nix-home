@@ -98,8 +98,8 @@ in
   config = {
     _geminiPolicyFile = policyFile;
 
-    programs.gemini-cli.enable = true;
-    programs.gemini-cli.package = pinToCCD1 pkgs-unstable.gemini-cli;
+    programs.antigravity-cli.enable = true;
+    programs.antigravity-cli.package = pinToCCD1 pkgs-unstable.gemini-cli;
 
     home.activation = {
       init = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -110,7 +110,7 @@ in
     # The flake sets a default GEMINI_MODEL env var which takes precedence over
     # the config file, making it impossible to change the model via settings.
     # Setting this to empty allows Gemini CLI to use the config file instead.
-    programs.gemini-cli.defaultModel = "";
+    programs.antigravity-cli.defaultModel = "";
 
     anti-drift.files = {
       ".gemini/settings.json" = {

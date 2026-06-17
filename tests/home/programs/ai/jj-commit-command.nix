@@ -4,7 +4,7 @@ let
   config = self.nixosConfigurations.nyancat.config.home-manager.users.dan;
 
   claudeCommitCommand = config.home.file.".claude/skills/commit/SKILL.md".text or "";
-  geminiCommitCommand = config.programs.gemini-cli.commands.commit.prompt or "";
+  geminiCommitCommand = config.programs.antigravity-cli.commands.commit.prompt or "";
   geminiPolicyFile = builtins.readFile config._geminiPolicyFile;
 
   # Read golden files from flake source

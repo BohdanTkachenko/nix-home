@@ -12,7 +12,7 @@ in
     enable = true;
     enableDefaultConfig = false;
 
-    matchBlocks = {
+    settings = {
       # Default host config (required when enableDefaultConfig = false)
       "*" = {
         controlMaster = "auto";
