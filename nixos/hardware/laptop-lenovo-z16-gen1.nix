@@ -19,8 +19,58 @@ in
       tlp.enable = false;
     };
 
+    # Pin Chrome to the Rembrandt 680M iGPU so the RX 6500M dGPU can stay
+    # in D3cold on battery. Three env vars are needed because Chrome reaches
+    # the GPU through three independent paths:
+    #
+    #   MESA_VK_DEVICE_SELECT + _FORCE_DEFAULT_DEVICE — radv's Vulkan layer.
+    #     `--use-angle=vulkan` makes ANGLE enumerate every Vulkan device on
+    #     startup, which would otherwise wake the dGPU out of D3cold at ~15W
+    #     idle even when --render-node-override points at the iGPU.
+    #   DRI_PRIME=0 — Mesa's GL/EGL/GBM picker. Forces the iGPU for
+    #     VA-API video decode, GBM compositing, and any GL fallback paths
+    #     ANGLE doesn't cover.
+    #
+    # Verified empirically: with just the MESA_VK pair the dGPU still woke
+    # under video load (Twitter playback). Adding DRI_PRIME kept it
+    # suspended through a 45s mixed-load test. Layered on top of the home-
+    # manager overlay's commandLineArgs via symlinkJoin + makeWrapper.
+    nixpkgs.overlays = [
+      (final: prev: {
+        google-chrome = final.symlinkJoin {
+          name = "google-chrome-igpu-pinned";
+          paths = [ prev.google-chrome ];
+          nativeBuildInputs = [ final.makeWrapper ];
+          postBuild = ''
+            for bin in $out/bin/*; do
+              wrapProgram "$bin" \
+                --set MESA_VK_DEVICE_SELECT "1002:1681" \
+                --set MESA_VK_DEVICE_SELECT_FORCE_DEFAULT_DEVICE "1" \
+                --set DRI_PRIME "0"
+            done
+            # Rewrite .desktop Exec= lines so GNOME's launcher hits the wrapped
+            # binaries. symlinkJoin leaves these as symlinks back into the
+            # unwrapped package, whose Exec= points at the original /bin/ —
+            # which bypasses wrapProgram and skips the env vars entirely.
+            for desktop in "$out"/share/applications/*.desktop; do
+              orig=$(readlink -f "$desktop")
+              rm "$desktop"
+              sed "s|${prev.google-chrome}/bin/|$out/bin/|g" "$orig" > "$desktop"
+            done
+          '';
+        };
+      })
+    ];
+
     # ath11k/WCN6855 WiFi tweaks
     networking.networkmanager.wifi.powersave = false;
+
+    # Pin all wifi connections to the 5 GHz band. WCN6855's 6 GHz (WiFi 6E)
+    # path on ath11k is unstable — band steering onto 6 GHz produces marginal
+    # links and contributed to the post-resume crashes. "a" means 5 GHz only
+    # (excludes both 2.4 GHz and 6 GHz); NM's band selector has no
+    # "everything except 6 GHz" option.
+    networking.networkmanager.settings.connection."wifi.band" = "a";
 
     # Use ethernet frame mode for better throughput and set regulatory domain
     boot.extraModprobeConfig = ''
