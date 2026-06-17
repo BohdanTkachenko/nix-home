@@ -21,7 +21,6 @@
     ./steam.nix
     ./user.nix
     ./waydroid.nix
-    ./hardware/kvm-switch.nix
   ];
 
   # NixOS release version

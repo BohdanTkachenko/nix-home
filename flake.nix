@@ -461,6 +461,9 @@
           home-manager.sharedModules = [
             {
               my.hardware.pc.enable = true;
+              # LG 45GX950A shared with the other PC via a USB switch: auto-switch
+              # the panel input based on which PC the monitor's USB hub is routed to.
+              my.hardware.kvmSwitch.enable = true;
               my.direnv-instant.enable = true;
               # Local PC: run the lemonade server so the headless workbench can
               # open URLs and set the clipboard here over an SSH reverse tunnel.
