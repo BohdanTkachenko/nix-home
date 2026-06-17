@@ -9,6 +9,11 @@
 let
   pinToCCD1 = import ../../../lib/pin-to-ccd1.nix { inherit pkgs; };
 
+  # On the aarch64 workbench, make Claude believe it has 20 logical CPUs so its
+  # `min(16, cores-2)` workflow concurrency cap lifts from 2 to 16. No-op on the
+  # x86_64 desktops. See lib/fake-cores.nix.
+  fakeCores = import ../../../lib/fake-cores.nix { inherit pkgs; };
+
   # MCP servers are declared with `${VAR}` placeholders for secrets. Claude
   # Code natively expands these from the process env at load time (see the
   # `Sy6` function in cli.js), the same way VS Code's mcp.json supports
@@ -167,6 +172,7 @@ let
 
     agentPushNotifEnabled = true;
     inputNeededNotifEnabled = true;
+    model = "opus[1m]";
     cleanupPeriodDays = 3650;
     effortLevel = "high";
     theme = "dark";
@@ -205,7 +211,7 @@ in
   config = lib.mkIf config.my.claude-code.enable {
     programs.claude-code = {
       enable = true;
-      package = pinToCCD1 claude-code-wrapped;
+      package = pinToCCD1 (fakeCores claude-code-wrapped);
     };
 
     # Make `claude-statusline` resolvable on PATH so settings.json can
