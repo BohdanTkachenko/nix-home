@@ -5,6 +5,7 @@
     btop
     eza
     fd
+    jj-worktree
     nushell
     procs
     ripgrep
@@ -27,7 +28,6 @@
     ../programs/audio-fix.nix
     ../programs/git.nix
     ../programs/jujutsu.nix
-    ../programs/jj-workspace.nix
     ../programs/lemonade.nix
     ../programs/micro.nix
     ../programs/ssh
