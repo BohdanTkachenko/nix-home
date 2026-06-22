@@ -44,11 +44,28 @@ let
   secretsDir = config.my.ai.secretsDir;
   exportSecret =
     file: var: ''export ${var}="$(cat "${secretsDir}/${file}" 2>/dev/null || true)"'';
+
+  # jj-worktree shims based on argv[0] == "git". A dir containing only
+  # `git -> jj-worktree`, prepended to claude's PATH, makes every git call
+  # claude (and its children) issue go through the shim — so `git worktree`
+  # transparently becomes `jj workspace` in jj repos, with all other git
+  # commands passed straight through to the real git. No need to launch claude
+  # via `jj-worktree run`. Escape hatch: JJ_WORKTREE_DISABLED=1.
+  gitShim = pkgs.runCommand "jj-worktree-git-shim" { } ''
+    mkdir -p $out/bin
+    ln -s ${pkgs.jj-worktree}/bin/jj-worktree $out/bin/git
+  '';
+
   wrapArgs = [
     ''--set SUDO_ASKPASS "${pkgs.seahorse}/libexec/seahorse/ssh-askpass"''
     "--set UV_PYTHON_PREFERENCE only-system"
     "--set CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN 1"
     ''--prefix PATH : "${pkgs.python3}/bin"''
+    # Activate the git -> jj-worktree shim and tell it where the real git is,
+    # so it resolves real git deterministically instead of via PATH order
+    # (which would otherwise find the shim itself first).
+    ''--prefix PATH : "${gitShim}/bin"''
+    ''--set JJ_WORKTREE_REAL_GIT "${pkgs.git}/bin/git"''
     # The --mcp-config path is single-quoted so nothing expands at build time;
     # bash expands $HOME at exec time when the wrapper script runs.
     "--add-flags '--mcp-config=\"\$HOME/.claude/mcp.json\"'"

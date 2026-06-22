@@ -8,5 +8,6 @@
     ../home/modules/options.nix
     ./google-chrome.nix
     ./riff-overlay.nix
+    ./jj-worktree-overlay.nix
   ];
 }

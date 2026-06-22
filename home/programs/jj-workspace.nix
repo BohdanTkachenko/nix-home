@@ -38,6 +38,7 @@ in
   home.packages = [
     jjWorkspace
     pkgs.fzf
+    pkgs.jj-worktree
   ];
 
   programs.jujutsu.settings.aliases.ws = [
